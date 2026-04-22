@@ -898,57 +898,92 @@
 
   /* ============================================================
      LIQUID GLASS — displacement-based (Apple WWDC style)
-     3 layers baked into a single element via ::before (bend) and
-     ::after (edge). The element itself carries the face shadow.
-     Add .lg to any surface to apply.
+     3 layers: face (host) + bend (::before) + edge (::after).
      ============================================================ */
-  .lg{ position:relative; isolation:isolate; }
-  .lg > *{ position:relative; z-index:3; }
-  /* FACE — soft ambient shadow on the host */
   .lg{
+    position:relative; isolation:isolate;
+    background-color: color-mix(in oklab, var(--ink) 8%, transparent);
     box-shadow:
       0 4px 4px rgba(0,0,0,.15),
-      0 0 12px rgba(0,0,0,.08),
-      0 20px 60px -20px color-mix(in oklab, #000 55%, transparent);
+      0 0 12px rgba(0,0,0,.10),
+      0 24px 70px -18px color-mix(in oklab, #000 60%, transparent);
   }
-  /* BEND — distorts whatever is behind */
+  [data-theme="light"] .lg{ background-color: rgba(255,255,255,.12); }
+  .lg > *{ position:relative; z-index:3; }
+
+  /* BEND — distorts everything behind via SVG turbulence */
   .lg::before{
     content:""; position:absolute; inset:0; z-index:0;
     border-radius: inherit;
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(6px) saturate(160%);
+    -webkit-backdrop-filter: blur(6px) saturate(160%);
     filter: url(#glass-blur);
     pointer-events:none;
   }
-  /* EDGE — inset white rim on all sides, aggressive */
+  /* EDGE — thick inset white rim, aggressive */
   .lg::after{
     content:""; position:absolute; inset:0; z-index:2;
     border-radius: inherit;
     box-shadow:
-      inset  3px  3px 3px 0 rgba(255,255,255,.45),
-      inset -3px -3px 3px 0 rgba(255,255,255,.45);
+      inset  3px  3px 4px 0 rgba(255,255,255,.55),
+      inset -3px -3px 4px 0 rgba(255,255,255,.40),
+      inset  0   0  0  1px rgba(255,255,255,.18);
     pointer-events:none;
   }
-  /* Subtle tint layer so the element still has its own color presence */
-  .lg{ background-color: color-mix(in oklab, var(--ink) 10%, transparent); }
-  [data-theme="light"] .lg{ background-color: rgba(255,255,255,.10); }
 
-  /* Light variant for bright host tints (testimonials with accent bg) */
-  .lg.lg-tint-mint { background-color: rgba(15, 239, 188, .35); }
-  .lg.lg-tint-paper{ background-color: rgba(220, 251, 239, .55); }
-  .lg.lg-tint-lilac{ background-color: rgba(216, 145, 216, .45); }
+  /* Tinted variants keep brand color but let the bend show through */
+  .lg.lg-tint-mint { background-color: rgba(15, 239, 188, .32); }
+  .lg.lg-tint-paper{ background-color: rgba(220, 251, 239, .35); }
+  .lg.lg-tint-lilac{ background-color: rgba(216, 145, 216, .38); }
 
-  /* Testimonials: ditch solid fills, go liquid */
-  .note:nth-child(1),
-  .note:nth-child(2),
-  .note:nth-child(3){ background: transparent; }
-  .note{
-    box-shadow: none; /* .lg provides shadow */
+  /* Testimonials: ditch solid fills */
+  .note{ background: transparent !important; box-shadow: none; }
+
+  /* When .lg is applied to an element that already had glass-pass pseudos,
+     the .lg pseudos must win — override the old ones. */
+  .feat-card.lg::before,
+  .cta.lg::before{
+    content:""; left:0; right:0; top:0; bottom:0; height:auto;
+    background: none;
+    border-radius: inherit;
+    backdrop-filter: blur(6px) saturate(160%);
+    -webkit-backdrop-filter: blur(6px) saturate(160%);
+    filter: url(#glass-blur);
+    z-index:0;
+  }
+  .feat-card.lg::after,
+  .cta.lg::after{
+    content:""; inset:0;
+    background: none; opacity:1; filter:none;
+    border-radius: inherit;
+    box-shadow:
+      inset  3px  3px 4px 0 rgba(255,255,255,.55),
+      inset -3px -3px 4px 0 rgba(255,255,255,.40),
+      inset  0   0  0  1px rgba(255,255,255,.18);
+    z-index:2;
   }
 
-  /* Fallback when SVG filter isn't supported — degrade to flat tint */
+  /* Ambient color blobs behind key sections so the bend has something
+     to distort (liquid glass needs content behind to look alive) */
+  .sect-testi, .sect-feat, .sect-cta{
+    position:relative; isolation:isolate;
+  }
+  .sect-testi::before, .sect-feat::before, .sect-cta::before{
+    content:""; position:absolute; inset:-20% -10%; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(40% 50% at 18% 30%, color-mix(in oklab, var(--accent) 55%, transparent), transparent 65%),
+      radial-gradient(35% 45% at 80% 25%, color-mix(in oklab, var(--lilac)  55%, transparent), transparent 65%),
+      radial-gradient(38% 48% at 55% 85%, color-mix(in oklab, #F5B35A 45%, transparent), transparent 65%);
+    filter: blur(60px);
+    opacity: .55;
+  }
+  [data-theme="light"] .sect-testi::before,
+  [data-theme="light"] .sect-feat::before,
+  [data-theme="light"] .sect-cta::before{ opacity:.38; }
+
+  /* Fallback when SVG filter isn't supported — keep the rim look */
   @supports not (filter: url(#glass-blur)){
-    .lg::before{ filter: none; }
+    .lg::before{ filter: none; backdrop-filter: blur(10px) saturate(170%); }
   }
 
   /* ---------- SECTION HEADER ---------- */
@@ -1588,7 +1623,7 @@
 </div>
 
 <!-- FEATURE ROWS (alternating) -->
-<section class="sect" id="servicios" data-screen-label="02 Servicios">
+<section class="sect sect-feat" id="servicios" data-screen-label="02 Servicios">
   <div class="wrap">
     <div class="sect-hd">
       <div class="idx reveal">02 / Qué hacemos</div>
@@ -1613,7 +1648,7 @@
         <div class="feat-visual reveal d1">
           <span class="sticker mint" style="width:80px; height:80px; top:-30px; right:-20px;"></span>
           <span class="sticker lilac" style="width:60px; height:60px; bottom:-20px; left:-25px;"></span>
-          <div class="feat-card">
+          <div class="feat-card lg">
             <div class="feat-card-hd">
               <span>Tareas · hoy</span>
               <span class="dots"><i></i><i></i><i></i></span>
@@ -1653,7 +1688,7 @@
         <div class="feat-visual reveal d1">
           <span class="sticker paper" style="width:70px; height:70px; top:-20px; left:-30px;"></span>
           <span class="sticker mint" style="width:90px; height:90px; bottom:-30px; right:-25px;"></span>
-          <div class="feat-card">
+          <div class="feat-card lg">
             <div class="feat-card-hd">
               <span>Tus herramientas</span>
               <span class="dots"><i></i><i></i><i></i></span>
@@ -1687,7 +1722,7 @@
         <div class="feat-visual reveal d1">
           <span class="sticker lilac" style="width:80px; height:80px; top:-25px; right:30px;"></span>
           <span class="sticker mint" style="width:50px; height:50px; bottom:40px; left:-20px;"></span>
-          <div class="feat-card">
+          <div class="feat-card lg">
             <div class="feat-card-hd">
               <span>Panel · inicio</span>
               <span class="dots"><i></i><i></i><i></i></span>
@@ -1716,7 +1751,7 @@
         <div class="feat-visual reveal d1">
           <span class="sticker mint" style="width:70px; height:70px; top:-20px; left:20px;"></span>
           <span class="sticker lilac" style="width:60px; height:60px; bottom:-20px; right:30px;"></span>
-          <div class="feat-card">
+          <div class="feat-card lg">
             <div class="feat-card-hd">
               <span>Antes · después</span>
               <span class="dots"><i></i><i></i><i></i></span>
@@ -1771,7 +1806,7 @@
 </section>
 
 <!-- TESTIMONIALS (sticky notes) -->
-<section class="sect" id="confianza" style="padding-top:0" data-screen-label="04 Confianza">
+<section class="sect sect-testi" id="confianza" style="padding-top:0" data-screen-label="04 Confianza">
   <div class="wrap">
     <div class="sect-hd">
       <div class="idx reveal">04 / Lo que dicen</div>
@@ -1797,8 +1832,8 @@
 </section>
 
 <!-- CTA FINAL -->
-<section class="wrap" id="contacto" data-screen-label="05 CTA">
-  <div class="cta reveal">
+<section class="wrap sect-cta" id="contacto" data-screen-label="05 CTA">
+  <div class="cta lg reveal">
     <div class="cta-grid">
       <div>
         <h2>¿Ganamos tiempo <em>juntos</em>?</h2>
