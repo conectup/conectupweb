@@ -1226,6 +1226,17 @@
   [data-theme="light"] .nav-cta{
     background: rgba(255,255,255,.40) !important;
   }
+  /* Hover has to beat the [data-theme] specificity in both modes. */
+  [data-theme="light"] .nav-cta:hover,
+  [data-theme="dark"]  .nav-cta:hover{
+    background: var(--accent) !important;
+    color: #fff !important;
+    border-color: var(--accent);
+  }
+  [data-theme="light"] .nav-cta:hover .dot,
+  [data-theme="dark"]  .nav-cta:hover .dot{
+    background: #fff; box-shadow: 0 0 10px rgba(255,255,255,.8);
+  }
 
 
   /* Fallback when SVG filter isn't supported — keep the rim look */
