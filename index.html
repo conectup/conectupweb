@@ -694,6 +694,10 @@
     --glass-shadow:    0 1px 0 color-mix(in oklab, var(--fg) 10%, transparent) inset,
                        0 20px 60px -20px color-mix(in oklab, #000 55%, transparent),
                        0 8px 20px -12px color-mix(in oklab, #000 40%, transparent);
+    /* Liquid shine — the inset rim lights that give the glass the "drop" look */
+    --liquid-shine:    inset -10px -8px 0 -11px color-mix(in oklab, var(--fg) 80%, transparent),
+                       inset   0px -9px 0  -8px color-mix(in oklab, var(--fg) 70%, transparent);
+    --liquid-shadow:   drop-shadow(0 10px 14px color-mix(in oklab, #000 55%, transparent));
   }
   [data-theme="light"]{
     --glass-bg:        color-mix(in oklab, #fff 60%, transparent);
@@ -703,6 +707,9 @@
     --glass-shadow:    0 1px 0 color-mix(in oklab, #fff 85%, transparent) inset,
                        0 20px 60px -24px color-mix(in oklab, #0a0a0f 22%, transparent),
                        0 8px 20px -14px color-mix(in oklab, #0a0a0f 15%, transparent);
+    --liquid-shine:    inset -10px -8px 0 -11px rgba(255,255,255,1),
+                       inset   0px -9px 0  -8px rgba(255,255,255,.95);
+    --liquid-shadow:   drop-shadow(0 10px 14px color-mix(in oklab, #0a0a0f 18%, transparent));
   }
 
   /* Nav — stronger frost */
@@ -714,7 +721,7 @@
     box-shadow: 0 1px 0 var(--glass-hl) inset;
   }
 
-  /* Hero visualization */
+  /* Hero visualization — liquid glass */
   .viz{
     background:
       radial-gradient(120% 80% at 20% 0%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 60%),
@@ -726,13 +733,24 @@
     box-shadow: var(--glass-shadow);
     position:relative;
   }
-  .viz::after{
+  /* Top 1px inner highlight (uses ::before so ::after stays free for liquid shine) */
+  .viz::before{
     content:""; position:absolute; left:1px; right:1px; top:1px; height:1px;
     background: linear-gradient(90deg, transparent, var(--glass-hl), transparent);
-    pointer-events:none; border-radius:inherit;
+    pointer-events:none; border-radius:inherit; z-index:2;
   }
+  /* Liquid shine — bottom-right rim + subtle drop shadow, behind content */
+  .viz::after{
+    content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+    border-radius: inherit;
+    box-shadow: var(--liquid-shine);
+    opacity:.65;
+    filter: blur(1px) brightness(115%);
+  }
+  .viz > *{ position:relative; z-index:1; }
+  .viz-hdr, .scene-pills, .scene-nav{ z-index:4 !important; }
 
-  /* Nodes inside viz */
+  /* Nodes inside viz — liquid pill */
   .node{
     background: var(--glass-bg-strong) !important;
     backdrop-filter: blur(14px) saturate(160%);
@@ -740,6 +758,8 @@
     border: 1px solid var(--glass-border);
     box-shadow:
       0 1px 0 var(--glass-hl) inset,
+      inset -6px -5px 0 -7px color-mix(in oklab, var(--fg) 80%, transparent),
+      inset 0 -5px 0 -4px color-mix(in oklab, var(--fg) 70%, transparent),
       0 10px 30px -14px color-mix(in oklab, #000 50%, transparent);
   }
 
@@ -768,7 +788,10 @@
   .btn-ghost{
     background: var(--glass-bg);
     border-color: var(--glass-border);
-    box-shadow: 0 1px 0 var(--glass-hl) inset;
+    box-shadow:
+      0 1px 0 var(--glass-hl) inset,
+      inset -8px -6px 0 -9px color-mix(in oklab, var(--fg) 70%, transparent),
+      inset 0 -6px 0 -5px color-mix(in oklab, var(--fg) 60%, transparent);
   }
   .btn-ghost:hover{ background: var(--glass-bg-strong); border-color: var(--glass-hl); }
 
@@ -781,7 +804,7 @@
     box-shadow: 0 1px 0 var(--glass-hl) inset;
   }
 
-  /* Feature cards — glass surface */
+  /* Feature cards — liquid glass */
   .feat-card{
     background: var(--glass-bg) !important;
     backdrop-filter: var(--glass-blur);
@@ -793,8 +816,16 @@
   .feat-card::before{
     content:""; position:absolute; left:1px; right:1px; top:1px; height:1px;
     background: linear-gradient(90deg, transparent, var(--glass-hl), transparent);
-    pointer-events:none; border-radius:inherit;
+    pointer-events:none; border-radius:inherit; z-index:3;
   }
+  .feat-card::after{
+    content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+    border-radius: inherit;
+    box-shadow: var(--liquid-shine);
+    opacity:.55;
+    filter: blur(1px) brightness(115%);
+  }
+  .feat-card > *{ position:relative; z-index:1; }
 
   /* Sub-window inside feature cards */
   .vwin{
@@ -813,7 +844,7 @@
     border-color: var(--glass-border);
   }
 
-  /* CTA block */
+  /* CTA block — liquid glass */
   .cta{
     background:
       radial-gradient(60% 120% at 100% 0%, color-mix(in oklab, var(--accent) 20%, transparent), transparent 60%),
@@ -828,8 +859,16 @@
   .cta::before{
     content:""; position:absolute; left:1px; right:1px; top:1px; height:1px;
     background: linear-gradient(90deg, transparent, var(--glass-hl), transparent);
-    pointer-events:none; border-radius:inherit;
+    pointer-events:none; border-radius:inherit; z-index:2;
   }
+  .cta::after{
+    content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+    border-radius: inherit;
+    box-shadow: var(--liquid-shine);
+    opacity:.5;
+    filter: blur(1px) brightness(115%);
+  }
+  .cta > *{ position:relative; z-index:1; }
 
   /* Tweaks panel — already glassy, just refine */
   .tweaks{
