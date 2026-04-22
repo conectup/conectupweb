@@ -1011,24 +1011,25 @@
      ============================================================ */
   .scroll-reveal{
     opacity:0;
-    transform: translateY(90px) scale(.9) rotateX(10deg);
+    transform: translate3d(0, 90px, 0) scale(.9);
     filter: blur(10px);
-    transform-origin: center bottom;
+    transform-origin: center center;
     transition:
       opacity   .7s cubic-bezier(.22,.61,.36,1),
       transform .9s cubic-bezier(.22,.61,.36,1),
       filter    .7s cubic-bezier(.22,.61,.36,1);
     will-change: opacity, transform, filter;
+    backface-visibility: hidden;
   }
   .scroll-reveal.is-in{
     opacity:1;
-    transform: translateY(0) scale(1) rotateX(0);
+    transform: translate3d(0, 0, 0) scale(1);
     filter: blur(0);
   }
   .scroll-reveal.is-out-above{
-    opacity:.25;
-    transform: translateY(-50px) scale(1.02);
-    filter: blur(3px);
+    opacity:0;
+    transform: translate3d(0, -70px, 0) scale(.94);
+    filter: blur(8px);
   }
   /* Stagger siblings when they enter together */
   .scroll-reveal.d1{ transition-delay: .08s; }
@@ -1057,23 +1058,16 @@
      frame-by-frame binding to scroll position. */
   @supports (animation-timeline: view()){
     .scroll-reveal{
-      animation: card-reveal linear both;
+      animation: card-lifecycle linear both;
       animation-timeline: view();
-      animation-range: entry 0% cover 40%;
+      animation-range: entry 0% exit 100%;
       opacity:1;
     }
-    .scroll-reveal.exit-fade{
-      animation: card-exit linear both;
-      animation-timeline: view();
-      animation-range: cover 60% exit 100%;
-    }
-    @keyframes card-reveal{
-      from{ opacity:0; transform: translateY(90px) scale(.9) rotateX(10deg); filter: blur(10px);}
-      to  { opacity:1; transform: translateY(0)    scale(1)  rotateX(0);     filter: blur(0);}
-    }
-    @keyframes card-exit{
-      from{ opacity:1; transform: translateY(0)    scale(1)    rotateX(0);  filter: blur(0);}
-      to  { opacity:.25; transform: translateY(-50px) scale(1.02); filter: blur(3px);}
+    @keyframes card-lifecycle{
+      0%   { opacity:0;   transform: translate3d(0, 90px, 0)  scale(.9);  filter: blur(10px); }
+      30%  { opacity:1;   transform: translate3d(0, 0, 0)     scale(1);   filter: blur(0);    }
+      70%  { opacity:1;   transform: translate3d(0, 0, 0)     scale(1);   filter: blur(0);    }
+      100% { opacity:0;   transform: translate3d(0, -70px, 0) scale(.94); filter: blur(8px);  }
     }
   }
 
@@ -1866,7 +1860,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
           </a>
         </div>
-        <div class="feat-visual reveal d1 scroll-reveal scroll-reveal-shadow exit-fade">
+        <div class="feat-visual reveal d1 scroll-reveal scroll-reveal-shadow">
           <span class="sticker mint" style="width:80px; height:80px; top:-30px; right:-20px;"></span>
           <span class="sticker lilac" style="width:60px; height:60px; bottom:-20px; left:-25px;"></span>
           <div class="feat-card lg">
@@ -1906,7 +1900,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
           </a>
         </div>
-        <div class="feat-visual reveal d1 scroll-reveal scroll-reveal-shadow exit-fade">
+        <div class="feat-visual reveal d1 scroll-reveal scroll-reveal-shadow">
           <span class="sticker paper" style="width:70px; height:70px; top:-20px; left:-30px;"></span>
           <span class="sticker mint" style="width:90px; height:90px; bottom:-30px; right:-25px;"></span>
           <div class="feat-card lg">
@@ -1940,7 +1934,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
           </a>
         </div>
-        <div class="feat-visual reveal d1 scroll-reveal scroll-reveal-shadow exit-fade">
+        <div class="feat-visual reveal d1 scroll-reveal scroll-reveal-shadow">
           <span class="sticker lilac" style="width:80px; height:80px; top:-25px; right:30px;"></span>
           <span class="sticker mint" style="width:50px; height:50px; bottom:40px; left:-20px;"></span>
           <div class="feat-card lg">
@@ -1969,7 +1963,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
           </a>
         </div>
-        <div class="feat-visual reveal d1 scroll-reveal scroll-reveal-shadow exit-fade">
+        <div class="feat-visual reveal d1 scroll-reveal scroll-reveal-shadow">
           <span class="sticker mint" style="width:70px; height:70px; top:-20px; left:20px;"></span>
           <span class="sticker lilac" style="width:60px; height:60px; bottom:-20px; right:30px;"></span>
           <div class="feat-card lg">
