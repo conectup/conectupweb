@@ -3856,34 +3856,54 @@
     // --- Drag to scroll with snap on release ---
     let isDragging = false, dragStartX = 0, dragStartScroll = 0, dragMoved = false;
     deck.addEventListener('pointerdown', (e) => {
-      // don't drag when user grabs a button inside
-      if(e.target.closest('button, a')) return;
+      // Only react to primary mouse button / touch / pen
+      if(e.button && e.button !== 0) return;
+      // don't drag when user grabs a button/link inside
+      if(e.target.closest('button, a, input, textarea, select')) return;
       isDragging = true;
       dragMoved = false;
       dragStartX = e.clientX;
       dragStartScroll = deck.scrollLeft;
       deck.style.scrollSnapType = 'none';
       deck.style.cursor = 'grabbing';
-      deck.setPointerCapture(e.pointerId);
+      deck.style.userSelect = 'none';
+      try { deck.setPointerCapture(e.pointerId); } catch(_) {}
     });
     deck.addEventListener('pointermove', (e) => {
       if(!isDragging) return;
       const dx = e.clientX - dragStartX;
-      if(Math.abs(dx) > 4) dragMoved = true;
+      if(Math.abs(dx) > 3){
+        dragMoved = true;
+        // block native selection / default behavior once we're dragging
+        e.preventDefault();
+        if(window.getSelection) window.getSelection().removeAllRanges();
+      }
       deck.scrollLeft = dragStartScroll - dx;
     });
+    // If the user drags past a certain threshold, swallow the click that
+    // would otherwise fire on the element they started on.
+    deck.addEventListener('click', (e) => {
+      if(dragMoved){ e.preventDefault(); e.stopPropagation(); dragMoved = false; }
+    }, true);
     function endDrag(e){
       if(!isDragging) return;
       isDragging = false;
       deck.style.cursor = '';
-      // snap to nearest after releasing
+      deck.style.userSelect = '';
       markActive();
       deck.style.scrollSnapType = 'x mandatory';
       goTo(current);
     }
     deck.addEventListener('pointerup', endDrag);
     deck.addEventListener('pointercancel', endDrag);
-    deck.addEventListener('pointerleave', endDrag);
+    // Don't end drag on pointerleave — setPointerCapture should keep events
+    // going until pointerup even if cursor leaves the element.
+
+    // Prevent text-selection / default drag-image on the deck elements
+    deck.addEventListener('dragstart', (e) => e.preventDefault());
+    deck.addEventListener('selectstart', (e) => {
+      if(isDragging) e.preventDefault();
+    });
 
     // Kick off after layout
     requestAnimationFrame(() => {
