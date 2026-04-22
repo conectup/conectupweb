@@ -896,6 +896,61 @@
     }
   }
 
+  /* ============================================================
+     LIQUID GLASS — displacement-based (Apple WWDC style)
+     3 layers baked into a single element via ::before (bend) and
+     ::after (edge). The element itself carries the face shadow.
+     Add .lg to any surface to apply.
+     ============================================================ */
+  .lg{ position:relative; isolation:isolate; }
+  .lg > *{ position:relative; z-index:3; }
+  /* FACE — soft ambient shadow on the host */
+  .lg{
+    box-shadow:
+      0 4px 4px rgba(0,0,0,.15),
+      0 0 12px rgba(0,0,0,.08),
+      0 20px 60px -20px color-mix(in oklab, #000 55%, transparent);
+  }
+  /* BEND — distorts whatever is behind */
+  .lg::before{
+    content:""; position:absolute; inset:0; z-index:0;
+    border-radius: inherit;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    filter: url(#glass-blur);
+    pointer-events:none;
+  }
+  /* EDGE — inset white rim on all sides, aggressive */
+  .lg::after{
+    content:""; position:absolute; inset:0; z-index:2;
+    border-radius: inherit;
+    box-shadow:
+      inset  3px  3px 3px 0 rgba(255,255,255,.45),
+      inset -3px -3px 3px 0 rgba(255,255,255,.45);
+    pointer-events:none;
+  }
+  /* Subtle tint layer so the element still has its own color presence */
+  .lg{ background-color: color-mix(in oklab, var(--ink) 10%, transparent); }
+  [data-theme="light"] .lg{ background-color: rgba(255,255,255,.10); }
+
+  /* Light variant for bright host tints (testimonials with accent bg) */
+  .lg.lg-tint-mint { background-color: rgba(15, 239, 188, .35); }
+  .lg.lg-tint-paper{ background-color: rgba(220, 251, 239, .55); }
+  .lg.lg-tint-lilac{ background-color: rgba(216, 145, 216, .45); }
+
+  /* Testimonials: ditch solid fills, go liquid */
+  .note:nth-child(1),
+  .note:nth-child(2),
+  .note:nth-child(3){ background: transparent; }
+  .note{
+    box-shadow: none; /* .lg provides shadow */
+  }
+
+  /* Fallback when SVG filter isn't supported — degrade to flat tint */
+  @supports not (filter: url(#glass-blur)){
+    .lg::before{ filter: none; }
+  }
+
   /* ---------- SECTION HEADER ---------- */
   .sect{ padding: var(--sect) 0; position:relative;}
   .sect-hd{ display:grid; grid-template-columns: 120px 1fr; gap:32px; margin-bottom: 68px; align-items:start;}
@@ -1261,6 +1316,15 @@
 </style>
 </head>
 <body data-theme="dark" data-accent="mint" data-density="comfortable">
+
+<!-- Global SVG filter for liquid-glass displacement -->
+<svg style="position:absolute; width:0; height:0; overflow:hidden" aria-hidden="true">
+  <filter id="glass-blur" x="0" y="0" width="100%" height="100%" filterUnits="objectBoundingBox">
+    <feTurbulence type="fractalNoise" baseFrequency="0.004 0.008" numOctaves="1" result="turbulence" />
+    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="80" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>
+
 
 <!-- NAV -->
 <nav class="nav" data-screen-label="Nav">
@@ -1716,15 +1780,15 @@
       </div>
     </div>
     <div class="testi-row">
-      <div class="note reveal">
+      <div class="note lg lg-tint-paper reveal">
         <p>"En seis semanas reemplazaron una tarea manual que ocupaba a tres personas. Hoy funciona sola."</p>
         <div class="who"><b>Martín R.</b> · Operaciones</div>
       </div>
-      <div class="note reveal d1">
+      <div class="note lg lg-tint-mint reveal d1">
         <p>"Nos entendieron desde el primer día. Sin jerga, sin humo — sólo soluciones que funcionan."</p>
         <div class="who"><b>Lucía G.</b> · Dirección</div>
       </div>
-      <div class="note reveal d2">
+      <div class="note lg lg-tint-lilac reveal d2">
         <p>"Lo mejor: cuando necesitamos algo nuevo, responden el mismo día. Se nota el acompañamiento."</p>
         <div class="who"><b>Jorge S.</b> · Logística</div>
       </div>
