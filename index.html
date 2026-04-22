@@ -1006,6 +1006,82 @@
      fabric behind everything, so there are no vertical/horizontal
      cuts between sections. */
 
+  /* ============================================================
+     SCROLL REVEAL (scroll-driven + IntersectionObserver fallback)
+     ============================================================ */
+  .scroll-reveal{
+    opacity:0;
+    transform: translateY(90px) scale(.9) rotateX(10deg);
+    filter: blur(10px);
+    transform-origin: center bottom;
+    transition:
+      opacity   .7s cubic-bezier(.22,.61,.36,1),
+      transform .9s cubic-bezier(.22,.61,.36,1),
+      filter    .7s cubic-bezier(.22,.61,.36,1);
+    will-change: opacity, transform, filter;
+  }
+  .scroll-reveal.is-in{
+    opacity:1;
+    transform: translateY(0) scale(1) rotateX(0);
+    filter: blur(0);
+  }
+  .scroll-reveal.is-out-above{
+    opacity:.25;
+    transform: translateY(-50px) scale(1.02);
+    filter: blur(3px);
+  }
+  /* Stagger siblings when they enter together */
+  .scroll-reveal.d1{ transition-delay: .08s; }
+  .scroll-reveal.d2{ transition-delay: .16s; }
+  .scroll-reveal.d3{ transition-delay: .24s; }
+
+  /* Shadow that "drops" under the card when it's centered — gives
+     weight at the sweet spot of the animation */
+  .scroll-reveal-shadow{ position:relative; }
+  .scroll-reveal-shadow::after{
+    content:""; position:absolute; left:8%; right:8%; bottom:-40px; height:60px;
+    background: radial-gradient(50% 50% at 50% 0%, color-mix(in oklab, #000 45%, transparent), transparent 70%);
+    filter: blur(18px);
+    opacity:0;
+    transition: opacity .9s ease;
+    pointer-events:none;
+    z-index:-1;
+  }
+  [data-theme="light"] .scroll-reveal-shadow::after{
+    background: radial-gradient(50% 50% at 50% 0%, color-mix(in oklab, #0a0a0f 22%, transparent), transparent 70%);
+  }
+  .scroll-reveal-shadow.is-in::after{ opacity:1; }
+
+  /* Native scroll-driven animation — Chrome/Edge 115+.
+     Overrides the JS-driven classes when available for smoother
+     frame-by-frame binding to scroll position. */
+  @supports (animation-timeline: view()){
+    .scroll-reveal{
+      animation: card-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+      opacity:1;
+    }
+    .scroll-reveal.exit-fade{
+      animation: card-exit linear both;
+      animation-timeline: view();
+      animation-range: cover 60% exit 100%;
+    }
+    @keyframes card-reveal{
+      from{ opacity:0; transform: translateY(90px) scale(.9) rotateX(10deg); filter: blur(10px);}
+      to  { opacity:1; transform: translateY(0)    scale(1)  rotateX(0);     filter: blur(0);}
+    }
+    @keyframes card-exit{
+      from{ opacity:1; transform: translateY(0)    scale(1)    rotateX(0);  filter: blur(0);}
+      to  { opacity:.25; transform: translateY(-50px) scale(1.02); filter: blur(3px);}
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .scroll-reveal{ opacity:1; transform:none; filter:none; animation:none !important; }
+    .scroll-reveal-shadow::after{ display:none; }
+  }
+
   /* Overrides for .lg applied to elements that already had pseudos
      (feat-card, cta, pstep, kpi, vwin, tweaks). Force the lg glass
      treatment to win. */
@@ -1790,7 +1866,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
           </a>
         </div>
-        <div class="feat-visual reveal d1">
+        <div class="feat-visual reveal d1 scroll-reveal scroll-reveal-shadow exit-fade">
           <span class="sticker mint" style="width:80px; height:80px; top:-30px; right:-20px;"></span>
           <span class="sticker lilac" style="width:60px; height:60px; bottom:-20px; left:-25px;"></span>
           <div class="feat-card lg">
@@ -1830,7 +1906,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
           </a>
         </div>
-        <div class="feat-visual reveal d1">
+        <div class="feat-visual reveal d1 scroll-reveal scroll-reveal-shadow exit-fade">
           <span class="sticker paper" style="width:70px; height:70px; top:-20px; left:-30px;"></span>
           <span class="sticker mint" style="width:90px; height:90px; bottom:-30px; right:-25px;"></span>
           <div class="feat-card lg">
@@ -1864,7 +1940,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
           </a>
         </div>
-        <div class="feat-visual reveal d1">
+        <div class="feat-visual reveal d1 scroll-reveal scroll-reveal-shadow exit-fade">
           <span class="sticker lilac" style="width:80px; height:80px; top:-25px; right:30px;"></span>
           <span class="sticker mint" style="width:50px; height:50px; bottom:40px; left:-20px;"></span>
           <div class="feat-card lg">
@@ -1893,7 +1969,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
           </a>
         </div>
-        <div class="feat-visual reveal d1">
+        <div class="feat-visual reveal d1 scroll-reveal scroll-reveal-shadow exit-fade">
           <span class="sticker mint" style="width:70px; height:70px; top:-20px; left:20px;"></span>
           <span class="sticker lilac" style="width:60px; height:60px; bottom:-20px; right:30px;"></span>
           <div class="feat-card lg">
@@ -2341,6 +2417,44 @@
 
     setScene(0);
     scheduleAuto(SCENE_DUR);
+  })();
+
+  // ---------- Scroll reveal (fallback for browsers without animation-timeline) ----------
+  (function scrollReveal(){
+    const supportsNative = CSS && CSS.supports && CSS.supports('animation-timeline: view()');
+    if(supportsNative) return; // Native scroll-driven anim handles it.
+
+    const els = document.querySelectorAll('.scroll-reveal');
+    if(!els.length) return;
+
+    const vh = ()=> window.innerHeight;
+    function update(){
+      for(const el of els){
+        const r = el.getBoundingClientRect();
+        const mid = r.top + r.height/2;
+        const v = vh();
+        if(r.bottom < 0){
+          el.classList.remove('is-in');
+          el.classList.add('is-out-above');
+        } else if(r.top > v){
+          el.classList.remove('is-in','is-out-above');
+        } else if(mid < v * 0.25){
+          el.classList.remove('is-in');
+          el.classList.add('is-out-above');
+        } else {
+          el.classList.add('is-in');
+          el.classList.remove('is-out-above');
+        }
+      }
+    }
+    let ticking = false;
+    window.addEventListener('scroll', ()=>{
+      if(ticking) return;
+      ticking = true;
+      requestAnimationFrame(()=>{ update(); ticking = false; });
+    }, { passive:true });
+    window.addEventListener('resize', update);
+    update();
   })();
 
   // ---------- Nav hide on scroll down ----------
