@@ -1739,24 +1739,47 @@
   .sd-item.on b{ color: var(--accent); }
   .sd-item.on span{ display:inline; font-weight:500; color: var(--fg); }
 
-  .stage-ctrls{ display:flex; gap: 8px; }
+  .stage-ctrls{ display:flex; align-items:center; gap: 8px; position:relative; }
+  .stage-ctrls::before{
+    content: "Usa ← →  o arrastra";
+    position: absolute; right: calc(100% + 14px); top: 50%; transform: translateY(-50%);
+    white-space: nowrap;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em;
+    color: var(--muted-2);
+    pointer-events: none;
+  }
+  @media (max-width: 900px){ .stage-ctrls::before{ display: none; } }
   .stage-btn{
-    border: 0; cursor: pointer;
-    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid color-mix(in oklab, var(--accent) 25%, transparent);
+    cursor: pointer;
+    width: 44px; height: 44px; border-radius: 50%;
     display: grid; place-items: center;
-    background: color-mix(in oklab, var(--ink) 25%, transparent);
+    background: color-mix(in oklab, var(--ink) 35%, transparent);
     color: var(--fg);
     backdrop-filter: blur(10px) saturate(180%);
     -webkit-backdrop-filter: blur(10px) saturate(180%);
     box-shadow:
-      inset 2px 2px 3px 0 rgba(255,255,255,.45),
-      inset -2px -2px 3px 0 rgba(255,255,255,.25),
-      0 4px 12px rgba(0,0,0,.2);
-    transition: transform .2s ease, background .2s ease;
+      inset 2px 2px 3px 0 rgba(255,255,255,.55),
+      inset -2px -2px 3px 0 rgba(255,255,255,.3),
+      0 6px 16px -4px color-mix(in oklab, var(--accent) 30%, transparent),
+      0 4px 12px rgba(0,0,0,.25);
+    transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
   }
-  .stage-btn:hover{ transform: translateY(-1px); background: color-mix(in oklab, var(--accent) 18%, var(--ink)); }
-  .stage-btn:active{ transform: translateY(0) scale(.95); }
-  .stage-btn svg{ width: 16px; height: 16px; }
+  .stage-btn:hover{
+    transform: translateY(-2px);
+    background: color-mix(in oklab, var(--accent) 22%, var(--ink));
+    border-color: var(--accent);
+    box-shadow:
+      inset 2px 2px 3px 0 rgba(255,255,255,.65),
+      inset -2px -2px 3px 0 rgba(255,255,255,.35),
+      0 10px 24px -4px color-mix(in oklab, var(--accent) 55%, transparent);
+  }
+  .stage-btn:active{ transform: translateY(0) scale(.94); }
+  .stage-btn svg{ width: 18px; height: 18px; }
+
+  /* Grab cursor on deck to hint draggability */
+  .proc-deck{ cursor: grab; }
+  .proc-deck:active{ cursor: grabbing; }
   .stage-play .ico-play{ display: none; }
   .stage-stage-stopped .stage-play .ico-pause,
   .proc-stage.is-paused .stage-play .ico-pause{ display: none; }
@@ -1850,10 +1873,8 @@
     width: 0;
     background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 60%, transparent), var(--accent));
     box-shadow: 0 0 8px color-mix(in oklab, var(--accent) 60%, transparent);
-    transform-origin: left center;
+    /* width transition is set inline by JS so hover-pause can resume mid-cycle */
   }
-  .stage-rail i.is-running{ animation: rail-fill 6s linear forwards; }
-  @keyframes rail-fill{ from{ width: 0; } to{ width: 100%; } }
 
   /* ============ MOCK 01 · NOTEBOOK ============ */
   .mock-notebook{
@@ -3698,21 +3719,24 @@
 
     let current = 0;
     let paused = false;
+    let hoverPaused = false;
     let autoTimer = null;
+    let railRemaining = 0;           // ms left on the current rail cycle
+    let railStart = 0;               // when the current cycle started
     const AUTOPLAY_MS = 6000;
+
+    function slideScrollLeft(i){
+      const el = slides[i];
+      return el.offsetLeft - (deck.clientWidth - el.clientWidth) / 2;
+    }
 
     function goTo(i, smooth = true){
       i = Math.max(0, Math.min(n - 1, i));
       current = i;
-      const el = slides[i];
-      deck.scrollTo({
-        left: el.offsetLeft - (deck.clientWidth - el.clientWidth) / 2,
-        behavior: smooth ? 'smooth' : 'auto'
-      });
+      deck.scrollTo({ left: slideScrollLeft(i), behavior: smooth ? 'smooth' : 'auto' });
     }
 
     function markActive(){
-      // find the slide closest to deck center
       const deckCenter = deck.scrollLeft + deck.clientWidth / 2;
       let best = 0, bestDist = Infinity;
       slides.forEach((s, i) => {
@@ -3725,25 +3749,65 @@
       dots.forEach((d, i) => d.classList.toggle('on', i === best));
     }
 
-    function restartRail(){
+    // Rail timing — resume from where we left off on hover pause.
+    function startRail(ms){
       if(!rail) return;
-      rail.classList.remove('is-running');
-      void rail.offsetWidth; // force reflow to restart animation
-      if(!paused) rail.classList.add('is-running');
+      railRemaining = ms;
+      railStart = performance.now();
+      rail.style.transition = 'none';
+      rail.style.width = '0%';
+      // force reflow so the transition restart takes effect
+      void rail.offsetWidth;
+      rail.style.transition = 'width ' + ms + 'ms linear';
+      rail.style.width = '100%';
+    }
+    function pauseRail(){
+      if(!rail) return;
+      const elapsed = performance.now() - railStart;
+      railRemaining = Math.max(0, railRemaining - elapsed);
+      // freeze current width
+      const computed = getComputedStyle(rail).width;
+      rail.style.transition = 'none';
+      rail.style.width = computed;
+    }
+    function resumeRail(){
+      if(!rail || railRemaining <= 0) return;
+      railStart = performance.now();
+      // next frame, kick the transition with remaining time
+      requestAnimationFrame(() => {
+        rail.style.transition = 'width ' + railRemaining + 'ms linear';
+        rail.style.width = '100%';
+      });
+    }
+    function resetRail(){
+      if(!rail) return;
+      rail.style.transition = 'none';
+      rail.style.width = '0%';
+      railRemaining = 0;
     }
 
     function scheduleAutoplay(){
       clearTimeout(autoTimer);
-      if(paused) return;
-      restartRail();
+      resetRail();
+      if(paused || hoverPaused) return;
+      startRail(AUTOPLAY_MS);
       autoTimer = setTimeout(() => {
-        const nextIdx = (current + 1) % n;
-        goTo(nextIdx);
+        goTo((current + 1) % n);
       }, AUTOPLAY_MS);
     }
+    function pauseAutoplay(){
+      clearTimeout(autoTimer);
+      pauseRail();
+    }
+    function resumeAutoplay(){
+      if(paused || hoverPaused || railRemaining <= 0) return;
+      resumeRail();
+      autoTimer = setTimeout(() => {
+        goTo((current + 1) % n);
+      }, railRemaining);
+    }
 
-    // Scroll listener — update active, only reset autoplay when slide
-    // actually changes (so the progress rail doesn't jitter mid-animation).
+    // Scroll listener — only reset autoplay when slide actually changes.
     let scrollTicking = false;
     let lastActive = -1;
     deck.addEventListener('scroll', () => {
@@ -3761,41 +3825,62 @@
 
     // Dots
     dots.forEach((dot, i) => {
-      dot.addEventListener('click', () => {
-        goTo(i);
-        paused = false;
-        stage.classList.remove('is-paused');
-      });
+      dot.addEventListener('click', () => { goTo(i); paused = false; stage.classList.remove('is-paused'); });
     });
 
     // Prev / next
-    if(prev) prev.addEventListener('click', () => {
-      goTo((current - 1 + n) % n);
-    });
-    if(next) next.addEventListener('click', () => {
-      goTo((current + 1) % n);
-    });
+    if(prev) prev.addEventListener('click', () => goTo((current - 1 + n) % n));
+    if(next) next.addEventListener('click', () => goTo((current + 1) % n));
 
     // Play / pause
     if(play) play.addEventListener('click', () => {
       paused = !paused;
       stage.classList.toggle('is-paused', paused);
-      if(paused){ clearTimeout(autoTimer); if(rail) rail.classList.remove('is-running'); }
-      else{ scheduleAutoplay(); }
+      if(paused) pauseAutoplay();
+      else { scheduleAutoplay(); }
     });
 
-    // Pause on hover (desktop only) + keyboard
-    stage.addEventListener('mouseenter', () => {
-      if(rail) rail.classList.remove('is-running');
-      clearTimeout(autoTimer);
-    });
-    stage.addEventListener('mouseleave', () => {
-      if(!paused) scheduleAutoplay();
-    });
+    // Hover: pause but keep progress — resume on leave from the same spot.
+    stage.addEventListener('mouseenter', () => { hoverPaused = true; pauseAutoplay(); });
+    stage.addEventListener('mouseleave', () => { hoverPaused = false; resumeAutoplay(); });
+
+    // Keyboard
     stage.addEventListener('keydown', (e) => {
       if(e.key === 'ArrowLeft')  goTo((current - 1 + n) % n);
       if(e.key === 'ArrowRight') goTo((current + 1) % n);
     });
+
+    // --- Drag to scroll with snap on release ---
+    let isDragging = false, dragStartX = 0, dragStartScroll = 0, dragMoved = false;
+    deck.addEventListener('pointerdown', (e) => {
+      // don't drag when user grabs a button inside
+      if(e.target.closest('button, a')) return;
+      isDragging = true;
+      dragMoved = false;
+      dragStartX = e.clientX;
+      dragStartScroll = deck.scrollLeft;
+      deck.style.scrollSnapType = 'none';
+      deck.style.cursor = 'grabbing';
+      deck.setPointerCapture(e.pointerId);
+    });
+    deck.addEventListener('pointermove', (e) => {
+      if(!isDragging) return;
+      const dx = e.clientX - dragStartX;
+      if(Math.abs(dx) > 4) dragMoved = true;
+      deck.scrollLeft = dragStartScroll - dx;
+    });
+    function endDrag(e){
+      if(!isDragging) return;
+      isDragging = false;
+      deck.style.cursor = '';
+      // snap to nearest after releasing
+      markActive();
+      deck.style.scrollSnapType = 'x mandatory';
+      goTo(current);
+    }
+    deck.addEventListener('pointerup', endDrag);
+    deck.addEventListener('pointercancel', endDrag);
+    deck.addEventListener('pointerleave', endDrag);
 
     // Kick off after layout
     requestAnimationFrame(() => {
