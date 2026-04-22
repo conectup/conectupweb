@@ -1,0 +1,10 @@
+{
+  "name": "conectupweb",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sitio web de ConectUp — soluciones tecnológicas a medida.",
+  "scripts": {
+    "dev": "npx --yes http-server . -p 3000 -c-1 -o",
+    "start": "npx --yes http-server . -p 3000 -c-1"
+  }
+}
