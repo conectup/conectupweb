@@ -1242,6 +1242,7 @@
   }
 
   /* Nav CTA button — same ghost glass */
+  /* Match .btn-ghost exactly so the nav CTA reads as the same button family */
   .nav-cta{
     background: color-mix(in oklab, var(--ink) 10%, transparent) !important;
     border: 0 !important;
@@ -1250,11 +1251,14 @@
     box-shadow:
       inset  2px  2px 3px  0 rgba(255,255,255,.85),
       inset -2px -2px 3px  0 rgba(255,255,255,.75),
-      inset  0    0   0   1px rgba(255,255,255,.30),
-      0 4px 12px rgba(0,0,0,.15);
+      inset  4px  4px 10px 0 rgba(255,255,255,.25),
+      inset -4px -4px 10px 0 rgba(255,255,255,.20),
+      inset  0    0   0   1px rgba(255,255,255,.35),
+      0 4px 14px rgba(0,0,0,.15),
+      0 0 0 1px color-mix(in oklab, var(--fg) 8%, transparent);
   }
   [data-theme="light"] .nav-cta{
-    background: rgba(255,255,255,.40) !important;
+    background: rgba(255,255,255,.35) !important;
   }
   /* Hover has to beat the [data-theme] specificity in both modes. */
   [data-theme="light"] .nav-cta:hover,
