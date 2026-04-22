@@ -2252,13 +2252,28 @@
     padding-bottom: 16px;
     border-bottom: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
   }
-  .doc-kv{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-  .doc-kv > div{ display:flex; flex-direction: column; gap: 3px; }
+  .doc-kv{
+    display:flex; gap: 14px; margin-bottom: 18px;
+    padding: 12px 0; flex-wrap: wrap;
+    border-top: 1px solid color-mix(in oklab, var(--fg) 8%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--fg) 8%, transparent);
+  }
+  .doc-kv > div{
+    display:flex; flex-direction: column; gap: 2px;
+    flex: 1 1 auto; min-width: 0;
+  }
+  .doc-kv > div + div{
+    padding-left: 14px;
+    border-left: 1px solid color-mix(in oklab, var(--fg) 8%, transparent);
+  }
   .doc-kv span{
     font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em;
     color: var(--muted-2); text-transform: uppercase;
   }
-  .doc-kv b{ font-size: 14px; font-weight: 500; color: var(--fg); }
+  .doc-kv b{
+    font-size: 13px; font-weight: 500; color: var(--fg);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
   .doc-bars{ display:flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
   .doc-bar{ display:flex; align-items:center; gap: 12px; }
   .doc-bar span{
@@ -2900,7 +2915,7 @@
     <div class="nav-links">
       <a href="#servicios">Servicios</a>
       <a href="#proceso">Cómo trabajamos</a>
-      <a href="#confianza">Clientes</a>
+      <a href="#contacto">Contacto</a>
     </div>
     <div class="nav-actions">
       <div class="toggle-switch" id="themeToggleWrap" title="Cambiar tema">
@@ -3559,18 +3574,18 @@
                   <span class="doc-tag">Propuesta · P-0342</span>
                   <span class="doc-stamp">Aprobado</span>
                 </div>
-                <div class="doc-title">Automatización<br>del proceso de pedidos</div>
+                <div class="doc-title">Automatización del proceso de pedidos</div>
                 <div class="doc-meta">Para: Distribuidor Carmen · Abril 2026</div>
                 <div class="doc-kv">
                   <div><span>Alcance</span><b>4 integraciones + panel</b></div>
-                  <div><span>Plazo</span><b>5 semanas</b></div>
-                  <div><span>Inversión</span><b>12 400 €</b></div>
+                  <div><span>Equipo</span><b>2 personas</b></div>
+                  <div><span>Entregas</span><b>Semanales</b></div>
                 </div>
                 <div class="doc-bars">
-                  <div class="doc-bar"><span>Sem 1 · Descubrimiento</span><i style="--w:100%"></i></div>
-                  <div class="doc-bar"><span>Sem 2–3 · Integraciones</span><i style="--w:90%"></i></div>
-                  <div class="doc-bar"><span>Sem 4 · Panel</span><i style="--w:70%"></i></div>
-                  <div class="doc-bar"><span>Sem 5 · Rollout</span><i style="--w:55%"></i></div>
+                  <div class="doc-bar"><span>Descubrimiento</span><i style="--w:100%"></i></div>
+                  <div class="doc-bar"><span>Integraciones</span><i style="--w:90%"></i></div>
+                  <div class="doc-bar"><span>Panel a medida</span><i style="--w:70%"></i></div>
+                  <div class="doc-bar"><span>Rollout</span><i style="--w:55%"></i></div>
                 </div>
                 <div class="doc-sign">
                   <svg viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
@@ -3956,9 +3971,8 @@
         <h5>Empresa</h5>
         <ul>
           <li><a href="#proceso">Cómo trabajamos</a></li>
-          <li><a href="#confianza">Clientes</a></li>
-          <li><a href="#">Equipo</a></li>
-          <li><a href="#">Carreras</a></li>
+          <li><a href="#confianza">Casos de éxito</a></li>
+          <li><a href="#contacto">Contacto</a></li>
         </ul>
       </div>
       <div>
@@ -3972,7 +3986,6 @@
     </div>
     <div class="foot-bot">
       <span>© 2026 ConectUp — Todos los derechos reservados</span>
-      <span>v2.0 · Crafted with intent</span>
     </div>
   </div>
 </footer>
