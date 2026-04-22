@@ -261,7 +261,21 @@
     font-size: clamp(46px, 7.6vw, 116px);
     line-height: .96; letter-spacing:-.035em; font-weight:500;
     margin: 28px 0 0; max-width: 13ch;
+    position:relative; isolation:isolate;
+    --mx: 50%; --my: 50%;
   }
+  h1.hero-title::before{
+    content:""; position:absolute; inset:-10% -6%; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(280px 180px at var(--mx) var(--my),
+        color-mix(in oklab, var(--accent) 32%, transparent) 0%,
+        color-mix(in oklab, var(--accent) 12%, transparent) 35%,
+        transparent 70%);
+    opacity:0; transition: opacity .5s ease;
+    filter: blur(14px);
+    border-radius: 40px;
+  }
+  h1.hero-title:hover::before{ opacity:1; }
   h1.hero-title .em{ font-family:var(--font-serif); font-style:italic; font-weight:400; color:var(--accent); letter-spacing:-.02em;}
   .hero-sub{
     color:var(--muted); font-size: clamp(16px, 1.35vw, 19px); line-height:1.55;
@@ -411,44 +425,182 @@
   .block-wires path{ fill:none; stroke: color-mix(in oklab, var(--accent) 45%, transparent); stroke-width:1; stroke-dasharray:3 4; animation: wiremove 8s linear infinite;}
   @keyframes wiremove{ to{ stroke-dashoffset:-80;} }
 
-  /* Scene 3 — Webs enteras */
+  /* Scene 3 — Webs enteras (mockup rico + scroll) */
   .browser{
     position:absolute; inset:44px 16px 58px 16px;
     border:1px solid var(--line-strong); border-radius:12px; overflow:hidden;
-    background: color-mix(in oklab, var(--ink) 70%, transparent);
+    background: color-mix(in oklab, var(--ink) 72%, transparent);
     display:flex; flex-direction:column;
+    --brand: var(--accent);
   }
+  .browser.brand-mint { --brand:#0FEFBC; --brand-2:#0BA888; }
+  .browser.brand-lilac{ --brand:#D891D8; --brand-2:#8E3C8E; }
+  .browser.brand-amber{ --brand:#F5B35A; --brand-2:#C07A1E; }
   .browser-bar{
     display:flex; align-items:center; gap:6px; padding:8px 10px;
     border-bottom:1px solid var(--line-strong);
     font-family:var(--font-mono); font-size:10px; color:var(--muted-2);
+    flex:0 0 auto;
   }
   .browser-bar .tl{ width:8px; height:8px; border-radius:999px; background: var(--line-strong); display:inline-block;}
   .browser-bar .url{ margin-left:10px; padding:3px 10px; border-radius:999px; background: color-mix(in oklab, var(--fg) 8%, transparent); }
-  .browser-bar .url .cursor{ display:inline-block; width:1px; height:10px; background:var(--accent); vertical-align:middle; margin-left:2px; animation: blink 1s steps(2) infinite;}
+  .browser-bar .url .cursor{ display:inline-block; width:1px; height:10px; background:var(--brand); vertical-align:middle; margin-left:2px; animation: blink 1s steps(2) infinite;}
   @keyframes blink{ 50%{ opacity:0;} }
-  .browser-body{ position:relative; flex:1; padding:10px 12px; display:flex; flex-direction:column; gap:8px;}
-  .wb{ border-radius:8px; background: color-mix(in oklab, var(--fg) 7%, transparent); opacity:0; transform:translateY(6px); transition: opacity .55s ease, transform .55s cubic-bezier(.2,.7,.2,1);}
-  .scene.is-active .wb.show{ opacity:1; transform:translateY(0);}
-  .wb.hero{ height:34%; background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 18%, transparent), color-mix(in oklab, var(--lilac) 12%, transparent)); position:relative; overflow:hidden;}
-  .wb.hero::after{ content:""; position:absolute; inset:0; background: radial-gradient(60% 80% at 20% 30%, color-mix(in oklab, var(--accent) 25%, transparent), transparent 60%);}
-  .wb.hero .lines{ position:absolute; left:14px; top:14px; right:40%; display:flex; flex-direction:column; gap:6px;}
-  .wb.hero .lines b{ height:8px; border-radius:4px; background: color-mix(in oklab, var(--fg) 65%, transparent); display:block;}
-  .wb.hero .lines b:nth-child(1){ width:80%;}
-  .wb.hero .lines b:nth-child(2){ width:55%; height:6px; background: color-mix(in oklab, var(--fg) 35%, transparent);}
-  .wb.grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; height:20%; background:transparent;}
-  .wb.grid3 > i{ background: color-mix(in oklab, var(--fg) 9%, transparent); border-radius:6px; display:block;}
-  .wb.row{ height:10%; display:flex; gap:6px;}
-  .wb.row > i{ flex:1; background: color-mix(in oklab, var(--fg) 9%, transparent); border-radius:5px; display:block;}
-  .wb.row > i:last-child{ flex:0 0 30%; background: var(--accent); box-shadow:0 0 14px color-mix(in oklab, var(--accent) 40%, transparent);}
 
-  /* Scene indicator */
-  .scene-pills{
-    position:absolute; left:16px; right:16px; bottom:14px; z-index:3;
-    display:flex; justify-content:center; gap:6px;
+  .browser-view{ position:relative; flex:1; overflow:hidden; }
+  .browser-page{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column;
+    transform: translateY(0);
+    transition: transform 3.2s cubic-bezier(.55,0,.2,1);
   }
-  .scene-pills i{ width:22px; height:4px; border-radius:4px; background: var(--line-strong); transition: background .4s ease, width .4s ease;}
-  .scene-pills i.on{ background: var(--accent); width:34px; box-shadow:0 0 8px var(--accent);}
+  .scene.is-active .browser-page.scroll{ transform: translateY(-38%); }
+
+  .wb{
+    border-radius:8px;
+    opacity:0; transform: translateY(10px) scale(.985);
+    transition: opacity .55s ease, transform .6s cubic-bezier(.2,.7,.2,1);
+    flex:0 0 auto; margin: 4px 8px; position:relative; overflow:hidden;
+  }
+  .scene.is-active .wb.show{ opacity:1; transform: translateY(0) scale(1);}
+
+  /* Navbar */
+  .wb.wb-nav{
+    height:28px; display:flex; align-items:center; padding: 0 10px; gap:10px;
+    background: color-mix(in oklab, var(--fg) 5%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+    border-radius:6px;
+  }
+  .wb-nav .logo{ width:16px; height:8px; border-radius:3px; background: var(--brand); box-shadow:0 0 6px var(--brand);}
+  .wb-nav .links{ display:flex; gap:8px; margin-left:auto;}
+  .wb-nav .links i{ width:22px; height:4px; border-radius:3px; background: color-mix(in oklab, var(--fg) 35%, transparent); display:block;}
+  .wb-nav .cta{ width:34px; height:12px; border-radius:999px; background: var(--brand); box-shadow:0 0 8px color-mix(in oklab, var(--brand) 50%, transparent);}
+
+  /* Hero */
+  .wb.wb-hero{
+    height: 150px; display:grid; grid-template-columns: 1.3fr 1fr; gap:10px;
+    padding:14px; align-items:center;
+    background:
+      radial-gradient(60% 80% at 15% 20%, color-mix(in oklab, var(--brand) 28%, transparent), transparent 60%),
+      linear-gradient(135deg, color-mix(in oklab, var(--brand-2,var(--brand)) 18%, transparent), transparent 55%),
+      color-mix(in oklab, var(--fg) 4%, transparent);
+  }
+  .wb-hero .copy{ display:flex; flex-direction:column; gap:6px; }
+  .wb-hero .copy .t1{ height:10px; width:90%; border-radius:4px; background: color-mix(in oklab, var(--fg) 75%, transparent);}
+  .wb-hero .copy .t2{ height:10px; width:65%; border-radius:4px; background: color-mix(in oklab, var(--fg) 75%, transparent);}
+  .wb-hero .copy .t3{ height:6px; width:80%; border-radius:3px; background: color-mix(in oklab, var(--fg) 35%, transparent); margin-top:4px;}
+  .wb-hero .copy .t4{ height:6px; width:70%; border-radius:3px; background: color-mix(in oklab, var(--fg) 35%, transparent);}
+  .wb-hero .copy .btns{ display:flex; gap:6px; margin-top:8px;}
+  .wb-hero .copy .btns i{ display:block; height:16px; width:50px; border-radius:999px;}
+  .wb-hero .copy .btns i:first-child{ background: var(--brand); box-shadow:0 0 10px color-mix(in oklab, var(--brand) 40%, transparent);}
+  .wb-hero .copy .btns i:last-child{ background:transparent; border:1px solid color-mix(in oklab, var(--fg) 35%, transparent);}
+  .wb-hero .art{
+    position:relative; height:100%; min-height:90px;
+    border-radius:8px;
+    background:
+      radial-gradient(55% 70% at 70% 60%, color-mix(in oklab, var(--brand) 55%, transparent), transparent 70%),
+      linear-gradient(160deg, color-mix(in oklab, var(--brand) 25%, transparent), color-mix(in oklab, var(--fg) 15%, transparent));
+    overflow:hidden;
+  }
+  .wb-hero .art::before{
+    content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(20% 30% at 30% 40%, color-mix(in oklab, var(--fg) 28%, transparent), transparent 70%),
+      radial-gradient(18% 26% at 65% 70%, color-mix(in oklab, var(--brand) 65%, transparent), transparent 70%);
+  }
+  .wb-hero .art::after{
+    content:""; position:absolute; left:10%; top:20%; right:20%; bottom:40%;
+    border-radius:50%; border:1px dashed color-mix(in oklab, var(--fg) 30%, transparent);
+    animation: spin 18s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg);} }
+
+  /* Feature cards */
+  .wb.wb-cards{
+    height:70px; display:grid; grid-template-columns: repeat(3,1fr); gap:6px; padding: 0 8px;
+    background:transparent;
+  }
+  .wb-cards .card-m{
+    background: color-mix(in oklab, var(--fg) 7%, transparent);
+    border:1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+    border-radius:8px; padding:8px; display:flex; flex-direction:column; gap:4px;
+  }
+  .wb-cards .card-m .ic{ width:14px; height:14px; border-radius:4px; background: var(--brand); box-shadow:0 0 6px color-mix(in oklab, var(--brand) 45%, transparent);}
+  .wb-cards .card-m .l1{ height:5px; width:80%; background: color-mix(in oklab, var(--fg) 55%, transparent); border-radius:3px; margin-top:2px;}
+  .wb-cards .card-m .l2{ height:4px; width:90%; background: color-mix(in oklab, var(--fg) 25%, transparent); border-radius:3px;}
+  .wb-cards .card-m .l3{ height:4px; width:60%; background: color-mix(in oklab, var(--fg) 25%, transparent); border-radius:3px;}
+
+  /* Gallery row */
+  .wb.wb-gallery{
+    height:60px; display:grid; grid-template-columns: 2fr 1fr 1fr; gap:6px; padding: 0 8px;
+    background:transparent;
+  }
+  .wb-gallery i{
+    display:block; border-radius:8px;
+    background: linear-gradient(135deg, color-mix(in oklab, var(--brand) 35%, transparent), color-mix(in oklab, var(--fg) 14%, transparent));
+    position:relative; overflow:hidden;
+  }
+  .wb-gallery i:nth-child(2){ background: linear-gradient(135deg, color-mix(in oklab, var(--brand-2,var(--brand)) 40%, transparent), color-mix(in oklab, var(--fg) 10%, transparent));}
+  .wb-gallery i::after{ content:""; position:absolute; inset:0; background: linear-gradient(75deg, transparent 40%, color-mix(in oklab, var(--fg) 18%, transparent) 50%, transparent 60%); animation: shimmer 2.8s linear infinite;}
+  @keyframes shimmer{ from{ transform:translateX(-100%);} to{ transform:translateX(100%);} }
+
+  /* Footer CTA */
+  .wb.wb-cta{
+    height:54px; padding:10px; margin: 4px 8px 12px;
+    background: linear-gradient(90deg, color-mix(in oklab, var(--brand) 20%, transparent), color-mix(in oklab, var(--brand-2,var(--brand)) 14%, transparent));
+    border:1px solid color-mix(in oklab, var(--brand) 35%, transparent);
+    border-radius:10px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .wb-cta .t{ display:flex; flex-direction:column; gap:4px; flex:1;}
+  .wb-cta .t i:first-child{ height:7px; width:70%; background: color-mix(in oklab, var(--fg) 75%, transparent); border-radius:4px; display:block;}
+  .wb-cta .t i:last-child { height:5px; width:45%; background: color-mix(in oklab, var(--fg) 40%, transparent); border-radius:3px; display:block;}
+  .wb-cta .btn-m{ width:60px; height:22px; border-radius:999px; background: var(--brand); box-shadow:0 0 12px color-mix(in oklab, var(--brand) 50%, transparent);}
+
+  /* Scene indicator — clickable */
+  .scene-pills{
+    position:absolute; left:16px; right:16px; bottom:14px; z-index:4;
+    display:flex; justify-content:center; gap:8px;
+  }
+  .scene-pills button{
+    width:28px; height:6px; border-radius:4px;
+    background: var(--line-strong); border:0; padding:0; cursor:pointer;
+    transition: background .4s ease, width .4s ease, box-shadow .4s ease;
+  }
+  .scene-pills button:hover{ background: color-mix(in oklab, var(--fg) 35%, transparent); }
+  .scene-pills button.on{ background: var(--accent); width:40px; box-shadow:0 0 10px var(--accent);}
+  .scene-pills button:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+  /* Arrow navigation */
+  .scene-nav{
+    position:absolute; top:50%; z-index:4; transform:translateY(-50%);
+    width:36px; height:36px; border-radius:999px;
+    display:grid; place-items:center; cursor:pointer;
+    background: color-mix(in oklab, var(--ink) 70%, transparent);
+    border:1px solid var(--line-strong); color:var(--fg);
+    opacity:0; transition: opacity .35s ease, background .2s, transform .2s, border-color .2s;
+    backdrop-filter: blur(6px);
+  }
+  .scene-nav:hover{ background: color-mix(in oklab, var(--accent) 30%, var(--ink)); border-color: var(--accent); }
+  .scene-nav:active{ transform: translateY(-50%) scale(.94); }
+  .scene-nav:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; opacity:1;}
+  .scene-nav.prev{ left:10px; }
+  .scene-nav.next{ right:10px; }
+  .viz:hover .scene-nav,
+  .viz:focus-within .scene-nav{ opacity:.92; }
+  .scene-nav svg{ width:16px; height:16px; }
+
+  /* Auto-progress ring on the active pill */
+  .scene-pills button.on::after{
+    content:""; position:absolute; inset:0; border-radius:inherit;
+    background: linear-gradient(to right, color-mix(in oklab, var(--fg) 25%, transparent), color-mix(in oklab, var(--fg) 25%, transparent));
+    transform-origin:left; transform: scaleX(0);
+    animation: pill-progress var(--dur,7s) linear forwards;
+    pointer-events:none;
+  }
+  .scene-pills[data-paused="true"] button.on::after{ animation-play-state: paused; }
+  @keyframes pill-progress{ from{ transform:scaleX(0);} to{ transform:scaleX(1);} }
+  .scene-pills button{ position:relative; overflow:hidden; }
 
   @media (prefers-reduced-motion: reduce){
     .scene{ transition:none; }
@@ -601,9 +753,9 @@
     box-shadow: 0 10px 30px -12px rgba(0,0,0,.35);
   }
   .note:hover{ transform: rotate(0deg) translateY(-4px);}
-  .note:nth-child(1){ background: var(--paper); --r:-1.5deg;}
-  .note:nth-child(2){ background: var(--mint); --r:1deg;}
-  .note:nth-child(3){ background: var(--lilac); --r:-.8deg;}
+  .note:nth-child(1){ background:#DCFBEF; --r:-1.5deg;}
+  .note:nth-child(2){ background:#0FEFBC; --r:1deg;}
+  .note:nth-child(3){ background:#D891D8; --r:-.8deg;}
   .note .who{ font-family:var(--font-display); font-style:normal; font-size:13px; letter-spacing:.02em; color:rgba(10,10,15,.7); margin-top:22px;}
   .note .who b{ color:#0a0a0f; font-weight:500;}
 
@@ -957,21 +1109,52 @@
 
         <!-- SCENE 3 — Webs enteras -->
         <div class="scene" data-scene="3">
-          <div class="browser">
+          <div class="browser brand-mint" id="webBrowser">
             <div class="browser-bar">
               <span class="tl"></span><span class="tl"></span><span class="tl"></span>
               <span class="url" id="browserUrl">https://tu-marca.com<span class="cursor"></span></span>
             </div>
-            <div class="browser-body">
-              <div class="wb hero"><div class="lines"><b></b><b></b></div></div>
-              <div class="wb grid3"><i></i><i></i><i></i></div>
-              <div class="wb row"><i></i><i></i><i></i></div>
+            <div class="browser-view">
+              <div class="browser-page" id="browserPage">
+                <div class="wb wb-nav">
+                  <span class="logo"></span>
+                  <span class="links"><i></i><i></i><i></i></span>
+                  <span class="cta"></span>
+                </div>
+                <div class="wb wb-hero">
+                  <div class="copy">
+                    <span class="t1"></span><span class="t2"></span>
+                    <span class="t3"></span><span class="t4"></span>
+                    <span class="btns"><i></i><i></i></span>
+                  </div>
+                  <div class="art"></div>
+                </div>
+                <div class="wb wb-cards">
+                  <div class="card-m"><span class="ic"></span><span class="l1"></span><span class="l2"></span><span class="l3"></span></div>
+                  <div class="card-m"><span class="ic"></span><span class="l1"></span><span class="l2"></span><span class="l3"></span></div>
+                  <div class="card-m"><span class="ic"></span><span class="l1"></span><span class="l2"></span><span class="l3"></span></div>
+                </div>
+                <div class="wb wb-gallery"><i></i><i></i><i></i></div>
+                <div class="wb wb-cta">
+                  <div class="t"><i></i><i></i></div>
+                  <span class="btn-m"></span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
+        <button class="scene-nav prev" id="sceneNavPrev" aria-label="Animación anterior" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+        </button>
+        <button class="scene-nav next" id="sceneNavNext" aria-label="Siguiente animación" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+
         <div class="scene-pills" id="scenePills">
-          <i class="on"></i><i></i><i></i>
+          <button class="on" type="button" aria-label="Workflows conectados"></button>
+          <button type="button" aria-label="Sistemas a medida"></button>
+          <button type="button" aria-label="Webs enteras"></button>
         </div>
       </div>
 
@@ -1350,20 +1533,38 @@
     });
   }, 600);
 
+  // ---------- Hero title hover glow ----------
+  (function heroTitleGlow(){
+    const t = document.querySelector('h1.hero-title');
+    if(!t) return;
+    t.addEventListener('pointermove', (e)=>{
+      const r = t.getBoundingClientRect();
+      t.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+      t.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100) + '%');
+    });
+  })();
+
   // ---------- Hero scene cycle ----------
   (function heroScenes(){
     const viz = document.getElementById('viz');
     if(!viz) return;
     const scenes = viz.querySelectorAll('.scene');
-    const pills  = viz.querySelectorAll('.scene-pills i');
+    const pills  = viz.querySelectorAll('.scene-pills button');
+    const pillsWrap = viz.querySelector('#scenePills');
     const hdrDots = viz.querySelectorAll('.viz-hdr .dots i');
     const labelEl = viz.querySelector('#vizLabel');
     const labels  = JSON.parse(labelEl.dataset.labels || '[]');
+    const prevBtn = viz.querySelector('#sceneNavPrev');
+    const nextBtn = viz.querySelector('#sceneNavNext');
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const SCENE_DUR = 7000;
+    const PAUSE_AFTER_INTERACTION = 15000;
 
     let current = 0;
     let rafs = [];
     let timers = [];
+    let autoTimer = null;
+    let pauseUntil = 0;
     const clearTimers = ()=>{ timers.forEach(clearTimeout); timers = []; rafs.forEach(cancelAnimationFrame); rafs = []; };
 
     // Scene 1 — animate packets along paths + pulse end node
@@ -1437,28 +1638,45 @@
       timers.push(setTimeout(sweep, 900));
     }
 
-    // Scene 3 — build website section by section + typing url
+    // Scene 3 — build website section by section + scroll + brand swap
     function runScene3(){
-      const wbs = scenes[2].querySelectorAll('.wb');
+      const browser = scenes[2].querySelector('#webBrowser');
+      const page    = scenes[2].querySelector('#browserPage');
+      const wbs = page.querySelectorAll('.wb');
       const url = scenes[2].querySelector('#browserUrl');
-      const urls = ['tu-marca.com','tu-tienda.com','tu-app.com'];
-      const cursor = '<span class="cursor"></span>';
-      wbs.forEach(w=> w.classList.remove('show'));
-      wbs.forEach((w,i)=> timers.push(setTimeout(()=> w.classList.add('show'), 350 + i*450)));
+      const brands = [
+        { cls:'brand-mint',  url:'tu-marca.com'  },
+        { cls:'brand-lilac', url:'tu-tienda.com' },
+        { cls:'brand-amber', url:'tu-app.com'    }
+      ];
+      const pick = brands[Math.floor(Math.random()*brands.length)];
 
-      // type URL
-      const pick = urls[Math.floor(Math.random()*urls.length)];
+      browser.classList.remove('brand-mint','brand-lilac','brand-amber');
+      browser.classList.add(pick.cls);
+
+      // Reset: hide sections + scroll top
+      wbs.forEach(w=> w.classList.remove('show'));
+      page.classList.remove('scroll');
+
+      // Build sections staggered
+      wbs.forEach((w,i)=> timers.push(setTimeout(()=> w.classList.add('show'), 250 + i*380)));
+
+      // Scroll down once everything is built
+      timers.push(setTimeout(()=> page.classList.add('scroll'), 250 + wbs.length*380 + 600));
+
+      // Type URL
+      const cursor = '<span class="cursor"></span>';
       let ch = 0;
       url.innerHTML = 'https://' + cursor;
       const type = ()=>{
         if(!scenes[2].classList.contains('is-active')) return;
-        if(ch <= pick.length){
-          url.innerHTML = 'https://' + pick.slice(0, ch) + cursor;
+        if(ch <= pick.url.length){
+          url.innerHTML = 'https://' + pick.url.slice(0, ch) + cursor;
           ch++;
-          timers.push(setTimeout(type, 90));
+          timers.push(setTimeout(type, 85));
         }
       };
-      timers.push(setTimeout(type, 600));
+      timers.push(setTimeout(type, 500));
     }
 
     function setScene(n){
@@ -1482,9 +1700,39 @@
       else if(n===2) runScene3();
     }
 
+    function scheduleAuto(delay){
+      clearTimeout(autoTimer);
+      if(prefersReduced) return;
+      autoTimer = setTimeout(()=>{
+        setScene((current+1) % scenes.length);
+        scheduleAuto(SCENE_DUR);
+      }, delay);
+    }
+
+    function onInteraction(n){
+      setScene(n);
+      pauseUntil = Date.now() + PAUSE_AFTER_INTERACTION;
+      if(pillsWrap) pillsWrap.setAttribute('data-paused','true');
+      clearTimeout(autoTimer);
+      autoTimer = setTimeout(()=>{
+        if(pillsWrap) pillsWrap.setAttribute('data-paused','false');
+        setScene((current+1) % scenes.length);
+        scheduleAuto(SCENE_DUR);
+      }, PAUSE_AFTER_INTERACTION);
+    }
+
+    if(prevBtn) prevBtn.addEventListener('click', ()=> onInteraction((current - 1 + scenes.length) % scenes.length));
+    if(nextBtn) nextBtn.addEventListener('click', ()=> onInteraction((current + 1) % scenes.length));
+    pills.forEach((p,i)=> p.addEventListener('click', ()=> onInteraction(i)));
+
+    // Keyboard navigation when viz has focus
+    viz.addEventListener('keydown', (e)=>{
+      if(e.key === 'ArrowLeft')  onInteraction((current - 1 + scenes.length) % scenes.length);
+      if(e.key === 'ArrowRight') onInteraction((current + 1) % scenes.length);
+    });
+
     setScene(0);
-    if(prefersReduced) return;
-    setInterval(()=> setScene((current+1) % scenes.length), 7000);
+    scheduleAuto(SCENE_DUR);
   })();
 
   // ---------- Nav hide on scroll down ----------
