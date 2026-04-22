@@ -1875,7 +1875,10 @@
   /* Mockup side */
   .ps-mock{
     width: 100%; align-self: center; min-width: 0;
+    max-height: 100%; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: center;
   }
+  .ps-mock > *{ width: 100%; }
 
   /* Bottom rail showing autoplay progress */
   .stage-rail{
@@ -2059,7 +2062,7 @@
   /* ============ MOCK 04 · DASHBOARD ============ */
   .mock-dash{
     background: color-mix(in oklab, var(--ink-2) 90%, var(--fg) 5%);
-    border-radius: 14px; padding: 20px;
+    border-radius: 14px; padding: 16px;
     border: 1px solid color-mix(in oklab, var(--fg) 12%, transparent);
     box-shadow:
       0 20px 50px -16px rgba(0,0,0,.5),
@@ -2067,7 +2070,8 @@
       inset -2px -2px 3px rgba(255,255,255,.15);
     backdrop-filter: blur(12px) saturate(180%);
     -webkit-backdrop-filter: blur(12px) saturate(180%);
-    display: flex; flex-direction: column; gap: 14px;
+    display: flex; flex-direction: column; gap: 12px;
+    overflow: hidden;
   }
   [data-theme="light"] .mock-dash{ background: rgba(255,255,255,.7); }
   .md-hd{ display:flex; justify-content:space-between; align-items:flex-start; gap: 12px; }
@@ -2076,8 +2080,8 @@
     letter-spacing: .06em; text-transform: uppercase;
   }
   .md-val{
-    font-size: 28px; font-weight: 500; letter-spacing: -.02em;
-    color: var(--fg); margin-top: 4px;
+    font-size: 24px; font-weight: 500; letter-spacing: -.02em;
+    color: var(--fg); margin-top: 2px;
     display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px;
   }
   .md-val em.up{
@@ -2094,17 +2098,17 @@
     padding: 5px 10px; border-radius: 999px;
     background: color-mix(in oklab, var(--fg) 6%, transparent);
   }
-  .md-chart{ width:100%; height: 100px; color: var(--muted-2);
+  .md-chart{ width:100%; height: 70px; color: var(--muted-2);
     filter: drop-shadow(0 0 10px color-mix(in oklab, var(--accent) 40%, transparent)); }
-  .md-grid{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: auto; }
+  .md-grid{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
   .md-cell{
-    padding: 12px 14px; border-radius: 10px;
+    padding: 10px 12px; border-radius: 10px;
     background: color-mix(in oklab, var(--fg) 4%, transparent);
-    display:flex; flex-direction: column; gap: 2px;
+    display:flex; flex-direction: column; gap: 1px;
   }
   .md-cell span{ font-family: var(--font-mono); font-size: 9px; color: var(--muted-2); letter-spacing: .08em; text-transform: uppercase; }
-  .md-cell b{ font-size: 20px; font-weight: 500; letter-spacing: -.02em; color: var(--fg); }
-  .md-cell em{ font-family: var(--font-mono); font-size: 10px; color: var(--muted); font-style: normal; opacity:.85; }
+  .md-cell b{ font-size: 18px; font-weight: 500; letter-spacing: -.02em; color: var(--fg); }
+  .md-cell em{ font-family: var(--font-mono); font-size: 9px; color: var(--muted); font-style: normal; opacity:.85; }
 
   /* Tablet & mobile */
   @media (max-width: 900px){
