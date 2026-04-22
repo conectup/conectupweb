@@ -2541,10 +2541,8 @@
     border:1px solid var(--line-strong); border-radius:28px;
     padding: clamp(40px, 7vw, 96px);
     position:relative; overflow:hidden;
-    background:
-      radial-gradient(60% 120% at 100% 0%, color-mix(in oklab, var(--accent) 16%, transparent), transparent 60%),
-      radial-gradient(60% 120% at 0% 100%, color-mix(in oklab, var(--lilac) 14%, transparent), transparent 60%),
-      var(--ink-2);
+    /* Background is defined by the later .cta liquid-glass rule (mint
+       only) — keeping only structural props here. */
   }
   .cta-grid{
     display:grid; grid-template-columns: 1.3fr .7fr; gap: clamp(30px, 5vw, 60px); align-items:end;
@@ -3871,7 +3869,7 @@
         <p class="cta-sub">Cuéntanos qué te está costando más tiempo del que debería. Te contestamos en menos de 24 horas laborables con una primera idea — sin humo y sin presentaciones.</p>
         <ul class="cta-facts">
           <li><span class="cta-fact-dot"></span>Sin compromiso, sin presentaciones</li>
-          <li><span class="cta-fact-dot"></span>Si no podemos ayudarte, te decimos quién sí</li>
+          <li><span class="cta-fact-dot"></span>Respuesta clara: qué, cómo y cuánto</li>
         </ul>
       </div>
 
