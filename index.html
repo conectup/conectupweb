@@ -1335,6 +1335,100 @@
   }
   @keyframes chk-spin{ to{ transform: rotate(360deg); } }
 
+  /* --- Before/After comparison card --- */
+  .card-hd-v2 .hd-savings{
+    display:inline-flex; align-items:center;
+    padding:6px 11px; border-radius:999px;
+    font-family: var(--font-mono); font-size:11px; font-weight:600;
+    color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 16%, transparent);
+    border: 1px solid color-mix(in oklab, var(--accent) 32%, transparent);
+    letter-spacing:.02em;
+  }
+
+  .ba-grid{
+    margin-top: 18px;
+    display:grid; grid-template-columns: 1fr auto 1fr;
+    gap: 8px; align-items:stretch;
+  }
+  .ba-col{
+    padding: 14px; border-radius: 14px;
+    background: color-mix(in oklab, var(--fg) 4%, transparent);
+    display:flex; flex-direction:column; gap: 10px;
+  }
+  .ba-before{ background: color-mix(in oklab, var(--fg) 3%, transparent); }
+  .ba-after {
+    background: linear-gradient(160deg,
+      color-mix(in oklab, var(--accent) 14%, transparent),
+      color-mix(in oklab, var(--accent) 4%, transparent));
+    border: 1px solid color-mix(in oklab, var(--accent) 22%, transparent);
+  }
+
+  .ba-col-hd{
+    display:flex; justify-content:space-between; align-items:center;
+    padding-bottom: 8px;
+    border-bottom: 1px solid color-mix(in oklab, var(--fg) 8%, transparent);
+  }
+  .ba-tag{
+    font-family: var(--font-mono); font-size:10px; letter-spacing:.08em;
+    text-transform:uppercase;
+    color: var(--muted-2);
+    padding: 3px 8px; border-radius:999px;
+    background: color-mix(in oklab, var(--fg) 6%, transparent);
+  }
+  .ba-tag-after{
+    color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 18%, transparent);
+  }
+  .ba-time{
+    font-family: var(--font-mono); font-size:11px;
+    color: var(--fg); font-weight:500; letter-spacing:.02em;
+  }
+  .ba-after .ba-time{ color: var(--accent); }
+
+  .ba-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap: 6px; }
+  .ba-list li{
+    display:flex; align-items:center; gap: 10px;
+    font-size: 12px; color: var(--fg); line-height: 1.4;
+    padding: 4px 0;
+  }
+  .ba-before .ba-list li{ color: var(--muted); }
+
+  .ba-step{
+    display:inline-grid; place-items:center;
+    width: 20px; height: 20px; border-radius:50%;
+    font-family: var(--font-mono); font-size: 9px; font-weight:500;
+    color: var(--muted-2);
+    background: color-mix(in oklab, var(--fg) 8%, transparent);
+    flex:0 0 auto;
+  }
+  .ba-step-ok{
+    display:inline-grid; place-items:center;
+    width: 20px; height: 20px; border-radius:50%;
+    color: var(--accent-ink, #041411);
+    background: var(--accent);
+    box-shadow: 0 0 8px color-mix(in oklab, var(--accent) 50%, transparent);
+    flex:0 0 auto;
+  }
+  .ba-step-ok svg{ width: 11px; height: 11px; }
+  .ba-more{
+    font-family: var(--font-mono); font-size: 10px; color: var(--muted-2);
+    padding-left: 30px; font-style: italic;
+    opacity:.7;
+  }
+
+  .ba-arrow{
+    display:flex; align-items:center; justify-content:center;
+    color: var(--accent);
+    opacity:.6;
+    padding: 0 6px;
+  }
+  .ba-arrow svg{ width: 28px; height: auto; }
+  @media (max-width: 560px){
+    .ba-grid{ grid-template-columns: 1fr; }
+    .ba-arrow{ transform: rotate(90deg); padding: 4px 0; }
+  }
+
   /* --- Dashboard card: hero KPI + grid + bars --- */
   .card-hd-v2 .hd-tabs{
     display:inline-flex; align-items:center; gap:6px;
@@ -2348,15 +2442,53 @@
           <span class="sticker mint" style="width:70px; height:70px; top:-20px; left:20px;"></span>
           <span class="sticker lilac" style="width:60px; height:60px; bottom:-20px; right:30px;"></span>
           <div class="feat-card lg">
-            <div class="feat-card-hd">
-              <span>Antes · después</span>
-              <span class="dots"><i></i><i></i><i></i></span>
+            <div class="feat-card-hd card-hd-v2">
+              <div class="hd-left">
+                <span class="hd-title">Proceso de pedidos</span>
+                <span class="hd-meta">Cliente real · distribuidor de alimentación</span>
+              </div>
+              <span class="hd-savings">−68% tiempo</span>
             </div>
-            <div class="vlist">
-              <div class="vrow pending"><span class="chk"></span><span>12 pasos manuales por pedido</span></div>
-              <div class="vrow pending"><span class="chk"></span><span>3 herramientas distintas</span></div>
-              <div class="vrow"><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9"/></svg></span><span>4 pasos automatizados</span></div>
-              <div class="vrow"><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9"/></svg></span><span>Un único flujo, claro</span></div>
+
+            <div class="ba-grid">
+              <div class="ba-col ba-before">
+                <div class="ba-col-hd">
+                  <span class="ba-tag">Antes</span>
+                  <span class="ba-time">42 min / pedido</span>
+                </div>
+                <ul class="ba-list">
+                  <li><span class="ba-step">01</span>Anotar pedido por teléfono</li>
+                  <li><span class="ba-step">02</span>Pasarlo a Excel manualmente</li>
+                  <li><span class="ba-step">03</span>Enviar al almacén por WhatsApp</li>
+                  <li><span class="ba-step">04</span>Crear factura en el programa</li>
+                  <li class="ba-more">+ 8 pasos más</li>
+                </ul>
+              </div>
+
+              <div class="ba-arrow" aria-hidden="true">
+                <svg viewBox="0 0 40 120" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 20 C 30 40, 30 80, 10 100"/>
+                  <path d="M4 94 L10 100 L16 94"/>
+                </svg>
+              </div>
+
+              <div class="ba-col ba-after">
+                <div class="ba-col-hd">
+                  <span class="ba-tag ba-tag-after">Después</span>
+                  <span class="ba-time">13 min / pedido</span>
+                </div>
+                <ul class="ba-list">
+                  <li><span class="ba-step-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9"/></svg></span>Pedido entra por formulario web</li>
+                  <li><span class="ba-step-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9"/></svg></span>Almacén lo recibe al instante</li>
+                  <li><span class="ba-step-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9"/></svg></span>Factura se crea sola</li>
+                  <li><span class="ba-step-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9"/></svg></span>Cliente recibe confirmación</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card-foot">
+              <span class="foot-dot"></span>
+              <span class="foot-txt">Rediseñado en 3 semanas · <b>9 h/semana</b> recuperadas por el equipo</span>
             </div>
           </div>
         </div>
