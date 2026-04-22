@@ -2955,6 +2955,180 @@
     .feat-visual *, .feat-visual.in *{ animation: none !important; transition: none !important;}
   }
 
+  /* ============================================================
+     RESPONSIVE FINAL PASS · tablet ≤900px + phone ≤640px + ≤420px
+     Consolidates all mobile-specific fixes to make sure every
+     section reads well on small viewports.
+     ============================================================ */
+
+  /* Tablet and below */
+  @media (max-width: 900px){
+    :root{
+      --maxw: 100%;
+      --gut: clamp(16px, 5vw, 28px);
+    }
+    .sect{ padding: 56px 0; }
+  }
+
+  /* Phone */
+  @media (max-width: 640px){
+    /* Global tweaks */
+    html{ -webkit-text-size-adjust: 100%; }
+    body{ overflow-x: hidden; }
+    :root{ --gut: 18px; }
+    .sect{ padding: 44px 0; }
+
+    /* Logo smaller in nav on phone */
+    .logo-mark{ height: 32px; }
+    .nav .wrap{ padding: 0 16px; }
+    .nav-row{ height: 58px; }
+    .nav-cta{
+      padding: 8px 12px !important;
+      font-size: 12px !important;
+      gap: 6px;
+    }
+    .toggle-switch{ transform: scale(.9); transform-origin: right center; }
+
+    /* Hero */
+    .hero{ padding-top: 90px; padding-bottom: 40px; }
+    .hero-inner{ grid-template-columns: 1fr !important; gap: 30px !important; }
+    h1.hero-title{
+      font-size: clamp(38px, 10vw, 52px);
+      margin-top: 16px; max-width: 100%;
+    }
+    .hero-sub{ font-size: 15px; max-width: 100%; margin-top: 18px; }
+    .hero-ctas{ margin-top: 26px; gap: 10px; }
+    .hero-ctas .btn{ padding: 13px 18px; font-size: 14px; }
+    .hero-meta{ gap: 20px; }
+    .viz{ aspect-ratio: auto; min-height: 380px; }
+
+    /* Hero viz — inner controls */
+    .viz-hdr{ left: 14px; right: 14px; top: 12px; font-size: 10px; }
+    .scene-nav{ width: 32px; height: 32px; }
+    .scene-nav.prev{ left: 6px; }
+    .scene-nav.next{ right: 6px; }
+    .scene-nav svg{ width: 13px; height: 13px; }
+    .scene-pills{ left: 14px; right: 14px; bottom: 10px; }
+
+    /* KPIs: stack vertical */
+    .kpis{ grid-template-columns: 1fr !important; gap: 10px !important; }
+    .kpi.lg{ min-height: auto; padding: 16px 18px; flex-direction: row; align-items: baseline; justify-content: space-between; gap: 14px; }
+    .kpi .n{ font-size: 28px; }
+    .kpi .l{ margin-top: 0; text-align: right; max-width: 60%; }
+
+    /* Section header */
+    .sect-hd{ grid-template-columns: 1fr; gap: 8px; margin-bottom: 28px; }
+    .sect-hd h2{ font-size: clamp(28px, 7.5vw, 38px); max-width: 100%; }
+    .sect-hd p{ font-size: 15px; }
+
+    /* Feature rows */
+    .feat-row{ grid-template-columns: 1fr !important; gap: 32px !important; margin-bottom: 70px !important; }
+    .feat-row.reverse .feat-copy{ order: 1; }
+    .feat-row.reverse .feat-visual{ order: 2; }
+    .feat-copy h3{ font-size: clamp(28px, 7.5vw, 36px); }
+    .feat-copy p{ font-size: 15px; }
+    .feat-visual{ aspect-ratio: auto; min-height: 300px; }
+    .feat-card{ padding: 20px; }
+    .sticker{ display: none; }
+
+    /* Task / integrations / dashboard / before-after cards */
+    .card-hd-v2{ flex-direction: column; align-items: flex-start; gap: 10px; }
+    .card-hd-v2 .hd-badge,
+    .card-hd-v2 .hd-pulse,
+    .card-hd-v2 .hd-savings,
+    .card-hd-v2 .hd-tabs{ align-self: flex-start; }
+    .vlist-v2 .vrow{ grid-template-columns: auto 1fr auto; gap: 10px; padding: 10px 12px; }
+    .vlist-v2 .vrow-title{ font-size: 13px; }
+    .int-row{ grid-template-columns: auto 1fr; gap: 10px; padding: 10px 12px; }
+    .int-flow, .int-count{ display: none; }
+    .dash-hero{ grid-template-columns: 1fr; gap: 10px; padding: 14px; }
+    .dash-spark{ width: 100%; height: 56px; }
+    .dash-grid{ grid-template-columns: 1fr 1fr; gap: 8px; }
+    .dash-num{ font-size: 24px; }
+    .ba-grid{ grid-template-columns: 1fr; gap: 10px; }
+    .ba-arrow{ transform: rotate(90deg); padding: 2px 0; }
+    .ba-arrow svg{ width: 22px; }
+
+    /* Process deck */
+    .stage-hd{ gap: 12px; padding: 0 2px; margin-bottom: 18px; flex-wrap: wrap; }
+    .stage-dots{ gap: 5px; order: 2; width: 100%; justify-content: center; }
+    .sd-item{ padding: 7px 10px; font-size: 10px; }
+    .sd-item.on span{ display: none !important; }
+    .stage-ctrls{ order: 1; width: 100%; justify-content: center; }
+    .stage-btn{ width: 38px; height: 38px; }
+    .proc-deck{
+      padding: 20px 6%;
+      scroll-padding: 0 6%;
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 4%, #000 96%, transparent 100%);
+              mask-image: linear-gradient(to right, transparent 0, #000 4%, #000 96%, transparent 100%);
+    }
+    .proc-slide{
+      flex: 0 0 88vw;
+      padding: 22px;
+      gap: 18px;
+    }
+    .ps-copy h3{ font-size: clamp(26px, 7vw, 34px); }
+    .ps-copy p{ font-size: 13px; }
+
+    /* Mini-mocks */
+    .mock-notebook{ padding: 18px 18px 18px 32px; font-size: 11px; min-height: auto; }
+    .nb-page h5{ font-size: 16px; }
+    .mock-doc, .mock-dash{ padding: 16px; font-size: 11px; }
+    .doc-title{ font-size: 20px; }
+    .doc-kv{ gap: 10px; }
+    .doc-kv > div + div{ padding-left: 10px; }
+    .doc-kv b{ font-size: 12px; }
+    .mock-ide{ font-size: 9px; }
+    .ide-code{ font-size: 10px; line-height: 1.5; }
+
+    /* Reviews */
+    .rv-hero{ grid-template-columns: 1fr !important; padding: 28px 22px !important; gap: 24px !important; }
+    .rv-quote p{ font-size: 24px; line-height: 1.3; }
+    .rv-meta{ gap: 12px; }
+    .rv-sep{ display: none; }
+    .rv-hero-kpi{ padding: 18px; }
+    .rv-kpi-value{ font-size: 56px; }
+    .rv-grid{ grid-template-columns: 1fr !important; gap: 14px; }
+    .rv-card-span{ grid-column: auto; }
+    .rv-card{ padding: 22px; }
+    .rv-text{ font-size: 16px; }
+
+    /* CTA */
+    .cta{ padding: 36px 24px !important; border-radius: 20px; }
+    .cta-inner{ grid-template-columns: 1fr; gap: 30px; }
+    .cta h2{ font-size: clamp(34px, 9vw, 48px); }
+    .cta-sub{ font-size: 15px; }
+    .cta-form{ padding: 22px; }
+    .cta-field input, .cta-field textarea{ font-size: 15px; }
+
+    /* Workflow viz */
+    .wf-toast{ font-size: 9px; padding: 5px 8px; }
+
+    /* Tweaks panel */
+    .tweaks{ max-width: 85vw; right: 16px; bottom: 16px; }
+
+    /* Footer */
+    .foot{ grid-template-columns: 1fr !important; gap: 24px; }
+    .foot h5{ font-size: 12px; }
+    .foot-bot{
+      flex-direction: column; align-items: flex-start;
+      gap: 10px; margin-top: 30px; padding-top: 18px;
+      font-size: 10px;
+    }
+  }
+
+  /* Very small phones */
+  @media (max-width: 420px){
+    h1.hero-title{ font-size: clamp(32px, 11vw, 44px); }
+    .sect-hd h2, .cta h2, .feat-copy h3, .ps-copy h3{
+      font-size: clamp(24px, 8vw, 32px);
+    }
+    .hero-ctas{ flex-direction: column; align-items: stretch; }
+    .hero-ctas .btn{ justify-content: center; width: 100%; }
+    .proc-slide{ flex: 0 0 92vw; padding: 18px; }
+    .dash-grid{ grid-template-columns: 1fr; }
+  }
+
 </style>
 </head>
 <body data-theme="dark" data-accent="mint" data-density="comfortable">
