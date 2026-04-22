@@ -130,19 +130,22 @@
   }
   .logo{ display:flex; align-items:center; gap:10px; font-weight:500; letter-spacing:-.01em; font-size:18px}
   .logo-mark{
-    width:28px; height:28px; position:relative;
+    width:40px; height:40px; position:relative;
     display:inline-flex; align-items:center; justify-content:center;
+    flex: 0 0 auto;
   }
   .logo-mark svg,
   .logo-mark img{
     width:100%; height:100%; display:block;
     object-fit: contain;
   }
-  /* In light theme the logo is a dark mark on a light bg — keep as-is. In
-     dark theme we invert brightness so a dark PNG mark reads white. */
-  [data-theme="dark"] .logo-mark img{
-    filter: brightness(0) invert(1);
-  }
+  /* Two image variants: light-mode mark (default) and dark-mode mark with
+     the arrow kept green. Only one is visible at a time via data-theme. */
+  .logo-mark .logo-dark{ display: none; }
+  [data-theme="dark"] .logo-mark .logo-light{ display: none; }
+  [data-theme="dark"] .logo-mark .logo-dark { display: block; }
+  /* Align mark with the wordmark baseline */
+  .logo{ align-items: center; gap: 12px; font-size: 20px; letter-spacing: -.015em; }
   .nav-links{ display:flex; gap:32px; font-size:14px; color:var(--muted)}
   .nav-links a{ position:relative; transition:color .2s}
   .nav-links a:hover{ color:var(--fg) }
@@ -2915,7 +2918,8 @@
   <div class="wrap nav-row">
     <a class="logo" href="#">
       <span class="logo-mark">
-        <img src="logomini.png" alt="ConectUp" width="28" height="28">
+        <img class="logo-light" src="logomini.png"      alt="ConectUp" width="40" height="40">
+        <img class="logo-dark"  src="logomini-dark.png" alt=""          width="40" height="40" aria-hidden="true">
       </span>
       <span>ConectUp</span>
     </a>
@@ -3953,7 +3957,8 @@
       <div>
         <a class="logo" href="#">
           <span class="logo-mark">
-            <img src="logomini.png" alt="ConectUp" width="28" height="28">
+            <img class="logo-light" src="logomini.png"      alt="ConectUp" width="40" height="40">
+        <img class="logo-dark"  src="logomini-dark.png" alt=""          width="40" height="40" aria-hidden="true">
           </span>
           <span>ConectUp</span>
         </a>
