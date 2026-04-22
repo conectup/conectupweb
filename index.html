@@ -154,6 +154,8 @@
   }
   .toggle-switch:hover .switch-label::after{ opacity:.55 }
   .toggle-switch .checkbox{ position:absolute; opacity:0; pointer-events:none; }
+  .toggle-switch .switch-label{ outline: none; }
+  .toggle-switch .checkbox:focus{ outline: none; }
   .toggle-switch .slider{
     position:absolute; inset:0; border-radius:inherit;
     transition: background-color .55s cubic-bezier(.8,0,.2,1);
@@ -176,8 +178,7 @@
                 0 2px 8px color-mix(in oklab, #000 35%, transparent);
   }
   .toggle-switch:focus-within .switch-label{
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 30%, transparent);
+    border-color: color-mix(in oklab, var(--fg) 20%, transparent);
   }
   .toggle-switch .switch-label:active .slider::before{ width:22px; }
 
