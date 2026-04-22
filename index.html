@@ -1682,76 +1682,119 @@
   @media (max-width:820px){ .proc-wrap{ grid-template-columns:1fr 1fr;} }
   @media (max-width:520px){ .proc-wrap{ grid-template-columns:1fr;} }
   /* ============================================================
-     PROCESS · scroll horizontal sticky with journey mockups
+     PROCESS · horizontal card deck with scroll-snap + autoplay
      ============================================================ */
-  .proc-viewport{
-    position:relative;
-    height: 400vh;         /* 4 slides × 100vh of scroll */
+  .proc-stage{
+    position: relative;
     margin-top: 40px;
   }
-  .proc-sticky{
-    position: sticky; top: 0;
-    height: 100vh;
-    overflow: hidden;
-    display: flex; flex-direction: column;
-    padding: 40px 0 50px;
-  }
 
-  /* Top progress */
-  .proc-progress{
-    flex: 0 0 auto;
-    display:flex; align-items:center; gap: 18px;
-    padding: 0 clamp(20px, 4vw, 56px);
-    margin-bottom: 18px;
+  /* Header with numbered dot-nav + prev/play/next */
+  .stage-hd{
+    display:flex; justify-content:space-between; align-items:center;
+    gap: 20px; flex-wrap: wrap;
+    padding: 0 4px;
+    margin-bottom: 24px;
   }
-  .proc-progress-bar{
-    flex: 1; height: 2px; border-radius: 2px; overflow:hidden;
-    background: color-mix(in oklab, var(--fg) 10%, transparent);
-    position:relative;
+  .stage-dots{
+    display:flex; gap: 8px; flex-wrap: wrap;
   }
-  .proc-progress-bar::after{
-    content:""; position:absolute; inset: 0 auto 0 0;
-    width: var(--p, 6%);
-    background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 60%, transparent), var(--accent));
-    box-shadow: 0 0 10px color-mix(in oklab, var(--accent) 60%, transparent);
-    transition: width .3s linear;
+  .sd-item{
+    border: 0; cursor: pointer;
+    display:inline-flex; align-items:center; gap: 10px;
+    padding: 9px 14px; border-radius: 999px;
+    background: color-mix(in oklab, var(--fg) 5%, transparent);
+    color: var(--muted);
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .03em;
+    transition: background .3s ease, color .3s ease, padding .3s ease;
+    border: 1px solid transparent;
   }
-  .proc-dots{ display:flex; gap: 10px; }
-  .proc-dot{
-    border: 0; padding: 6px 10px; border-radius: 999px;
-    background: color-mix(in oklab, var(--fg) 6%, transparent);
-    font-family: var(--font-mono); font-size: 10px; letter-spacing:.04em;
-    color: var(--muted-2); cursor: pointer;
-    transition: background .25s ease, color .25s ease, transform .25s ease;
+  .sd-item b{
+    font-family: var(--font-serif); font-style: italic;
+    font-weight: 400; font-size: 14px;
+    color: var(--muted-2);
+    transition: color .3s ease;
   }
-  .proc-dot b{ font-weight: 500; }
-  .proc-dot:hover{ color: var(--fg); }
-  .proc-dot.on{
-    background: color-mix(in oklab, var(--accent) 20%, transparent);
+  .sd-item span{ display:none; }
+  .sd-item:hover{ color: var(--fg); }
+  .sd-item:hover b{ color: var(--fg); }
+  .sd-item.on{
+    background: color-mix(in oklab, var(--accent) 16%, transparent);
+    border-color: color-mix(in oklab, var(--accent) 30%, transparent);
     color: var(--accent);
-    transform: translateY(-1px);
+    padding-right: 18px;
   }
+  .sd-item.on b{ color: var(--accent); }
+  .sd-item.on span{ display:inline; font-weight:500; color: var(--fg); }
 
-  /* Horizontal track */
-  .proc-track{
-    flex: 1;
-    display: flex;
-    transform: translate3d(var(--tx, 0px), 0, 0);
-    transition: transform .9s cubic-bezier(.7,0,.2,1);
-    will-change: transform;
+  .stage-ctrls{ display:flex; gap: 8px; }
+  .stage-btn{
+    border: 0; cursor: pointer;
+    width: 40px; height: 40px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: color-mix(in oklab, var(--ink) 25%, transparent);
+    color: var(--fg);
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    box-shadow:
+      inset 2px 2px 3px 0 rgba(255,255,255,.45),
+      inset -2px -2px 3px 0 rgba(255,255,255,.25),
+      0 4px 12px rgba(0,0,0,.2);
+    transition: transform .2s ease, background .2s ease;
   }
+  .stage-btn:hover{ transform: translateY(-1px); background: color-mix(in oklab, var(--accent) 18%, var(--ink)); }
+  .stage-btn:active{ transform: translateY(0) scale(.95); }
+  .stage-btn svg{ width: 16px; height: 16px; }
+  .stage-play .ico-play{ display: none; }
+  .stage-stage-stopped .stage-play .ico-pause,
+  .proc-stage.is-paused .stage-play .ico-pause{ display: none; }
+  .proc-stage.is-paused .stage-play .ico-play{ display: block; }
+
+  /* Card deck — native scroll-snap, zero lag */
+  .proc-deck{
+    display: flex;
+    gap: clamp(16px, 2vw, 28px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 40px clamp(14%, 18%, 22%);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .proc-deck::-webkit-scrollbar{ display: none; }
+
+  /* Each slide */
   .proc-slide{
-    flex: 0 0 100%;
-    height: 100%;
-    padding: 0 clamp(20px, 4vw, 56px);
+    flex: 0 0 min(720px, 64vw);
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(30px, 5vw, 80px);
-    align-items: center;
+    gap: 28px;
+    padding: 32px;
+    border-radius: 24px;
+    background: color-mix(in oklab, var(--ink) 18%, transparent);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+    box-shadow:
+      inset 2px 2px 3px 0 rgba(255,255,255,.35),
+      inset -2px -2px 3px 0 rgba(255,255,255,.15),
+      0 24px 60px -20px rgba(0,0,0,.4);
+    /* Card fades & shrinks as it leaves snap center */
+    opacity: .35;
+    transform: scale(.9);
+    transition: opacity .5s cubic-bezier(.2,.7,.2,1), transform .5s cubic-bezier(.2,.7,.2,1);
+  }
+  [data-theme="light"] .proc-slide{ background: rgba(255,255,255,.55); }
+  .proc-slide.is-active{
+    opacity: 1;
+    transform: scale(1);
   }
 
   /* Slide copy side */
-  .ps-copy{ display:flex; flex-direction:column; gap: 20px; max-width: 48ch; }
+  .ps-copy{ display:flex; flex-direction:column; gap: 18px; justify-content: center; min-width: 0; }
   .ps-step{
     display:inline-flex; align-self: flex-start;
     padding: 6px 12px; border-radius: 999px;
@@ -1761,53 +1804,58 @@
     border: 1px solid color-mix(in oklab, var(--accent) 25%, transparent);
   }
   .ps-copy h3{
-    margin: 0; font-size: clamp(42px, 6vw, 84px); line-height: .98;
-    letter-spacing: -.03em; font-weight: 500;
+    margin: 0; font-size: clamp(28px, 3.4vw, 44px); line-height: 1;
+    letter-spacing: -.025em; font-weight: 500;
   }
   .ps-copy h3 .em{
     font-family: var(--font-serif); font-style: italic; color: var(--accent); font-weight: 400;
   }
-  .ps-copy p{ margin: 0; color: var(--muted); font-size: 17px; line-height: 1.55; max-width: 42ch; }
-  .ps-list{ list-style: none; padding: 0; margin: 6px 0 0; display:flex; flex-direction:column; gap: 10px; }
+  .ps-copy p{ margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+  .ps-list{ list-style: none; padding: 0; margin: 4px 0 0; display:flex; flex-direction:column; gap: 8px; }
   .ps-list li{
-    display:flex; align-items:center; gap: 12px;
-    font-size: 14px; color: var(--fg);
+    display:flex; align-items:center; gap: 10px;
+    font-size: 12px; color: var(--fg);
     font-family: var(--font-mono); letter-spacing: .01em;
   }
   .ps-list li span{
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--accent); box-shadow: 0 0 8px var(--accent); flex: 0 0 auto;
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 6px var(--accent); flex: 0 0 auto;
   }
 
-  /* Mockup side — animated per slide active state */
+  /* Mockup side */
   .ps-mock{
-    width: 100%; max-width: 520px; justify-self: center;
-    opacity: 0; transform: translateY(30px) scale(.96);
-    transition: opacity .7s cubic-bezier(.2,.7,.2,1) .1s,
-                transform .9s cubic-bezier(.2,.7,.2,1) .1s;
+    width: 100%; align-self: center; min-width: 0;
   }
-  .proc-slide.is-active .ps-mock{
-    opacity: 1; transform: translateY(0) scale(1);
+
+  /* Bottom rail showing autoplay progress */
+  .stage-rail{
+    margin: 24px 6px 0;
+    height: 2px; border-radius: 2px; overflow: hidden;
+    background: color-mix(in oklab, var(--fg) 8%, transparent);
   }
-  .proc-slide.is-active .ps-copy{ animation: slide-copy-in .9s cubic-bezier(.2,.7,.2,1) both; }
-  @keyframes slide-copy-in{
-    from{ opacity:0; transform: translateX(-20px); }
-    to  { opacity:1; transform: translateX(0); }
+  .stage-rail i{
+    display: block; height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 60%, transparent), var(--accent));
+    box-shadow: 0 0 8px color-mix(in oklab, var(--accent) 60%, transparent);
+    transform-origin: left center;
   }
+  .stage-rail i.is-running{ animation: rail-fill 6s linear forwards; }
+  @keyframes rail-fill{ from{ width: 0; } to{ width: 100%; } }
 
   /* ============ MOCK 01 · NOTEBOOK ============ */
   .mock-notebook{
     position: relative;
     background: linear-gradient(180deg, #fcfaf5 0%, #f4efe3 100%);
-    border-radius: 4px 16px 16px 4px;
-    padding: 30px 32px 30px 46px;
+    border-radius: 4px 14px 14px 4px;
+    padding: 22px 22px 22px 38px;
     color: #2a251a;
     font-family: var(--font-serif);
     box-shadow:
       0 20px 60px -20px rgba(0,0,0,.45),
       0 8px 20px -10px rgba(0,0,0,.3);
     transform: rotate(-1.5deg);
-    min-height: 380px;
+    font-size: 12px;
   }
   .mock-notebook::before{
     content:""; position:absolute; left: 30px; top: 0; bottom: 0;
@@ -1854,9 +1902,9 @@
     position: relative;
     background: color-mix(in oklab, var(--ink) 25%, #fff);
     color: var(--fg);
-    border-radius: 16px;
-    padding: 28px;
-    min-height: 380px;
+    border-radius: 14px;
+    padding: 20px;
+    font-size: 12px;
     border: 1px solid color-mix(in oklab, var(--fg) 12%, transparent);
     box-shadow:
       0 30px 60px -20px rgba(0,0,0,.5),
@@ -1914,11 +1962,10 @@
   /* ============ MOCK 03 · IDE ============ */
   .mock-ide{
     background: #0d1017; color: #e4e7ee;
-    border-radius: 14px; overflow: hidden;
-    font-family: var(--font-mono);
+    border-radius: 12px; overflow: hidden;
+    font-family: var(--font-mono); font-size: 10px;
     border: 1px solid rgba(255,255,255,.08);
-    box-shadow: 0 30px 60px -20px rgba(0,0,0,.6);
-    min-height: 380px;
+    box-shadow: 0 20px 50px -16px rgba(0,0,0,.6);
     display: flex; flex-direction: column;
   }
   .ide-tabs{
@@ -1964,16 +2011,15 @@
   /* ============ MOCK 04 · DASHBOARD ============ */
   .mock-dash{
     background: color-mix(in oklab, var(--ink) 20%, #fff);
-    border-radius: 16px; padding: 24px;
+    border-radius: 14px; padding: 20px;
     border: 1px solid color-mix(in oklab, var(--fg) 12%, transparent);
     box-shadow:
-      0 30px 60px -20px rgba(0,0,0,.5),
+      0 20px 50px -16px rgba(0,0,0,.5),
       inset 2px 2px 3px rgba(255,255,255,.3),
       inset -2px -2px 3px rgba(255,255,255,.15);
     backdrop-filter: blur(12px) saturate(180%);
     -webkit-backdrop-filter: blur(12px) saturate(180%);
-    min-height: 380px;
-    display: flex; flex-direction: column; gap: 18px;
+    display: flex; flex-direction: column; gap: 14px;
   }
   [data-theme="light"] .mock-dash{ background: rgba(255,255,255,.7); }
   .md-hd{ display:flex; justify-content:space-between; align-items:flex-start; gap: 12px; }
@@ -2009,23 +2055,16 @@
   .md-cell b{ font-size: 20px; font-weight: 500; letter-spacing: -.02em; color: var(--fg); }
   .md-cell em{ font-family: var(--font-mono); font-size: 10px; color: var(--muted-2); font-style: normal; }
 
-  /* Tablet & mobile fallback: stack vertically, no sticky */
+  /* Tablet & mobile */
   @media (max-width: 900px){
-    .proc-viewport{ height: auto; }
-    .proc-sticky{ position: static; height: auto; padding: 10px 0; }
-    .proc-progress{ display: none; }
-    .proc-track{
-      flex-direction: column; transform: none !important;
-      gap: 60px;
-    }
+    .proc-deck{ padding: 30px 8%; }
     .proc-slide{
-      flex: 0 0 auto;
+      flex: 0 0 85vw;
       grid-template-columns: 1fr;
-      gap: 30px;
-      padding: 0;
+      gap: 24px;
     }
-    .ps-mock{ opacity: 1; transform: none; }
-    .proc-slide.is-active .ps-copy{ animation: none; }
+    .stage-hd{ gap: 14px; }
+    .sd-item span{ display: none !important; }
   }
 
   /* ---------- TIMELINE (legacy, kept hidden for a11y) ---------- */
@@ -2958,21 +2997,31 @@
       </div>
     </div>
 
-    <div class="proc-viewport" id="procViewport">
-      <div class="proc-sticky">
-        <!-- Progress bar -->
-        <div class="proc-progress">
-          <div class="proc-progress-bar" id="procProgress"></div>
-          <div class="proc-dots">
-            <button class="proc-dot on" data-step="0" aria-label="Ir al paso 1"><b>01</b></button>
-            <button class="proc-dot"    data-step="1" aria-label="Ir al paso 2"><b>02</b></button>
-            <button class="proc-dot"    data-step="2" aria-label="Ir al paso 3"><b>03</b></button>
-            <button class="proc-dot"    data-step="3" aria-label="Ir al paso 4"><b>04</b></button>
-          </div>
+    <div class="proc-stage" id="procStage">
+      <!-- Stage controls (prev/dots/next/auto) -->
+      <div class="stage-hd">
+        <div class="stage-dots">
+          <button class="sd-item on" data-step="0" aria-label="Paso 1"><b>01</b><span>Escuchamos</span></button>
+          <button class="sd-item"    data-step="1" aria-label="Paso 2"><b>02</b><span>Proponemos</span></button>
+          <button class="sd-item"    data-step="2" aria-label="Paso 3"><b>03</b><span>Construimos</span></button>
+          <button class="sd-item"    data-step="3" aria-label="Paso 4"><b>04</b><span>Acompañamos</span></button>
         </div>
+        <div class="stage-ctrls">
+          <button class="stage-btn" id="procPrev" aria-label="Anterior">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <button class="stage-btn stage-play" id="procPlay" aria-label="Pausar/reanudar">
+            <svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+            <svg class="ico-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <button class="stage-btn" id="procNext" aria-label="Siguiente">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
 
-        <!-- Track with 4 slides -->
-        <div class="proc-track" id="procTrack">
+      <!-- Horizontal card deck — scroll-snap -->
+      <div class="proc-deck" id="procDeck">
 
           <!-- 01 Escuchamos — libreta -->
           <article class="proc-slide">
@@ -3141,8 +3190,9 @@
             </div>
           </article>
 
-        </div>
       </div>
+      <!-- Autoplay progress rail -->
+      <div class="stage-rail"><i id="procRail"></i></div>
     </div>
 
     <!-- Hidden legacy timeline keeps semantic list for search/screen-reader -->
@@ -3620,77 +3670,123 @@
     scheduleAuto(SCENE_DUR);
   })();
 
-  // ---------- Process: horizontal scroll driven by vertical scroll ----------
-  (function procScroll(){
-    const viewport = document.getElementById('procViewport');
-    const track    = document.getElementById('procTrack');
-    const progress = document.getElementById('procProgress');
-    if(!viewport || !track) return;
+  // ---------- Process: horizontal card deck with snap + autoplay ----------
+  (function procDeck(){
+    const stage = document.getElementById('procStage');
+    const deck  = document.getElementById('procDeck');
+    const rail  = document.getElementById('procRail');
+    const prev  = document.getElementById('procPrev');
+    const next  = document.getElementById('procNext');
+    const play  = document.getElementById('procPlay');
+    if(!stage || !deck) return;
 
-    const slides = track.querySelectorAll('.proc-slide');
-    const dots   = viewport.querySelectorAll('.proc-dot');
+    const slides = Array.from(deck.querySelectorAll('.proc-slide'));
+    const dots   = Array.from(stage.querySelectorAll('.sd-item'));
     const n = slides.length;
     if(n < 2) return;
 
-    const mobile = () => window.matchMedia('(max-width: 900px)').matches;
+    let current = 0;
+    let paused = false;
+    let autoTimer = null;
+    const AUTOPLAY_MS = 6000;
 
-    function update(){
-      if(mobile()){
-        track.style.setProperty('--tx', '0px');
-        slides.forEach(s => s.classList.add('is-active'));
-        return;
-      }
-      const r = viewport.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const total = viewport.offsetHeight - vh;   // scrollable distance
-      const scrolled = Math.min(Math.max(-r.top, 0), total);
-      const p = total > 0 ? scrolled / total : 0; // 0..1
-
-      // translate the track horizontally by p * (n-1) * 100%
-      const tx = -p * (n - 1) * 100;
-      track.style.setProperty('--tx', tx + 'vw');
-      // But .proc-slide is flex 0 0 100% of the track's own width (not vw),
-      // and track width equals container width, so use percentage-of-track.
-      // We'll compute via pixels for accuracy.
-      const trackWidth = track.clientWidth;
-      const pxShift = -p * (n - 1) * trackWidth;
-      track.style.setProperty('--tx', pxShift + 'px');
-
-      // active slide index
-      const idx = Math.min(n - 1, Math.round(p * (n - 1)));
-      slides.forEach((s, i) => s.classList.toggle('is-active', i === idx));
-      dots.forEach((d, i) => d.classList.toggle('on', i === idx));
-
-      // progress bar
-      if(progress){
-        progress.style.setProperty('--p', (p * 100) + '%');
-      }
+    function goTo(i, smooth = true){
+      i = Math.max(0, Math.min(n - 1, i));
+      current = i;
+      const el = slides[i];
+      deck.scrollTo({
+        left: el.offsetLeft - (deck.clientWidth - el.clientWidth) / 2,
+        behavior: smooth ? 'smooth' : 'auto'
+      });
     }
 
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-      if(ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => { update(); ticking = false; });
-    }, { passive: true });
-    window.addEventListener('resize', update);
+    function markActive(){
+      // find the slide closest to deck center
+      const deckCenter = deck.scrollLeft + deck.clientWidth / 2;
+      let best = 0, bestDist = Infinity;
+      slides.forEach((s, i) => {
+        const center = s.offsetLeft + s.clientWidth / 2;
+        const d = Math.abs(center - deckCenter);
+        if(d < bestDist){ bestDist = d; best = i; }
+      });
+      if(best !== current){ current = best; }
+      slides.forEach((s, i) => s.classList.toggle('is-active', i === best));
+      dots.forEach((d, i) => d.classList.toggle('on', i === best));
+    }
 
-    // Click on dots → scroll to that slide's position
+    function restartRail(){
+      if(!rail) return;
+      rail.classList.remove('is-running');
+      void rail.offsetWidth; // force reflow to restart animation
+      if(!paused) rail.classList.add('is-running');
+    }
+
+    function scheduleAutoplay(){
+      clearTimeout(autoTimer);
+      if(paused) return;
+      restartRail();
+      autoTimer = setTimeout(() => {
+        const nextIdx = (current + 1) % n;
+        goTo(nextIdx);
+      }, AUTOPLAY_MS);
+    }
+
+    // Scroll listener — update active + reset autoplay when user scrolls
+    let scrollTicking = false;
+    deck.addEventListener('scroll', () => {
+      if(scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(() => {
+        markActive();
+        scheduleAutoplay();
+        scrollTicking = false;
+      });
+    }, { passive: true });
+
+    // Dots
     dots.forEach((dot, i) => {
       dot.addEventListener('click', () => {
-        if(mobile()){
-          slides[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
-          return;
-        }
-        const r = viewport.getBoundingClientRect();
-        const start = window.scrollY + r.top;
-        const total = viewport.offsetHeight - window.innerHeight;
-        const targetScroll = start + (i / (n - 1)) * total;
-        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+        goTo(i);
+        paused = false;
+        stage.classList.remove('is-paused');
       });
     });
 
-    update();
+    // Prev / next
+    if(prev) prev.addEventListener('click', () => {
+      goTo((current - 1 + n) % n);
+    });
+    if(next) next.addEventListener('click', () => {
+      goTo((current + 1) % n);
+    });
+
+    // Play / pause
+    if(play) play.addEventListener('click', () => {
+      paused = !paused;
+      stage.classList.toggle('is-paused', paused);
+      if(paused){ clearTimeout(autoTimer); if(rail) rail.classList.remove('is-running'); }
+      else{ scheduleAutoplay(); }
+    });
+
+    // Pause on hover (desktop only) + keyboard
+    stage.addEventListener('mouseenter', () => {
+      if(rail) rail.classList.remove('is-running');
+      clearTimeout(autoTimer);
+    });
+    stage.addEventListener('mouseleave', () => {
+      if(!paused) scheduleAutoplay();
+    });
+    stage.addEventListener('keydown', (e) => {
+      if(e.key === 'ArrowLeft')  goTo((current - 1 + n) % n);
+      if(e.key === 'ArrowRight') goTo((current + 1) % n);
+    });
+
+    // Kick off after layout
+    requestAnimationFrame(() => {
+      goTo(0, false);
+      markActive();
+      scheduleAutoplay();
+    });
   })();
 
   // ---------- Scroll reveal (fallback for browsers without animation-timeline) ----------
