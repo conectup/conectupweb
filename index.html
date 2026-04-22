@@ -3902,7 +3902,7 @@
       <form class="cta-form" id="ctaForm" novalidate>
         <!-- Web3Forms needs this access key. Replace YOUR_ACCESS_KEY_HERE with
              the key from https://web3forms.com (free, delivers to any email). -->
-        <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+        <input type="hidden" name="access_key" value="5ac9ca76-fdb9-4dcd-a328-c0db5605c95c">
         <input type="hidden" name="subject" value="Nueva consulta desde conectup.io">
         <input type="hidden" name="from_name" value="Web ConectUp">
         <input type="hidden" name="redirect" value="false">
@@ -4550,7 +4550,7 @@
     const form = document.getElementById('ctaForm');
     if(!form) return;
     const key = form.querySelector('[name="access_key"]');
-    const hasKey = key && key.value && key.value !== 'YOUR_ACCESS_KEY_HERE';
+    const hasKey = key && key.value && !/YOUR_ACCESS_KEY_HERE|^$/.test(key.value);
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
