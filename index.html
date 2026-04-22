@@ -2559,6 +2559,186 @@
   .cta-actions .btn{ justify-content:space-between; width:100%;}
   .cta-actions .meta{ font-family:var(--font-mono); font-size:12px; color:var(--muted-2); letter-spacing:.1em; text-transform:uppercase; margin-top:8px;}
 
+  /* ============================================================
+     CTA · contact form with direct-to-email submission
+     ============================================================ */
+  .cta-badge{
+    position: absolute; top: 20px; right: 24px; z-index: 3;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px 6px 10px; border-radius: 999px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .04em;
+    color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 14%, transparent);
+    border: 1px solid color-mix(in oklab, var(--accent) 30%, transparent);
+  }
+  .cta-badge-dot{
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 70%, transparent);
+    animation: hd-pulse 2s ease-out infinite;
+  }
+
+  .cta-inner{
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 460px);
+    gap: clamp(30px, 5vw, 60px);
+    align-items: start;
+  }
+  @media (max-width: 820px){
+    .cta-inner{ grid-template-columns: 1fr; }
+    .cta-badge{ top: 14px; right: 14px; font-size: 10px; padding: 5px 10px 5px 8px; }
+  }
+
+  .cta-copy h2{ margin: 0 0 18px; }
+  .cta-copy .cta-sub{ margin: 0 0 24px; max-width: 46ch; }
+  .cta-facts{
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .cta-facts li{
+    display: flex; align-items: center; gap: 12px;
+    font-family: var(--font-mono); font-size: 13px;
+    color: var(--fg); letter-spacing: .01em;
+  }
+  .cta-fact-dot{
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 8px var(--accent);
+    flex: 0 0 auto;
+  }
+
+  /* Form */
+  .cta-form{
+    position: relative;
+    display: flex; flex-direction: column; gap: 14px;
+    padding: 28px;
+    border-radius: 20px;
+    background: color-mix(in oklab, var(--ink) 22%, transparent);
+    border: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+    backdrop-filter: blur(14px) saturate(180%);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.25),
+      0 20px 50px -20px rgba(0,0,0,.4);
+  }
+  .cta-honey{ position: absolute; left: -9999px; opacity: 0; pointer-events: none; }
+
+  .cta-field{
+    position: relative;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .cta-label{
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--muted-2); letter-spacing: .1em; text-transform: uppercase;
+  }
+  .cta-field input,
+  .cta-field textarea{
+    width: 100%;
+    padding: 13px 44px 13px 16px;
+    border-radius: 12px;
+    background: color-mix(in oklab, var(--fg) 5%, transparent);
+    border: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+    color: var(--fg); font: inherit;
+    font-size: 14px; letter-spacing: -.005em;
+    outline: none;
+    transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+    resize: none;
+  }
+  .cta-field textarea{ padding-right: 16px; line-height: 1.5; }
+  .cta-field input::placeholder,
+  .cta-field textarea::placeholder{ color: var(--muted-2); }
+  .cta-field input:hover,
+  .cta-field textarea:hover{
+    border-color: color-mix(in oklab, var(--fg) 18%, transparent);
+  }
+  .cta-field input:focus,
+  .cta-field textarea:focus{
+    border-color: color-mix(in oklab, var(--accent) 55%, transparent);
+    background: color-mix(in oklab, var(--fg) 3%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 18%, transparent);
+  }
+  .cta-field input:invalid:not(:placeholder-shown),
+  .cta-field textarea:invalid:not(:placeholder-shown){
+    border-color: color-mix(in oklab, #ff6b6b 45%, transparent);
+  }
+  .cta-field-icn{
+    position: absolute; right: 14px; top: 36px;
+    width: 16px; height: 16px;
+    color: var(--muted-2);
+    pointer-events: none;
+  }
+
+  .cta-bottom{
+    display: flex; flex-direction: column; gap: 10px;
+    margin-top: 4px;
+  }
+  .cta-submit{
+    width: 100%; justify-content: center; position: relative;
+    padding: 16px 22px;
+    gap: 10px;
+  }
+  .cta-submit .cta-spin{
+    position: absolute; right: 22px;
+    width: 18px; height: 18px;
+    animation: chk-spin .8s linear infinite;
+    display: none;
+  }
+  .cta-form.is-sending .cta-submit{ pointer-events: none; opacity: .8; }
+  .cta-form.is-sending .cta-submit-label{ opacity: .6; }
+  .cta-form.is-sending .cta-submit .arr{ display: none; }
+  .cta-form.is-sending .cta-submit .cta-spin{ display: block; }
+
+  .cta-direct{
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px;
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--muted); letter-spacing: .02em;
+    padding: 6px 12px;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: color .2s, background .2s;
+  }
+  .cta-direct:hover{
+    color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 10%, transparent);
+  }
+  .cta-direct svg{ width: 14px; height: 14px; }
+
+  .cta-privacy{
+    margin: 4px 0 0;
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--muted-2); letter-spacing: .01em; line-height: 1.5;
+    text-align: center;
+  }
+  .cta-privacy b{ color: var(--fg); font-weight: 500; }
+
+  /* States */
+  .cta-state{
+    display: none;
+    align-items: flex-start; gap: 12px;
+    padding: 14px 16px; border-radius: 12px;
+    font-family: var(--font-display); font-size: 13px; line-height: 1.45;
+  }
+  .cta-state svg{ width: 22px; height: 22px; flex: 0 0 auto; margin-top: 1px; }
+  .cta-state b{ display: block; color: var(--fg); font-weight: 500; margin-bottom: 2px; }
+  .cta-state span{ color: var(--muted); }
+  .cta-state a{ color: var(--accent); text-decoration: underline; }
+
+  .cta-state-ok{
+    background: color-mix(in oklab, var(--accent) 14%, transparent);
+    border: 1px solid color-mix(in oklab, var(--accent) 30%, transparent);
+    color: var(--accent);
+  }
+  .cta-state-err{
+    background: color-mix(in oklab, #ff6b6b 14%, transparent);
+    border: 1px solid color-mix(in oklab, #ff6b6b 30%, transparent);
+    color: #ff8a8a;
+  }
+  .cta-form.is-ok  .cta-state-ok { display: flex; animation: state-in .35s cubic-bezier(.22,.61,.36,1) both; }
+  .cta-form.is-err .cta-state-err{ display: flex; animation: state-in .35s cubic-bezier(.22,.61,.36,1) both; }
+  @keyframes state-in{
+    from{ opacity: 0; transform: translateY(6px); }
+    to  { opacity: 1; transform: translateY(0); }
+  }
+
   /* ---------- FOOTER ---------- */
   footer{ padding: 60px 0 40px; border-top:1px solid var(--line);}
   .foot{ display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap:30px; align-items:start;}
@@ -3702,26 +3882,74 @@
 <!-- CTA FINAL -->
 <section class="wrap sect-cta" id="contacto" data-screen-label="05 CTA">
   <div class="cta lg reveal">
-    <div class="cta-grid">
-      <div>
+    <!-- Decorative floating tag -->
+    <span class="cta-badge" aria-hidden="true">
+      <span class="cta-badge-dot"></span>
+      Aceptando 2 proyectos · Q2 2026
+    </span>
+
+    <div class="cta-inner">
+      <div class="cta-copy">
         <h2>¿Ganamos tiempo <em>juntos</em>?</h2>
-        <p class="cta-sub">Una primera conversación de 30 minutos. Sin compromiso, sin presentaciones, sin humo. Si podemos ayudarte, te lo decimos. Si no, te decimos quién sí.</p>
+        <p class="cta-sub">Cuéntanos qué te está costando más tiempo del que debería. Te contestamos en menos de 24 horas laborables con una primera idea — sin humo y sin presentaciones.</p>
+        <ul class="cta-facts">
+          <li><span class="cta-fact-dot"></span>Primera conversación gratis · 30 min</li>
+          <li><span class="cta-fact-dot"></span>Sin compromiso, sin presentaciones</li>
+          <li><span class="cta-fact-dot"></span>Si no podemos ayudarte, te decimos quién sí</li>
+        </ul>
       </div>
-      <div class="cta-actions">
-        <a class="btn btn-primary" href="#">
-          Agendar 30 min
-          <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
-          </svg>
-        </a>
-        <a class="btn btn-ghost" href="mailto:hola@conectup.io">
-          hola@conectup.io
-          <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M4 8l8 6 8-6"/><rect x="4" y="6" width="16" height="12" rx="1.5"/>
-          </svg>
-        </a>
-        <div class="meta">Respondemos en &lt; 24h laborables</div>
-      </div>
+
+      <form class="cta-form" id="ctaForm" novalidate>
+        <!-- Web3Forms needs this access key. Replace YOUR_ACCESS_KEY_HERE with
+             the key from https://web3forms.com (free, delivers to any email). -->
+        <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+        <input type="hidden" name="subject" value="Nueva consulta desde conectup.io">
+        <input type="hidden" name="from_name" value="Web ConectUp">
+        <input type="hidden" name="redirect" value="false">
+        <!-- Honeypot -->
+        <input type="checkbox" name="botcheck" class="cta-honey" tabindex="-1" autocomplete="off">
+
+        <label class="cta-field">
+          <span class="cta-label">Tu email</span>
+          <input type="email" name="email" required autocomplete="email" placeholder="nombre@empresa.com">
+          <svg class="cta-field-icn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        </label>
+
+        <label class="cta-field cta-field-tall">
+          <span class="cta-label">Qué te está costando tiempo</span>
+          <textarea name="message" required rows="3" placeholder="Un par de frases son suficientes. Por ejemplo: 'pedidos que pasamos a mano de correo a Excel'."></textarea>
+        </label>
+
+        <div class="cta-bottom">
+          <button type="submit" class="btn btn-primary cta-submit">
+            <span class="cta-submit-label">Enviar consulta</span>
+            <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+            <svg class="cta-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/></svg>
+          </button>
+          <a class="cta-direct" href="mailto:conectupes@outlook.com">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+            conectupes@outlook.com
+          </a>
+        </div>
+
+        <p class="cta-privacy">Respondemos en menos de <b>24 h laborables</b>. No te apuntamos a ninguna lista, no compartimos tus datos.</p>
+
+        <!-- States -->
+        <div class="cta-state cta-state-ok" role="status" aria-live="polite">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 6-6"/></svg>
+          <div>
+            <b>Recibido.</b>
+            <span>Te escribimos en menos de 24 h. Mientras, no dudes en mandarnos un correo directo.</span>
+          </div>
+        </div>
+        <div class="cta-state cta-state-err" role="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16.5v.01"/></svg>
+          <div>
+            <b>Ha fallado el envío.</b>
+            <span>Escríbenos a <a href="mailto:conectupes@outlook.com">conectupes@outlook.com</a> y lo miramos.</span>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </section>
@@ -4315,6 +4543,62 @@
     }, { passive:true });
     window.addEventListener('resize', update);
     update();
+  })();
+
+  // ---------- CTA contact form ----------
+  (function ctaForm(){
+    const form = document.getElementById('ctaForm');
+    if(!form) return;
+    const key = form.querySelector('[name="access_key"]');
+    const hasKey = key && key.value && key.value !== 'YOUR_ACCESS_KEY_HERE';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      form.classList.remove('is-ok', 'is-err');
+
+      // Native HTML5 validation first
+      if(!form.checkValidity()){
+        form.reportValidity();
+        return;
+      }
+      // Honeypot: if filled, silently drop
+      const honey = form.querySelector('[name="botcheck"]');
+      if(honey && honey.checked) return;
+
+      const email = (form.elements.email.value || '').trim();
+      const message = (form.elements.message.value || '').trim();
+
+      // Fallback if Web3Forms key is not set → open mailto with the message
+      if(!hasKey){
+        const subject = encodeURIComponent('Nueva consulta desde conectup.io');
+        const body    = encodeURIComponent(
+          'De: ' + email + '\n\n' + message
+        );
+        window.location.href = 'mailto:conectupes@outlook.com?subject=' + subject + '&body=' + body;
+        form.classList.add('is-ok');
+        return;
+      }
+
+      form.classList.add('is-sending');
+      try{
+        const fd = new FormData(form);
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: fd
+        });
+        const data = await res.json().catch(() => ({}));
+        if(res.ok && data.success !== false){
+          form.classList.add('is-ok');
+          form.reset();
+        } else {
+          form.classList.add('is-err');
+        }
+      } catch(err){
+        form.classList.add('is-err');
+      } finally {
+        form.classList.remove('is-sending');
+      }
+    });
   })();
 
   // ---------- Nav hide on scroll down ----------
