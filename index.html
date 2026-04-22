@@ -300,15 +300,17 @@
      Those shadows radiate outward tracing the letter shape.
      A radial mask reveals the glow only around the cursor. */
   h1.hero-title .glow-layer{
-    position:absolute; inset:0; z-index:-1; pointer-events:none;
-    color: transparent;
+    position:absolute; left:-40px; right:-40px; top:-40px; bottom:-40px;
+    padding: 40px; box-sizing: content-box;
+    z-index:-1; pointer-events:none;
+    color: transparent; overflow: visible;
     text-shadow:
       0 0 8px  color-mix(in oklab, var(--accent) 85%, transparent),
       0 0 18px color-mix(in oklab, var(--accent) 65%, transparent),
       0 0 36px color-mix(in oklab, var(--accent) 45%, transparent),
       0 0 70px color-mix(in oklab, var(--accent) 30%, transparent);
-    -webkit-mask-image: radial-gradient(240px 200px at var(--mx) var(--my), #000 0%, rgba(0,0,0,.55) 45%, transparent 75%);
-            mask-image: radial-gradient(240px 200px at var(--mx) var(--my), #000 0%, rgba(0,0,0,.55) 45%, transparent 75%);
+    -webkit-mask-image: radial-gradient(240px 200px at calc(var(--mx) + 40px) calc(var(--my) + 40px), #000 0%, rgba(0,0,0,.55) 45%, transparent 78%);
+            mask-image: radial-gradient(240px 200px at calc(var(--mx) + 40px) calc(var(--my) + 40px), #000 0%, rgba(0,0,0,.55) 45%, transparent 78%);
     opacity: var(--glow, 0);
     transition: opacity .5s ease;
   }
