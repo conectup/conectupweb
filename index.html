@@ -57,6 +57,19 @@
   [data-accent="lilac"]{ --accent: var(--lilac); --accent-ink:#1b0a1b;}
   [data-accent="paper"]{ --accent: var(--paper); --accent-ink:#041411;}
 
+  /* Light mode: boost contrast + darker accent for legible text on light bg */
+  [data-theme="light"]{
+    --muted: rgba(10,10,15,.72);
+    --muted-2: rgba(10,10,15,.58);
+    --accent: #0BA888;           /* deeper mint for AA contrast on light */
+    --lilac:  #8E3C8E;
+    --accent-ink: #FFFFFF;
+  }
+  [data-theme="light"] .eyebrow{ color: rgba(10,10,15,.78); }
+  [data-theme="light"] h1.hero-title .em,
+  [data-theme="light"] .sect-hd h2 .em,
+  [data-theme="light"] .feat-copy h3 .em{ color: #0BA888; }
+
   [data-density="tight"]{ --sect: clamp(70px, 9vw, 120px);}
   [data-density="airy"]{ --sect: clamp(110px, 16vw, 220px);}
 
@@ -295,32 +308,154 @@
       var(--ink-2);
     overflow:hidden;
   }
+  .viz::before{
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:.25;
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--fg) 8%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--fg) 8%, transparent) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(120% 100% at 50% 50%, #000 30%, transparent 80%);
+  }
   .viz-hdr{
-    position:absolute; left:16px; right:16px; top:14px;
+    position:absolute; left:16px; right:16px; top:14px; z-index:3;
     display:flex; justify-content:space-between; align-items:center;
     font-family:var(--font-mono); font-size:11px; color:var(--muted-2); letter-spacing:.1em; text-transform:uppercase;
   }
+  .viz-hdr .label{ transition: opacity .45s ease, transform .45s cubic-bezier(.2,.7,.2,1); display:inline-block; }
+  .viz-hdr .label.swap-out{ opacity:0; transform:translateY(-6px); }
+  .viz-hdr .label.swap-in { opacity:0; transform:translateY(6px); }
   .viz-hdr .dots{ display:flex; gap:6px;}
-  .viz-hdr .dots i{ width:7px; height:7px; border-radius:999px; background:var(--line-strong); display:block;}
-  .viz-hdr .dots i:first-child{ background:var(--accent);}
-  .viz svg{ position:absolute; inset:0; width:100%; height:100%;}
+  .viz-hdr .dots i{ width:7px; height:7px; border-radius:999px; background:var(--line-strong); display:block; transition: background .4s ease, transform .4s ease;}
+  .viz-hdr .dots i.on{ background:var(--accent); transform:scale(1.15);}
+
+  /* Stack of scenes */
+  .scene{
+    position:absolute; inset:0;
+    opacity:0; transform:translateY(10px) scale(.985);
+    transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);
+    pointer-events:none;
+  }
+  .scene.is-active{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+  .scene svg{ position:absolute; inset:0; width:100%; height:100%;}
+
+  /* Scene 1 — Workflow */
+  .flow-path{
+    fill:none; stroke: color-mix(in oklab, var(--fg) 28%, transparent);
+    stroke-width:1.2; stroke-linecap:round;
+    stroke-dasharray: var(--len,600); stroke-dashoffset: var(--len,600);
+    transition: stroke-dashoffset 1.2s cubic-bezier(.4,.8,.2,1);
+  }
+  .scene.is-active .flow-path{ stroke-dashoffset: 0; }
+  .flow-path.glow{ stroke:url(#flowGrad); stroke-width:1.8; filter: drop-shadow(0 0 4px color-mix(in oklab, var(--accent) 70%, transparent)); }
+
   .node{
     position:absolute; transform:translate(-50%,-50%);
     display:flex; align-items:center; gap:8px;
     padding:8px 12px; border-radius:10px;
-    background: color-mix(in oklab, var(--ink) 55%, transparent);
+    background: color-mix(in oklab, var(--ink) 62%, transparent);
     border:1px solid var(--line-strong);
     font-family:var(--font-mono); font-size:11px; letter-spacing:.04em;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(6px);
     color: var(--fg);
+    transition: transform .5s cubic-bezier(.2,.7,.2,1), border-color .3s, box-shadow .4s;
+  }
+  .node.pulse{
+    border-color: color-mix(in oklab, var(--accent) 70%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 14%, transparent),
+                0 0 24px color-mix(in oklab, var(--accent) 30%, transparent);
+  }
+  .node.pulse.lilac{
+    border-color: color-mix(in oklab, var(--lilac) 70%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--lilac) 14%, transparent),
+                0 0 24px color-mix(in oklab, var(--lilac) 30%, transparent);
   }
   .node .nd{ width:6px; height:6px; border-radius:999px; background:var(--accent); box-shadow:0 0 8px var(--accent);}
   .node.lilac .nd{ background:var(--lilac); box-shadow:0 0 8px var(--lilac);}
   .node.idle .nd{ background:var(--muted-2); box-shadow:none;}
-  .packet{
-    fill: var(--accent); r:3;
+  .node.center{ padding:10px 14px; font-size:12px; }
+  .node .icn{ width:12px; height:12px; opacity:.8; }
+  .packet{ fill: var(--accent); filter: drop-shadow(0 0 6px var(--accent)); }
+  .packet.l{ fill:var(--lilac); filter: drop-shadow(0 0 6px var(--lilac)); }
+
+  /* Scene 2 — Sistemas a medida (bloques modulares) */
+  .blocks{ position:absolute; inset:44px 16px 58px 16px; display:grid; grid-template-columns:repeat(6,1fr); grid-template-rows:repeat(5,1fr); gap:8px;}
+  .block{
+    border:1px solid var(--line-strong); border-radius:10px;
+    background: color-mix(in oklab, var(--ink) 58%, transparent);
+    backdrop-filter: blur(4px);
+    padding:8px 10px; display:flex; flex-direction:column; justify-content:space-between;
+    font-family:var(--font-mono); font-size:10px; color:var(--muted); letter-spacing:.06em;
+    opacity:0; transform:translateY(8px) scale(.96);
+    transition: opacity .55s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1), border-color .3s, box-shadow .4s;
   }
-  .packet.l{ fill:var(--lilac)}
+  .scene.is-active .block{ opacity:1; transform:translateY(0) scale(1); }
+  .block .ttl{ color:var(--fg); font-size:11px; letter-spacing:.04em; text-transform:uppercase; display:flex; align-items:center; gap:6px;}
+  .block .ttl .d{ width:6px; height:6px; border-radius:999px; background:var(--accent); box-shadow:0 0 8px var(--accent);}
+  .block.lilac .ttl .d{ background:var(--lilac); box-shadow:0 0 8px var(--lilac);}
+  .block .meter{ height:4px; border-radius:4px; background: color-mix(in oklab, var(--fg) 12%, transparent); overflow:hidden; position:relative;}
+  .block .meter::after{ content:""; position:absolute; left:0; top:0; bottom:0; width:var(--w,60%); background: var(--accent); box-shadow:0 0 10px var(--accent); border-radius:inherit;}
+  .block.lilac .meter::after{ background:var(--lilac); box-shadow:0 0 10px var(--lilac);}
+  .block .rows{ display:flex; flex-direction:column; gap:3px;}
+  .block .rows span{ height:3px; border-radius:2px; background: color-mix(in oklab, var(--fg) 10%, transparent);}
+  .block .rows span:nth-child(1){ width:70%;}
+  .block .rows span:nth-child(2){ width:90%;}
+  .block .rows span:nth-child(3){ width:55%;}
+  .block.hl{ border-color: color-mix(in oklab, var(--accent) 60%, transparent); box-shadow:0 0 0 3px color-mix(in oklab, var(--accent) 14%, transparent); }
+  .block.b-db   { grid-column:1/3; grid-row:1/3; }
+  .block.b-api  { grid-column:3/5; grid-row:1/3; }
+  .block.b-auth { grid-column:5/7; grid-row:1/3; }
+  .block.b-dash { grid-column:1/4; grid-row:3/6; }
+  .block.b-flow { grid-column:4/7; grid-row:3/5; }
+  .block.b-bot  { grid-column:4/7; grid-row:5/6; }
+  .block-wires{ position:absolute; inset:0; pointer-events:none; opacity:.5;}
+  .block-wires path{ fill:none; stroke: color-mix(in oklab, var(--accent) 45%, transparent); stroke-width:1; stroke-dasharray:3 4; animation: wiremove 8s linear infinite;}
+  @keyframes wiremove{ to{ stroke-dashoffset:-80;} }
+
+  /* Scene 3 — Webs enteras */
+  .browser{
+    position:absolute; inset:44px 16px 58px 16px;
+    border:1px solid var(--line-strong); border-radius:12px; overflow:hidden;
+    background: color-mix(in oklab, var(--ink) 70%, transparent);
+    display:flex; flex-direction:column;
+  }
+  .browser-bar{
+    display:flex; align-items:center; gap:6px; padding:8px 10px;
+    border-bottom:1px solid var(--line-strong);
+    font-family:var(--font-mono); font-size:10px; color:var(--muted-2);
+  }
+  .browser-bar .tl{ width:8px; height:8px; border-radius:999px; background: var(--line-strong); display:inline-block;}
+  .browser-bar .url{ margin-left:10px; padding:3px 10px; border-radius:999px; background: color-mix(in oklab, var(--fg) 8%, transparent); }
+  .browser-bar .url .cursor{ display:inline-block; width:1px; height:10px; background:var(--accent); vertical-align:middle; margin-left:2px; animation: blink 1s steps(2) infinite;}
+  @keyframes blink{ 50%{ opacity:0;} }
+  .browser-body{ position:relative; flex:1; padding:10px 12px; display:flex; flex-direction:column; gap:8px;}
+  .wb{ border-radius:8px; background: color-mix(in oklab, var(--fg) 7%, transparent); opacity:0; transform:translateY(6px); transition: opacity .55s ease, transform .55s cubic-bezier(.2,.7,.2,1);}
+  .scene.is-active .wb.show{ opacity:1; transform:translateY(0);}
+  .wb.hero{ height:34%; background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 18%, transparent), color-mix(in oklab, var(--lilac) 12%, transparent)); position:relative; overflow:hidden;}
+  .wb.hero::after{ content:""; position:absolute; inset:0; background: radial-gradient(60% 80% at 20% 30%, color-mix(in oklab, var(--accent) 25%, transparent), transparent 60%);}
+  .wb.hero .lines{ position:absolute; left:14px; top:14px; right:40%; display:flex; flex-direction:column; gap:6px;}
+  .wb.hero .lines b{ height:8px; border-radius:4px; background: color-mix(in oklab, var(--fg) 65%, transparent); display:block;}
+  .wb.hero .lines b:nth-child(1){ width:80%;}
+  .wb.hero .lines b:nth-child(2){ width:55%; height:6px; background: color-mix(in oklab, var(--fg) 35%, transparent);}
+  .wb.grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; height:20%; background:transparent;}
+  .wb.grid3 > i{ background: color-mix(in oklab, var(--fg) 9%, transparent); border-radius:6px; display:block;}
+  .wb.row{ height:10%; display:flex; gap:6px;}
+  .wb.row > i{ flex:1; background: color-mix(in oklab, var(--fg) 9%, transparent); border-radius:5px; display:block;}
+  .wb.row > i:last-child{ flex:0 0 30%; background: var(--accent); box-shadow:0 0 14px color-mix(in oklab, var(--accent) 40%, transparent);}
+
+  /* Scene indicator */
+  .scene-pills{
+    position:absolute; left:16px; right:16px; bottom:14px; z-index:3;
+    display:flex; justify-content:center; gap:6px;
+  }
+  .scene-pills i{ width:22px; height:4px; border-radius:4px; background: var(--line-strong); transition: background .4s ease, width .4s ease;}
+  .scene-pills i.on{ background: var(--accent); width:34px; box-shadow:0 0 8px var(--accent);}
+
+  @media (prefers-reduced-motion: reduce){
+    .scene{ transition:none; }
+    .flow-path{ transition:none; stroke-dashoffset:0; }
+    .block, .wb{ transition:none; opacity:1; transform:none; }
+    .block-wires path{ animation:none; }
+  }
 
   /* ---------- MARQUEE / LOGOS ---------- */
   .strip{
@@ -769,31 +904,75 @@
     <div class="hero-meta reveal d3">
       <div class="viz" id="viz">
         <div class="viz-hdr">
-          <span>Un proceso · conectado</span>
-          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="label" id="vizLabel" data-labels='["Workflows conectados","Sistemas a medida","Webs enteras"]'>Workflows conectados</span>
+          <span class="dots"><i class="on"></i><i></i><i></i></span>
         </div>
-        <svg viewBox="0 0 600 420" preserveAspectRatio="none">
-          <g stroke="currentColor" stroke-opacity=".28" stroke-width="1.2" fill="none" stroke-linecap="round" style="color:var(--fg)">
-            <!-- Ventas -> Tu proceso -->
-            <path d="M135 100 C 240 100, 250 210, 330 210" />
-            <!-- Administración -> Tu proceso -->
-            <path d="M155 336 C 245 336, 255 210, 330 210" />
-            <!-- Tu proceso -> Informes -->
-            <path d="M395 210 C 450 210, 455 118, 500 118" />
-            <!-- Tu proceso -> Clientes -->
-            <path d="M395 210 C 450 210, 460 319, 505 319" />
-          </g>
-          <g>
-            <circle class="packet p1" cx="135" cy="100" r="3.5"/>
-            <circle class="packet p2 l" cx="155" cy="336" r="3.5"/>
-            <circle class="packet p3" cx="395" cy="210" r="3.5"/>
-          </g>
-        </svg>
-        <div class="node" style="left:14%; top:24%;"><span class="nd"></span>Ventas</div>
-        <div class="node lilac" style="left:18%; top:80%;"><span class="nd"></span>Administración</div>
-        <div class="node" style="left:60%; top:50%;"><span class="nd"></span>Tu proceso</div>
-        <div class="node idle" style="left:86%; top:28%;"><span class="nd"></span>Informes</div>
-        <div class="node idle" style="left:86%; top:76%;"><span class="nd"></span>Clientes</div>
+
+        <!-- SCENE 1 — Workflow conectado -->
+        <div class="scene is-active" data-scene="1">
+          <svg viewBox="0 0 600 420" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="flowGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%"  stop-color="var(--accent)" stop-opacity=".15"/>
+                <stop offset="50%" stop-color="var(--accent)" stop-opacity="1"/>
+                <stop offset="100%" stop-color="var(--accent)" stop-opacity=".15"/>
+              </linearGradient>
+            </defs>
+            <g fill="none" stroke-linecap="round">
+              <path class="flow-path" d="M135 100 C 240 100, 250 210, 330 210" />
+              <path class="flow-path" d="M155 336 C 245 336, 255 210, 330 210" />
+              <path class="flow-path" d="M395 210 C 450 210, 455 118, 500 118" />
+              <path class="flow-path" d="M395 210 C 450 210, 460 319, 505 319" />
+            </g>
+            <g>
+              <circle class="packet p1" cx="135" cy="100" r="4"/>
+              <circle class="packet p2 l" cx="155" cy="336" r="4"/>
+              <circle class="packet p3" cx="395" cy="210" r="4"/>
+            </g>
+          </svg>
+          <div class="node" data-node="sales" style="left:14%; top:24%;"><span class="nd"></span>Ventas</div>
+          <div class="node lilac" data-node="admin" style="left:18%; top:80%;"><span class="nd"></span>Administración</div>
+          <div class="node center" data-node="core" style="left:60%; top:50%;"><span class="nd"></span>Tu proceso</div>
+          <div class="node idle" data-node="reports" style="left:86%; top:28%;"><span class="nd"></span>Informes</div>
+          <div class="node idle" data-node="clients" style="left:86%; top:76%;"><span class="nd"></span>Clientes</div>
+        </div>
+
+        <!-- SCENE 2 — Sistemas a medida -->
+        <div class="scene" data-scene="2">
+          <svg class="block-wires" viewBox="0 0 600 420" preserveAspectRatio="none">
+            <path d="M150 140 C 230 140, 250 230, 300 260"/>
+            <path d="M450 140 C 380 160, 350 240, 320 260"/>
+            <path d="M300 260 C 260 300, 240 340, 220 360"/>
+            <path d="M320 260 C 380 300, 420 330, 460 360"/>
+          </svg>
+          <div class="blocks">
+            <div class="block b-db" style="--w:78%"><div class="ttl"><span class="d"></span>Base de datos</div><div class="meter"></div></div>
+            <div class="block b-api" style="--w:62%"><div class="ttl"><span class="d"></span>API REST</div><div class="meter"></div></div>
+            <div class="block b-auth lilac" style="--w:100%"><div class="ttl"><span class="d"></span>Auth · SSO</div><div class="meter"></div></div>
+            <div class="block b-dash"><div class="ttl"><span class="d"></span>Dashboard a medida</div><div class="rows"><span></span><span></span><span></span></div></div>
+            <div class="block b-flow lilac" style="--w:84%"><div class="ttl"><span class="d"></span>Automatizaciones</div><div class="meter"></div></div>
+            <div class="block b-bot" style="--w:40%"><div class="ttl"><span class="d"></span>Integraciones</div><div class="meter"></div></div>
+          </div>
+        </div>
+
+        <!-- SCENE 3 — Webs enteras -->
+        <div class="scene" data-scene="3">
+          <div class="browser">
+            <div class="browser-bar">
+              <span class="tl"></span><span class="tl"></span><span class="tl"></span>
+              <span class="url" id="browserUrl">https://tu-marca.com<span class="cursor"></span></span>
+            </div>
+            <div class="browser-body">
+              <div class="wb hero"><div class="lines"><b></b><b></b></div></div>
+              <div class="wb grid3"><i></i><i></i><i></i></div>
+              <div class="wb row"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scene-pills" id="scenePills">
+          <i class="on"></i><i></i><i></i>
+        </div>
       </div>
 
       <div class="kpis">
@@ -1171,34 +1350,141 @@
     });
   }, 600);
 
-  // ---------- Hero node packets animation ----------
-  (function animateHero(){
-    const paths = document.querySelectorAll('#viz svg path');
-    if(!paths.length) return;
-    const p1 = document.querySelector('#viz .p1');
-    const p2 = document.querySelector('#viz .p2');
-    const p3 = document.querySelector('#viz .p3');
-    const routes = [
-      { pk:p1, path:paths[0], dur:2800, delay:0 },      // Ventas -> Proceso
-      { pk:p2, path:paths[1], dur:3200, delay:900 },    // Admin -> Proceso
-      { pk:p3, path:paths[2], dur:2400, delay:1800 },   // Proceso -> Informes
-      { pk:p3, path:paths[3], dur:2600, delay:3000 }    // Proceso -> Clientes
-    ];
-    function runRoute(r){
-      const len = r.path.getTotalLength();
-      const start = performance.now();
-      function tick(now){
-        const t = Math.min(1, (now - start) / r.dur);
-        const pt = r.path.getPointAtLength(len * t);
-        r.pk.setAttribute('cx', pt.x);
-        r.pk.setAttribute('cy', pt.y);
-        r.pk.style.opacity = t < .05 ? t*20 : t > .95 ? (1-t)*20 : 1;
-        if(t<1) requestAnimationFrame(tick);
-        else setTimeout(()=> runRoute(r), 400 + Math.random()*800);
+  // ---------- Hero scene cycle ----------
+  (function heroScenes(){
+    const viz = document.getElementById('viz');
+    if(!viz) return;
+    const scenes = viz.querySelectorAll('.scene');
+    const pills  = viz.querySelectorAll('.scene-pills i');
+    const hdrDots = viz.querySelectorAll('.viz-hdr .dots i');
+    const labelEl = viz.querySelector('#vizLabel');
+    const labels  = JSON.parse(labelEl.dataset.labels || '[]');
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let current = 0;
+    let rafs = [];
+    let timers = [];
+    const clearTimers = ()=>{ timers.forEach(clearTimeout); timers = []; rafs.forEach(cancelAnimationFrame); rafs = []; };
+
+    // Scene 1 — animate packets along paths + pulse end node
+    function runScene1(){
+      const paths = scenes[0].querySelectorAll('svg .flow-path');
+      const p1 = scenes[0].querySelector('.p1');
+      const p2 = scenes[0].querySelector('.p2');
+      const p3 = scenes[0].querySelector('.p3');
+      const sales   = scenes[0].querySelector('[data-node="sales"]');
+      const admin   = scenes[0].querySelector('[data-node="admin"]');
+      const core    = scenes[0].querySelector('[data-node="core"]');
+      const reports = scenes[0].querySelector('[data-node="reports"]');
+      const clients = scenes[0].querySelector('[data-node="clients"]');
+
+      paths.forEach(p=>{
+        const len = p.getTotalLength();
+        p.style.setProperty('--len', len);
+      });
+
+      const routes = [
+        { pk:p1, path:paths[0], dur:2200, delay: 600, from:sales,   to:core,    glow:paths[0] },
+        { pk:p2, path:paths[1], dur:2400, delay:1500, from:admin,   to:core,    glow:paths[1], lilac:true },
+        { pk:p3, path:paths[2], dur:1900, delay:3200, from:core,    to:reports, glow:paths[2] },
+        { pk:p3, path:paths[3], dur:2100, delay:4300, from:core,    to:clients, glow:paths[3] }
+      ];
+
+      function runRoute(r){
+        const len = r.path.getTotalLength();
+        const start = performance.now();
+        r.glow.classList.add('glow');
+        if(r.from) r.from.classList.add('pulse');
+        function tick(now){
+          if(!scenes[0].classList.contains('is-active')) return;
+          const t = Math.min(1, (now - start) / r.dur);
+          const eased = t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+          const pt = r.path.getPointAtLength(len * eased);
+          r.pk.setAttribute('cx', pt.x);
+          r.pk.setAttribute('cy', pt.y);
+          r.pk.style.opacity = t < .05 ? t*20 : t > .95 ? (1-t)*20 : 1;
+          if(t<1){ rafs.push(requestAnimationFrame(tick)); }
+          else {
+            r.glow.classList.remove('glow');
+            if(r.from) r.from.classList.remove('pulse');
+            if(r.to){
+              r.to.classList.add('pulse');
+              if(r.lilac) r.to.classList.add('lilac-pulse');
+              timers.push(setTimeout(()=> r.to.classList.remove('pulse'), 900));
+            }
+          }
+        }
+        rafs.push(requestAnimationFrame(tick));
       }
-      requestAnimationFrame(tick);
+      routes.forEach(r=> timers.push(setTimeout(()=> runRoute(r), r.delay)));
     }
-    routes.forEach((r,i)=> setTimeout(()=> runRoute(r), r.delay));
+
+    // Scene 2 — stagger-in blocks + highlight sweep
+    function runScene2(){
+      const blocks = scenes[1].querySelectorAll('.block');
+      blocks.forEach((b,i)=>{
+        b.style.transitionDelay = (i * 90) + 'ms';
+      });
+      // highlight sweep
+      let i = 0;
+      const sweep = ()=>{
+        if(!scenes[1].classList.contains('is-active')) return;
+        blocks.forEach(b=> b.classList.remove('hl'));
+        blocks[i % blocks.length].classList.add('hl');
+        i++;
+        timers.push(setTimeout(sweep, 900));
+      };
+      timers.push(setTimeout(sweep, 900));
+    }
+
+    // Scene 3 — build website section by section + typing url
+    function runScene3(){
+      const wbs = scenes[2].querySelectorAll('.wb');
+      const url = scenes[2].querySelector('#browserUrl');
+      const urls = ['tu-marca.com','tu-tienda.com','tu-app.com'];
+      const cursor = '<span class="cursor"></span>';
+      wbs.forEach(w=> w.classList.remove('show'));
+      wbs.forEach((w,i)=> timers.push(setTimeout(()=> w.classList.add('show'), 350 + i*450)));
+
+      // type URL
+      const pick = urls[Math.floor(Math.random()*urls.length)];
+      let ch = 0;
+      url.innerHTML = 'https://' + cursor;
+      const type = ()=>{
+        if(!scenes[2].classList.contains('is-active')) return;
+        if(ch <= pick.length){
+          url.innerHTML = 'https://' + pick.slice(0, ch) + cursor;
+          ch++;
+          timers.push(setTimeout(type, 90));
+        }
+      };
+      timers.push(setTimeout(type, 600));
+    }
+
+    function setScene(n){
+      clearTimers();
+      scenes.forEach((s,i)=> s.classList.toggle('is-active', i===n));
+      pills.forEach((p,i)=> p.classList.toggle('on', i===n));
+      hdrDots.forEach((d,i)=> d.classList.toggle('on', i===n));
+      // Label swap animation
+      if(labels[n] && labelEl){
+        labelEl.classList.add('swap-out');
+        setTimeout(()=>{
+          labelEl.textContent = labels[n];
+          labelEl.classList.remove('swap-out');
+          labelEl.classList.add('swap-in');
+          requestAnimationFrame(()=> labelEl.classList.remove('swap-in'));
+        }, 250);
+      }
+      current = n;
+      if(n===0) runScene1();
+      else if(n===1) runScene2();
+      else if(n===2) runScene3();
+    }
+
+    setScene(0);
+    if(prefersReduced) return;
+    setInterval(()=> setScene((current+1) % scenes.length), 7000);
   })();
 
   // ---------- Nav hide on scroll down ----------
