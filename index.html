@@ -1681,7 +1681,354 @@
   }
   @media (max-width:820px){ .proc-wrap{ grid-template-columns:1fr 1fr;} }
   @media (max-width:520px){ .proc-wrap{ grid-template-columns:1fr;} }
-  /* ---------- TIMELINE (proceso en 4 pasos) ---------- */
+  /* ============================================================
+     PROCESS · scroll horizontal sticky with journey mockups
+     ============================================================ */
+  .proc-viewport{
+    position:relative;
+    height: 400vh;         /* 4 slides × 100vh of scroll */
+    margin-top: 40px;
+  }
+  .proc-sticky{
+    position: sticky; top: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 40px 0 50px;
+  }
+
+  /* Top progress */
+  .proc-progress{
+    flex: 0 0 auto;
+    display:flex; align-items:center; gap: 18px;
+    padding: 0 clamp(20px, 4vw, 56px);
+    margin-bottom: 18px;
+  }
+  .proc-progress-bar{
+    flex: 1; height: 2px; border-radius: 2px; overflow:hidden;
+    background: color-mix(in oklab, var(--fg) 10%, transparent);
+    position:relative;
+  }
+  .proc-progress-bar::after{
+    content:""; position:absolute; inset: 0 auto 0 0;
+    width: var(--p, 6%);
+    background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 60%, transparent), var(--accent));
+    box-shadow: 0 0 10px color-mix(in oklab, var(--accent) 60%, transparent);
+    transition: width .3s linear;
+  }
+  .proc-dots{ display:flex; gap: 10px; }
+  .proc-dot{
+    border: 0; padding: 6px 10px; border-radius: 999px;
+    background: color-mix(in oklab, var(--fg) 6%, transparent);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing:.04em;
+    color: var(--muted-2); cursor: pointer;
+    transition: background .25s ease, color .25s ease, transform .25s ease;
+  }
+  .proc-dot b{ font-weight: 500; }
+  .proc-dot:hover{ color: var(--fg); }
+  .proc-dot.on{
+    background: color-mix(in oklab, var(--accent) 20%, transparent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  /* Horizontal track */
+  .proc-track{
+    flex: 1;
+    display: flex;
+    transform: translate3d(var(--tx, 0px), 0, 0);
+    transition: transform .9s cubic-bezier(.7,0,.2,1);
+    will-change: transform;
+  }
+  .proc-slide{
+    flex: 0 0 100%;
+    height: 100%;
+    padding: 0 clamp(20px, 4vw, 56px);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(30px, 5vw, 80px);
+    align-items: center;
+  }
+
+  /* Slide copy side */
+  .ps-copy{ display:flex; flex-direction:column; gap: 20px; max-width: 48ch; }
+  .ps-step{
+    display:inline-flex; align-self: flex-start;
+    padding: 6px 12px; border-radius: 999px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em;
+    color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 14%, transparent);
+    border: 1px solid color-mix(in oklab, var(--accent) 25%, transparent);
+  }
+  .ps-copy h3{
+    margin: 0; font-size: clamp(42px, 6vw, 84px); line-height: .98;
+    letter-spacing: -.03em; font-weight: 500;
+  }
+  .ps-copy h3 .em{
+    font-family: var(--font-serif); font-style: italic; color: var(--accent); font-weight: 400;
+  }
+  .ps-copy p{ margin: 0; color: var(--muted); font-size: 17px; line-height: 1.55; max-width: 42ch; }
+  .ps-list{ list-style: none; padding: 0; margin: 6px 0 0; display:flex; flex-direction:column; gap: 10px; }
+  .ps-list li{
+    display:flex; align-items:center; gap: 12px;
+    font-size: 14px; color: var(--fg);
+    font-family: var(--font-mono); letter-spacing: .01em;
+  }
+  .ps-list li span{
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 8px var(--accent); flex: 0 0 auto;
+  }
+
+  /* Mockup side — animated per slide active state */
+  .ps-mock{
+    width: 100%; max-width: 520px; justify-self: center;
+    opacity: 0; transform: translateY(30px) scale(.96);
+    transition: opacity .7s cubic-bezier(.2,.7,.2,1) .1s,
+                transform .9s cubic-bezier(.2,.7,.2,1) .1s;
+  }
+  .proc-slide.is-active .ps-mock{
+    opacity: 1; transform: translateY(0) scale(1);
+  }
+  .proc-slide.is-active .ps-copy{ animation: slide-copy-in .9s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes slide-copy-in{
+    from{ opacity:0; transform: translateX(-20px); }
+    to  { opacity:1; transform: translateX(0); }
+  }
+
+  /* ============ MOCK 01 · NOTEBOOK ============ */
+  .mock-notebook{
+    position: relative;
+    background: linear-gradient(180deg, #fcfaf5 0%, #f4efe3 100%);
+    border-radius: 4px 16px 16px 4px;
+    padding: 30px 32px 30px 46px;
+    color: #2a251a;
+    font-family: var(--font-serif);
+    box-shadow:
+      0 20px 60px -20px rgba(0,0,0,.45),
+      0 8px 20px -10px rgba(0,0,0,.3);
+    transform: rotate(-1.5deg);
+    min-height: 380px;
+  }
+  .mock-notebook::before{
+    content:""; position:absolute; left: 30px; top: 0; bottom: 0;
+    width: 1px; background: rgba(200, 60, 60, .45);
+  }
+  .nb-rings{
+    position:absolute; left: 8px; top: 30px; bottom: 30px;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .nb-rings i{
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #c8c0a8;
+    border: 1px solid #8b8266;
+    box-shadow: inset 0 -1px 2px rgba(0,0,0,.2);
+  }
+  .nb-page{ font-size: 14px; line-height: 1.5; }
+  .nb-date{
+    font-family: var(--font-mono); font-size: 11px;
+    color: #a08a55; letter-spacing: .1em; text-transform: uppercase;
+  }
+  .nb-page h5{
+    margin: 8px 0 14px; font-family: var(--font-serif); font-style: italic;
+    font-size: 19px; font-weight: 500; letter-spacing: -.01em;
+  }
+  .nb-line{ margin-bottom: 4px; font-family: var(--font-serif); }
+  .nb-line mark{
+    background: #fbe89a; padding: 0 3px; color: inherit;
+    font-style: italic;
+  }
+  .nb-highlight{
+    margin-top: 14px; padding: 10px 14px;
+    background: rgba(251, 232, 154, .5);
+    border-left: 2px solid #d4a82e;
+    font-family: var(--font-serif); font-style: italic; font-size: 13px;
+    line-height: 1.45;
+  }
+  .nb-scribble{
+    margin-top: 18px; color: #8b8266; opacity: .6;
+  }
+  .nb-scribble svg{ width: 100px; height: 30px; }
+
+  /* ============ MOCK 02 · PROPOSAL ============ */
+  .mock-doc{
+    position: relative;
+    background: color-mix(in oklab, var(--ink) 25%, #fff);
+    color: var(--fg);
+    border-radius: 16px;
+    padding: 28px;
+    min-height: 380px;
+    border: 1px solid color-mix(in oklab, var(--fg) 12%, transparent);
+    box-shadow:
+      0 30px 60px -20px rgba(0,0,0,.5),
+      inset 2px 2px 3px rgba(255,255,255,.3),
+      inset -2px -2px 3px rgba(255,255,255,.15);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+  }
+  [data-theme="light"] .mock-doc{ background: rgba(255,255,255,.7); }
+  .doc-hd{ display:flex; justify-content:space-between; align-items:center; margin-bottom: 18px; }
+  .doc-tag{
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em;
+    color: var(--muted-2); text-transform: uppercase;
+  }
+  .doc-stamp{
+    font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+    color: var(--accent); letter-spacing: .08em; text-transform: uppercase;
+    padding: 4px 10px; border: 1.5px solid var(--accent); border-radius: 4px;
+    transform: rotate(-3deg);
+    background: color-mix(in oklab, var(--accent) 10%, transparent);
+  }
+  .doc-title{
+    font-size: 24px; font-weight: 500; letter-spacing: -.02em;
+    line-height: 1.15; margin-bottom: 4px;
+  }
+  .doc-meta{
+    font-family: var(--font-mono); font-size: 11px; color: var(--muted-2);
+    letter-spacing: .02em; margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+  }
+  .doc-kv{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .doc-kv > div{ display:flex; flex-direction: column; gap: 3px; }
+  .doc-kv span{
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em;
+    color: var(--muted-2); text-transform: uppercase;
+  }
+  .doc-kv b{ font-size: 14px; font-weight: 500; color: var(--fg); }
+  .doc-bars{ display:flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+  .doc-bar{ display:flex; align-items:center; gap: 12px; }
+  .doc-bar span{
+    font-family: var(--font-mono); font-size: 10px; color: var(--muted);
+    flex: 0 0 150px;
+  }
+  .doc-bar i{
+    flex: 1; height: 4px; border-radius: 2px; display: block;
+    background: linear-gradient(90deg, var(--accent), color-mix(in oklab, var(--accent) 50%, transparent));
+    width: var(--w);
+    box-shadow: 0 0 8px color-mix(in oklab, var(--accent) 50%, transparent);
+  }
+  .doc-sign{
+    margin-top: 10px; color: var(--accent); opacity: .75;
+  }
+
+  /* ============ MOCK 03 · IDE ============ */
+  .mock-ide{
+    background: #0d1017; color: #e4e7ee;
+    border-radius: 14px; overflow: hidden;
+    font-family: var(--font-mono);
+    border: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,.6);
+    min-height: 380px;
+    display: flex; flex-direction: column;
+  }
+  .ide-tabs{
+    display:flex; background: #070a10;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .ide-tab{
+    padding: 10px 16px; font-size: 11px; color: rgba(255,255,255,.45);
+    border-right: 1px solid rgba(255,255,255,.05);
+  }
+  .ide-tab.on{ color: #fff; background: #0d1017; border-bottom: 2px solid var(--accent); margin-bottom:-1px; }
+  .ide-body{ flex:1; padding: 16px; font-size: 12px; line-height: 1.7; }
+  .ide-code{ margin: 0; white-space: pre-wrap; font-family: inherit; }
+  .ide-code .l-num{
+    display: inline-block; width: 22px; color: rgba(255,255,255,.2);
+    user-select: none; text-align: right; margin-right: 10px;
+  }
+  .ide-code .k { color: #c084fc; }
+  .ide-code .fn{ color: #60a5fa; }
+  .ide-code .c { color: #64748b; font-style: italic; }
+  .ide-preview{
+    border-top: 1px solid rgba(255,255,255,.08);
+    background: rgba(255,255,255,.02);
+  }
+  .prev-hd{
+    padding: 8px 14px; font-size: 10px; color: rgba(255,255,255,.45);
+    letter-spacing: .04em; border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .prev-body{ padding: 10px 14px; display:flex; flex-direction: column; gap: 6px; font-size: 11px; color: rgba(255,255,255,.85); }
+  .prev-row{ display:flex; align-items:center; gap: 10px; }
+  .prev-row i.ok{
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+  }
+  .prev-row i.live{
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); opacity: .6;
+    animation: hd-pulse 1.6s ease-out infinite;
+  }
+  .prev-live{ color: rgba(255,255,255,.55); }
+
+  /* ============ MOCK 04 · DASHBOARD ============ */
+  .mock-dash{
+    background: color-mix(in oklab, var(--ink) 20%, #fff);
+    border-radius: 16px; padding: 24px;
+    border: 1px solid color-mix(in oklab, var(--fg) 12%, transparent);
+    box-shadow:
+      0 30px 60px -20px rgba(0,0,0,.5),
+      inset 2px 2px 3px rgba(255,255,255,.3),
+      inset -2px -2px 3px rgba(255,255,255,.15);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    min-height: 380px;
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  [data-theme="light"] .mock-dash{ background: rgba(255,255,255,.7); }
+  .md-hd{ display:flex; justify-content:space-between; align-items:flex-start; gap: 12px; }
+  .md-label{
+    font-family: var(--font-mono); font-size: 10px; color: var(--muted-2);
+    letter-spacing: .06em; text-transform: uppercase;
+  }
+  .md-val{
+    font-size: 28px; font-weight: 500; letter-spacing: -.02em;
+    color: var(--fg); margin-top: 4px;
+  }
+  .md-val em.up{
+    font-style: normal; font-family: var(--font-mono); font-size: 11px;
+    color: var(--accent); margin-left: 8px;
+    padding: 3px 8px; border-radius: 999px;
+    background: color-mix(in oklab, var(--accent) 16%, transparent);
+  }
+  .md-badge{
+    font-family: var(--font-mono); font-size: 10px; color: var(--muted);
+    letter-spacing: .04em;
+    padding: 5px 10px; border-radius: 999px;
+    background: color-mix(in oklab, var(--fg) 6%, transparent);
+  }
+  .md-chart{ width:100%; height: 100px; color: var(--muted-2);
+    filter: drop-shadow(0 0 10px color-mix(in oklab, var(--accent) 40%, transparent)); }
+  .md-grid{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: auto; }
+  .md-cell{
+    padding: 12px 14px; border-radius: 10px;
+    background: color-mix(in oklab, var(--fg) 4%, transparent);
+    display:flex; flex-direction: column; gap: 2px;
+  }
+  .md-cell span{ font-family: var(--font-mono); font-size: 9px; color: var(--muted-2); letter-spacing: .08em; text-transform: uppercase; }
+  .md-cell b{ font-size: 20px; font-weight: 500; letter-spacing: -.02em; color: var(--fg); }
+  .md-cell em{ font-family: var(--font-mono); font-size: 10px; color: var(--muted-2); font-style: normal; }
+
+  /* Tablet & mobile fallback: stack vertically, no sticky */
+  @media (max-width: 900px){
+    .proc-viewport{ height: auto; }
+    .proc-sticky{ position: static; height: auto; padding: 10px 0; }
+    .proc-progress{ display: none; }
+    .proc-track{
+      flex-direction: column; transform: none !important;
+      gap: 60px;
+    }
+    .proc-slide{
+      flex: 0 0 auto;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      padding: 0;
+    }
+    .ps-mock{ opacity: 1; transform: none; }
+    .proc-slide.is-active .ps-copy{ animation: none; }
+  }
+
+  /* ---------- TIMELINE (legacy, kept hidden for a11y) ---------- */
   .timeline{
     position:relative;
     margin-top: 50px;
@@ -2601,7 +2948,7 @@
 </section>
 
 <!-- PROCESS -->
-<section class="sect sect-proc" id="proceso" style="padding-top:0" data-screen-label="03 Proceso">
+<section class="sect sect-proc proc-scroll" id="proceso" style="padding-top:0" data-screen-label="03 Proceso">
   <div class="wrap">
     <div class="sect-hd">
       <div class="idx reveal">03 / Cómo trabajamos</div>
@@ -2610,7 +2957,196 @@
         <p class="reveal d2">Sin sorpresas, sin jerga, sin ciclos infinitos. Te acompañamos desde la primera conversación hasta mucho después de poner la solución en marcha.</p>
       </div>
     </div>
-    <div class="timeline">
+
+    <div class="proc-viewport" id="procViewport">
+      <div class="proc-sticky">
+        <!-- Progress bar -->
+        <div class="proc-progress">
+          <div class="proc-progress-bar" id="procProgress"></div>
+          <div class="proc-dots">
+            <button class="proc-dot on" data-step="0" aria-label="Ir al paso 1"><b>01</b></button>
+            <button class="proc-dot"    data-step="1" aria-label="Ir al paso 2"><b>02</b></button>
+            <button class="proc-dot"    data-step="2" aria-label="Ir al paso 3"><b>03</b></button>
+            <button class="proc-dot"    data-step="3" aria-label="Ir al paso 4"><b>04</b></button>
+          </div>
+        </div>
+
+        <!-- Track with 4 slides -->
+        <div class="proc-track" id="procTrack">
+
+          <!-- 01 Escuchamos — libreta -->
+          <article class="proc-slide">
+            <div class="ps-copy">
+              <span class="ps-step">Fase 01 · 1 semana</span>
+              <h3>Escuchamos<span class="em">.</span></h3>
+              <p>Nos sentamos con quien vive el proceso cada día. Tomamos notas, grabamos cuellos de botella, dibujamos el mapa real de cómo funciona todo hoy — incluidas las partes que nadie se atreve a contar.</p>
+              <ul class="ps-list">
+                <li><span></span>3–5 entrevistas con personas clave</li>
+                <li><span></span>Observación en el sitio, no por Zoom</li>
+                <li><span></span>Mapa del proceso actual, sin edulcorar</li>
+              </ul>
+            </div>
+            <div class="ps-mock">
+              <div class="mock-notebook">
+                <div class="nb-rings"><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="nb-page">
+                  <div class="nb-date">Mar · 14 abr</div>
+                  <h5>Reunión · Carmen (operaciones)</h5>
+                  <div class="nb-line">Cada pedido pasa por <mark>3 personas</mark> antes de</div>
+                  <div class="nb-line">salir. Se copia a mano del correo a Excel</div>
+                  <div class="nb-line">y luego al programa de facturación.</div>
+                  <div class="nb-line">—</div>
+                  <div class="nb-line"><mark>dolor:</mark> al final del día quedan</div>
+                  <div class="nb-line">pedidos sin procesar. Se acumulan.</div>
+                  <div class="nb-line">—</div>
+                  <div class="nb-highlight">"Si al menos llegaran ya en un formato<br>que pueda pegar..." — Carmen</div>
+                  <div class="nb-scribble">
+                    <svg viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                      <path d="M5 20 C 20 5, 40 35, 60 20 S 100 5, 115 20" />
+                      <path d="M15 30 L 105 30" stroke-dasharray="2 4"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 02 Proponemos — propuesta -->
+          <article class="proc-slide">
+            <div class="ps-copy">
+              <span class="ps-step">Fase 02 · 3–5 días</span>
+              <h3>Proponemos<span class="em">.</span></h3>
+              <p>La solución más sencilla que resuelve. Un documento con el alcance, los plazos y el precio — sin letra pequeña, sin 'dependerá de'. Lo firmas o no; así de claro.</p>
+              <ul class="ps-list">
+                <li><span></span>Alcance cerrado antes de empezar</li>
+                <li><span></span>Precio fijo, no por horas</li>
+                <li><span></span>Plan semana a semana</li>
+              </ul>
+            </div>
+            <div class="ps-mock">
+              <div class="mock-doc">
+                <div class="doc-hd">
+                  <span class="doc-tag">Propuesta · P-0342</span>
+                  <span class="doc-stamp">Aprobado</span>
+                </div>
+                <div class="doc-title">Automatización<br>del proceso de pedidos</div>
+                <div class="doc-meta">Para: Distribuidor Carmen · Abril 2026</div>
+                <div class="doc-kv">
+                  <div><span>Alcance</span><b>4 integraciones + panel</b></div>
+                  <div><span>Plazo</span><b>5 semanas</b></div>
+                  <div><span>Inversión</span><b>12 400 €</b></div>
+                </div>
+                <div class="doc-bars">
+                  <div class="doc-bar"><span>Sem 1 · Descubrimiento</span><i style="--w:100%"></i></div>
+                  <div class="doc-bar"><span>Sem 2–3 · Integraciones</span><i style="--w:90%"></i></div>
+                  <div class="doc-bar"><span>Sem 4 · Panel</span><i style="--w:70%"></i></div>
+                  <div class="doc-bar"><span>Sem 5 · Rollout</span><i style="--w:55%"></i></div>
+                </div>
+                <div class="doc-sign">
+                  <svg viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                    <path d="M5 28 C 20 10, 30 32, 45 18 C 55 8, 65 30, 80 22 C 95 15, 105 28, 115 20"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 03 Construimos — IDE + preview -->
+          <article class="proc-slide">
+            <div class="ps-copy">
+              <span class="ps-step">Fase 03 · 3–8 semanas</span>
+              <h3>Construimos<span class="em">.</span></h3>
+              <p>En ciclos cortos con entregas cada semana. Ves lo que hacemos mientras lo hacemos y ajustas sobre la marcha. Sin sorpresas en el minuto 90.</p>
+              <ul class="ps-list">
+                <li><span></span>Entregables visibles cada viernes</li>
+                <li><span></span>Feedback → cambios en días, no meses</li>
+                <li><span></span>Código propio, sin atarte a nadie</li>
+              </ul>
+            </div>
+            <div class="ps-mock">
+              <div class="mock-ide">
+                <div class="ide-tabs">
+                  <span class="ide-tab on">pedidos.ts</span>
+                  <span class="ide-tab">sync.ts</span>
+                  <span class="ide-tab">panel.tsx</span>
+                </div>
+                <div class="ide-body">
+                  <pre class="ide-code"><span class="l-num">1</span><span class="k">async function</span> <span class="fn">sincronizarPedido</span>(pedido) {{'{'}}
+<span class="l-num">2</span>  <span class="k">const</span> cliente = <span class="k">await</span> crm.<span class="fn">buscar</span>(pedido.email);
+<span class="l-num">3</span>  <span class="k">const</span> factura = <span class="k">await</span> holded.<span class="fn">crear</span>({{'{'}}
+<span class="l-num">4</span>    cliente,
+<span class="l-num">5</span>    lineas: pedido.lineas,
+<span class="l-num">6</span>  {{'}'}});
+<span class="l-num">7</span>  <span class="k">await</span> gmail.<span class="fn">confirmar</span>(cliente, factura);
+<span class="l-num">8</span>  <span class="c">// listo · 11 segundos</span>
+<span class="l-num">9</span>{{'}'}}</pre>
+                </div>
+                <div class="ide-preview">
+                  <div class="prev-hd">Preview · localhost:3000</div>
+                  <div class="prev-body">
+                    <div class="prev-row"><i class="ok"></i>Pedido #2318 sincronizado</div>
+                    <div class="prev-row"><i class="ok"></i>Factura F-0089 creada</div>
+                    <div class="prev-row"><i class="ok"></i>Confirmación enviada</div>
+                    <div class="prev-row prev-live"><i class="live"></i>Esperando próximo pedido…</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 04 Acompañamos — dashboard -->
+          <article class="proc-slide">
+            <div class="ps-copy">
+              <span class="ps-step">Fase 04 · Continuo</span>
+              <h3>Acompañamos<span class="em">.</span></h3>
+              <p>Seguimos después del arranque. La solución mejora con el uso, el equipo nunca se queda solo y los números suben porque seguimos afinando.</p>
+              <ul class="ps-list">
+                <li><span></span>Revisión mensual de métricas</li>
+                <li><span></span>Mejoras que surgen con el uso real</li>
+                <li><span></span>Canal directo de soporte</li>
+              </ul>
+            </div>
+            <div class="ps-mock">
+              <div class="mock-dash">
+                <div class="md-hd">
+                  <div>
+                    <span class="md-label">Tiempo por pedido · últimos 90 días</span>
+                    <div class="md-val">13 min <em class="up">↓ de 42 min</em></div>
+                  </div>
+                  <span class="md-badge">En marcha · 11 semanas</span>
+                </div>
+                <svg class="md-chart" viewBox="0 0 320 120" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="mdFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%"  stop-color="var(--accent)" stop-opacity=".55"/>
+                      <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <g stroke="currentColor" stroke-opacity=".1" stroke-width="1">
+                    <line x1="0" y1="30" x2="320" y2="30"/>
+                    <line x1="0" y1="60" x2="320" y2="60"/>
+                    <line x1="0" y1="90" x2="320" y2="90"/>
+                  </g>
+                  <path d="M0 18 L40 22 L80 40 L120 52 L160 70 L200 82 L240 92 L280 98 L320 102 L320 120 L0 120 Z" fill="url(#mdFill)"/>
+                  <path d="M0 18 L40 22 L80 40 L120 52 L160 70 L200 82 L240 92 L280 98 L320 102"
+                        fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="320" cy="102" r="4" fill="var(--accent)"/>
+                </svg>
+                <div class="md-grid">
+                  <div class="md-cell"><span>Errores/mes</span><b>0</b><em>era 14</em></div>
+                  <div class="md-cell"><span>Satisfacción</span><b>4.8</b><em>NPS +68</em></div>
+                  <div class="md-cell"><span>Ahorro/mes</span><b>36 h</b><em>3 personas</em></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden legacy timeline keeps semantic list for search/screen-reader -->
+    <div class="timeline" hidden aria-hidden="true">
       <!-- Horizontal rail that connects the four nodes -->
       <svg class="timeline-rail" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true">
         <defs>
@@ -3082,6 +3618,79 @@
 
     setScene(0);
     scheduleAuto(SCENE_DUR);
+  })();
+
+  // ---------- Process: horizontal scroll driven by vertical scroll ----------
+  (function procScroll(){
+    const viewport = document.getElementById('procViewport');
+    const track    = document.getElementById('procTrack');
+    const progress = document.getElementById('procProgress');
+    if(!viewport || !track) return;
+
+    const slides = track.querySelectorAll('.proc-slide');
+    const dots   = viewport.querySelectorAll('.proc-dot');
+    const n = slides.length;
+    if(n < 2) return;
+
+    const mobile = () => window.matchMedia('(max-width: 900px)').matches;
+
+    function update(){
+      if(mobile()){
+        track.style.setProperty('--tx', '0px');
+        slides.forEach(s => s.classList.add('is-active'));
+        return;
+      }
+      const r = viewport.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const total = viewport.offsetHeight - vh;   // scrollable distance
+      const scrolled = Math.min(Math.max(-r.top, 0), total);
+      const p = total > 0 ? scrolled / total : 0; // 0..1
+
+      // translate the track horizontally by p * (n-1) * 100%
+      const tx = -p * (n - 1) * 100;
+      track.style.setProperty('--tx', tx + 'vw');
+      // But .proc-slide is flex 0 0 100% of the track's own width (not vw),
+      // and track width equals container width, so use percentage-of-track.
+      // We'll compute via pixels for accuracy.
+      const trackWidth = track.clientWidth;
+      const pxShift = -p * (n - 1) * trackWidth;
+      track.style.setProperty('--tx', pxShift + 'px');
+
+      // active slide index
+      const idx = Math.min(n - 1, Math.round(p * (n - 1)));
+      slides.forEach((s, i) => s.classList.toggle('is-active', i === idx));
+      dots.forEach((d, i) => d.classList.toggle('on', i === idx));
+
+      // progress bar
+      if(progress){
+        progress.style.setProperty('--p', (p * 100) + '%');
+      }
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if(ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { update(); ticking = false; });
+    }, { passive: true });
+    window.addEventListener('resize', update);
+
+    // Click on dots → scroll to that slide's position
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        if(mobile()){
+          slides[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        const r = viewport.getBoundingClientRect();
+        const start = window.scrollY + r.top;
+        const total = viewport.offsetHeight - window.innerHeight;
+        const targetScroll = start + (i / (n - 1)) * total;
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+      });
+    });
+
+    update();
   })();
 
   // ---------- Scroll reveal (fallback for browsers without animation-timeline) ----------
