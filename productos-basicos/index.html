@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ConectUp - Productos basicos</title>
+<link rel="icon" type="image/png" href="../logomini.png">
+<link rel="icon" type="image/png" href="../logomini-dark.png" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="../logomini.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#050309;
+    --ink-2:#0b0810;
+    --ink-3:#14111b;
+    --fg:#eafdf5;
+    --muted:rgba(234,253,245,.68);
+    --muted-2:rgba(234,253,245,.46);
+    --line:rgba(220,251,239,.10);
+    --line-strong:rgba(220,251,239,.20);
+    --accent:#0fefbc;
+    --accent-ink:#041411;
+    --lilac:#d891d8;
+    --font-display:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,monospace;
+    --font-serif:"Instrument Serif",ui-serif,Georgia,serif;
+    --maxw:1240px;
+    --gut:clamp(20px,4vw,46px);
+    --glass-bg:color-mix(in oklab, var(--ink) 42%, transparent);
+    --glass-bg-strong:color-mix(in oklab, var(--ink) 62%, transparent);
+    --glass-border:color-mix(in oklab, var(--fg) 14%, transparent);
+    --glass-hl:color-mix(in oklab, var(--fg) 26%, transparent);
+    --glass-blur:blur(22px) saturate(160%);
+    --glass-blur-lg:blur(32px) saturate(170%);
+    --glass-shadow:
+      0 1px 0 color-mix(in oklab, var(--fg) 10%, transparent) inset,
+      0 20px 60px -22px color-mix(in oklab, #000 55%, transparent),
+      0 8px 24px -14px color-mix(in oklab, #000 40%, transparent);
+    --liquid-shine:
+      inset -10px -8px 0 -11px color-mix(in oklab, var(--fg) 80%, transparent),
+      inset 0 -9px 0 -8px color-mix(in oklab, var(--fg) 70%, transparent);
+  }
+  [data-theme="light"]{
+    --ink:#f6fbf8;
+    --ink-2:#eef7f1;
+    --ink-3:#e1ece5;
+    --fg:#0a0a0f;
+    --muted:rgba(10,10,15,.70);
+    --muted-2:rgba(10,10,15,.48);
+    --line:rgba(10,10,15,.10);
+    --line-strong:rgba(10,10,15,.18);
+    --accent:#0ba888;
+    --accent-ink:#ffffff;
+    --glass-bg:color-mix(in oklab, #fff 60%, transparent);
+    --glass-bg-strong:color-mix(in oklab, #fff 78%, transparent);
+    --glass-border:color-mix(in oklab, #0a0a0f 12%, transparent);
+    --glass-hl:color-mix(in oklab, #fff 90%, transparent);
+    --glass-shadow:
+      0 1px 0 color-mix(in oklab, #fff 85%, transparent) inset,
+      0 20px 60px -24px color-mix(in oklab, #0a0a0f 22%, transparent),
+      0 8px 20px -14px color-mix(in oklab, #0a0a0f 15%, transparent);
+    --liquid-shine:
+      inset -10px -8px 0 -11px rgba(255,255,255,1),
+      inset 0 -9px 0 -8px rgba(255,255,255,.95);
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--ink);
+    color:var(--fg);
+    font-family:var(--font-display);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    position:relative;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    pointer-events:none;
+    background:
+      radial-gradient(58% 42% at 14% 12%, color-mix(in oklab, var(--accent) 18%, transparent), transparent 72%),
+      radial-gradient(48% 36% at 84% 20%, color-mix(in oklab, var(--lilac) 16%, transparent), transparent 74%),
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size:auto, auto, 78px 78px, 78px 78px;
+    opacity:.52;
+    mask-image:radial-gradient(ellipse 88% 72% at 50% 28%, #000 42%, transparent 90%);
+    -webkit-mask-image:radial-gradient(ellipse 88% 72% at 50% 28%, #000 42%, transparent 90%);
+  }
+  a{ color:inherit; text-decoration:none; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 var(--gut); }
+
+  .nav{
+    position:sticky;
+    top:0;
+    z-index:30;
+    backdrop-filter:var(--glass-blur);
+    -webkit-backdrop-filter:var(--glass-blur);
+    background:color-mix(in oklab, var(--ink) 30%, transparent);
+    border-bottom:0;
+    -webkit-mask-image:linear-gradient(to bottom, #000 86%, transparent 100%);
+            mask-image:linear-gradient(to bottom, #000 86%, transparent 100%);
+  }
+  .nav-row{
+    min-height:68px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .logo-mark{
+    height:42px;
+    display:inline-flex;
+    align-items:center;
+    gap:0;
+  }
+  .logo-mark img{ height:100%; width:auto; display:block; flex:0 0 auto; }
+  .logo-mark .logo-light{ display:block !important; }
+  .logo-mark .logo-dark{ display:none !important; }
+  [data-theme="dark"] .logo-mark .logo-light{ display:none !important; }
+  [data-theme="dark"] .logo-mark .logo-dark{ display:block !important; }
+  [data-theme="light"] .logo-mark .logo-light{ display:block !important; }
+  [data-theme="light"] .logo-mark .logo-dark{ display:none !important; }
+  .nav-links{
+    display:flex;
+    gap:28px;
+    color:var(--muted);
+    font-size:14px;
+  }
+  .nav-links a:hover{ color:var(--fg); }
+  .nav-actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .back-home{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 14px;
+    border:1px solid var(--glass-border);
+    border-radius:999px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--muted);
+    background:var(--glass-bg);
+    backdrop-filter:blur(10px) saturate(180%);
+    -webkit-backdrop-filter:blur(10px) saturate(180%);
+    box-shadow:
+      0 1px 0 var(--glass-hl) inset,
+      inset -8px -6px 0 -9px color-mix(in oklab, var(--fg) 70%, transparent),
+      inset 0 -6px 0 -5px color-mix(in oklab, var(--fg) 60%, transparent);
+  }
+  .back-home:hover{
+    color:var(--fg);
+    border-color:color-mix(in oklab, var(--accent) 40%, transparent);
+  }
+
+  .toggle-switch{
+    position:relative;
+    width:62px;
+    height:30px;
+    flex:0 0 auto;
+  }
+  .toggle-switch .switch-label{
+    position:absolute;
+    inset:0;
+    border-radius:999px;
+    cursor:pointer;
+    background:#28292c;
+    border:1px solid var(--glass-border);
+    overflow:hidden;
+    backdrop-filter:blur(10px) saturate(180%);
+    -webkit-backdrop-filter:blur(10px) saturate(180%);
+    box-shadow:
+      0 1px 0 var(--glass-hl) inset,
+      inset -8px -6px 0 -9px color-mix(in oklab, var(--fg) 74%, transparent),
+      inset 0 -6px 0 -5px color-mix(in oklab, var(--fg) 64%, transparent);
+  }
+  .toggle-switch .checkbox{
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+  }
+  .toggle-switch .slider{
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
+    transition:background-color .35s ease;
+  }
+  .toggle-switch .checkbox:checked ~ .slider{ background:#d8dbe0; }
+  .toggle-switch .slider::before{
+    content:"";
+    position:absolute;
+    top:4px;
+    left:4px;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:#28292c;
+    box-shadow:inset 9px -3px 0 0 #d8dbe0;
+    transition:transform .35s ease, box-shadow .35s ease;
+  }
+  .toggle-switch .checkbox:checked ~ .slider::before{
+    transform:translateX(32px);
+    box-shadow:inset 0 0 0 0 #d8dbe0;
+  }
+
+  .hero{
+    padding:74px 0 34px;
+  }
+  .hero-shell{
+    position:relative;
+    overflow:hidden;
+    border:1px solid var(--glass-border);
+    border-radius:32px;
+    padding:clamp(28px,5vw,64px);
+    background:
+      radial-gradient(120% 90% at 18% 0%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 60%),
+      radial-gradient(90% 70% at 100% 100%, color-mix(in oklab, var(--lilac) 11%, transparent), transparent 66%),
+      var(--glass-bg);
+    backdrop-filter:var(--glass-blur-lg);
+    -webkit-backdrop-filter:var(--glass-blur-lg);
+    box-shadow:var(--glass-shadow);
+  }
+  .hero-shell::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+      linear-gradient(135deg, color-mix(in oklab, var(--fg) 6%, transparent), transparent 36%),
+      radial-gradient(44% 38% at 84% 18%, color-mix(in oklab, var(--accent) 10%, transparent), transparent 78%);
+    opacity:.85;
+  }
+  .hero-shell::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    border-radius:inherit;
+    box-shadow:var(--liquid-shine);
+    opacity:.6;
+    filter:blur(1px) brightness(115%);
+  }
+  .hero-grid{
+    position:relative;
+    z-index:1;
+    display:grid;
+    grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);
+    gap:clamp(28px,4vw,54px);
+    align-items:center;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:7px 12px;
+    border-radius:999px;
+    border:1px solid var(--line-strong);
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .eyebrow::before{
+    content:"";
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 10px var(--accent);
+  }
+  h1{
+    margin:22px 0 0;
+    font-size:clamp(42px,8vw,94px);
+    line-height:.92;
+    letter-spacing:-.04em;
+    font-weight:500;
+    max-width:11ch;
+  }
+  h1 .em{
+    font-family:var(--font-serif);
+    font-style:italic;
+    font-weight:400;
+    color:var(--accent);
+  }
+  .hero-sub{
+    margin:24px 0 0;
+    max-width:54ch;
+    color:var(--muted);
+    font-size:clamp(16px,1.35vw,19px);
+    line-height:1.65;
+  }
+  .hero-actions{
+    margin-top:28px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    min-height:48px;
+    padding:0 18px;
+    border-radius:999px;
+    font-size:14px;
+    font-weight:500;
+  }
+  .btn-primary{
+    background:color-mix(in oklab, var(--accent) 88%, transparent);
+    color:var(--accent-ink);
+    border:1px solid color-mix(in oklab, var(--accent) 70%, transparent);
+    backdrop-filter:blur(10px) saturate(180%);
+    -webkit-backdrop-filter:blur(10px) saturate(180%);
+    box-shadow:
+      0 1px 0 color-mix(in oklab, #fff 30%, transparent) inset,
+      0 14px 32px -18px color-mix(in oklab, var(--accent) 76%, transparent);
+  }
+  .btn-ghost{
+    border:1px solid var(--glass-border);
+    color:var(--fg);
+    background:var(--glass-bg);
+    backdrop-filter:blur(10px) saturate(180%);
+    -webkit-backdrop-filter:blur(10px) saturate(180%);
+    box-shadow:
+      0 1px 0 var(--glass-hl) inset,
+      inset -8px -6px 0 -9px color-mix(in oklab, var(--fg) 70%, transparent),
+      inset 0 -6px 0 -5px color-mix(in oklab, var(--fg) 60%, transparent);
+  }
+  .hero-note{
+    position:relative;
+    z-index:1;
+    display:grid;
+    gap:16px;
+  }
+  .hero-panel{
+    border:1px solid var(--glass-border);
+    border-radius:24px;
+    padding:22px;
+    background:var(--glass-bg-strong);
+    backdrop-filter:blur(14px) saturate(160%);
+    -webkit-backdrop-filter:blur(14px) saturate(160%);
+    box-shadow:
+      0 1px 0 var(--glass-hl) inset,
+      inset -8px -6px 0 -9px color-mix(in oklab, var(--fg) 70%, transparent),
+      inset 0 -6px 0 -5px color-mix(in oklab, var(--fg) 60%, transparent),
+      0 10px 30px -16px color-mix(in oklab, #000 45%, transparent);
+  }
+  .hero-panel .kicker{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted-2);
+  }
+  .hero-panel strong{
+    display:block;
+    margin-top:10px;
+    font-size:clamp(22px,3.4vw,34px);
+    line-height:1.08;
+    letter-spacing:-.03em;
+  }
+  .hero-panel p{
+    margin:12px 0 0;
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.65;
+  }
+  .hero-mini-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  .hero-mini{
+    border:1px solid var(--glass-border);
+    border-radius:18px;
+    padding:16px;
+    background:var(--glass-bg);
+    backdrop-filter:blur(12px) saturate(160%);
+    -webkit-backdrop-filter:blur(12px) saturate(160%);
+    box-shadow:
+      0 1px 0 var(--glass-hl) inset,
+      inset -8px -6px 0 -9px color-mix(in oklab, var(--fg) 66%, transparent),
+      inset 0 -6px 0 -5px color-mix(in oklab, var(--fg) 56%, transparent);
+  }
+  .hero-mini b{
+    display:block;
+    font-size:24px;
+    letter-spacing:-.03em;
+    margin-bottom:6px;
+  }
+  .hero-mini span{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  .catalog{
+    padding:18px 0 92px;
+  }
+  .catalog-head{
+    max-width:760px;
+    margin:0 auto 34px;
+    text-align:center;
+  }
+  .catalog-head span{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted-2);
+  }
+  .catalog-head h2{
+    margin:14px 0 0;
+    font-size:clamp(32px,5vw,58px);
+    line-height:.98;
+    letter-spacing:-.03em;
+    font-weight:500;
+  }
+  .catalog-head p{
+    margin:16px auto 0;
+    max-width:58ch;
+    color:var(--muted);
+    font-size:16px;
+    line-height:1.65;
+  }
+  .product-list{
+    display:grid;
+    gap:20px;
+  }
+  .product-card{
+    position:relative;
+    overflow:hidden;
+    border:1px solid var(--glass-border);
+    border-radius:28px;
+    padding:24px;
+    background:
+      radial-gradient(90% 70% at 0% 0%, color-mix(in oklab, var(--accent) 8%, transparent), transparent 70%),
+      radial-gradient(86% 64% at 100% 100%, color-mix(in oklab, var(--lilac) 8%, transparent), transparent 76%),
+      var(--glass-bg);
+    backdrop-filter:var(--glass-blur);
+    -webkit-backdrop-filter:var(--glass-blur);
+    box-shadow:var(--glass-shadow);
+  }
+  .product-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+      linear-gradient(135deg, color-mix(in oklab, var(--fg) 5%, transparent), transparent 36%),
+      radial-gradient(56% 40% at 84% 16%, color-mix(in oklab, var(--accent) 10%, transparent), transparent 80%);
+  }
+  .product-card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    border-radius:inherit;
+    box-shadow:var(--liquid-shine);
+    opacity:.58;
+    filter:blur(1px) brightness(115%);
+  }
+  .product-grid{
+    position:relative;
+    z-index:1;
+    display:grid;
+    grid-template-columns:minmax(280px,.92fr) minmax(0,1.08fr);
+    gap:24px;
+    align-items:center;
+  }
+  .product-card.reverse .product-grid{
+    grid-template-columns:minmax(0,1.08fr) minmax(280px,.92fr);
+  }
+  .product-card.reverse .product-copy{ order:1; }
+  .product-card.reverse .product-visual{ order:2; }
+  .product-visual{
+    min-height:240px;
+    border:1px solid var(--glass-border);
+    border-radius:22px;
+    background:
+      radial-gradient(120% 100% at 10% 10%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 68%),
+      radial-gradient(90% 70% at 100% 100%, color-mix(in oklab, var(--lilac) 10%, transparent), transparent 76%),
+      var(--glass-bg-strong);
+    display:grid;
+    place-items:center;
+    text-align:center;
+    padding:20px;
+    backdrop-filter:blur(16px) saturate(165%);
+    -webkit-backdrop-filter:blur(16px) saturate(165%);
+    box-shadow:
+      0 1px 0 var(--glass-hl) inset,
+      inset -8px -6px 0 -9px color-mix(in oklab, var(--fg) 70%, transparent),
+      inset 0 -6px 0 -5px color-mix(in oklab, var(--fg) 60%, transparent),
+      0 14px 34px -22px color-mix(in oklab, #000 45%, transparent);
+  }
+  .product-visual .ghost{
+    display:grid;
+    gap:12px;
+    justify-items:center;
+  }
+  .product-visual .ghost strong{
+    font-family:var(--font-mono);
+    font-size:14px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--accent);
+  }
+  .product-visual .ghost span{
+    max-width:24ch;
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.55;
+  }
+  .product-copy .tag{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted-2);
+  }
+  .product-copy h3{
+    margin:12px 0 0;
+    font-size:clamp(30px,4.4vw,54px);
+    line-height:1.02;
+    letter-spacing:-.03em;
+    font-weight:500;
+  }
+  .product-copy p{
+    margin:16px 0 0;
+    max-width:42ch;
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.7;
+  }
+  .product-points{
+    margin:18px 0 0;
+    padding:0;
+    list-style:none;
+    display:grid;
+    gap:10px;
+  }
+  .product-points li{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:var(--fg);
+    font-size:14px;
+  }
+  .product-points li::before{
+    content:"";
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 8px var(--accent);
+    flex:0 0 auto;
+  }
+
+  .closing{
+    margin-top:26px;
+    text-align:center;
+    border:1px solid var(--glass-border);
+    border-radius:22px;
+    padding:20px 24px;
+    background:var(--glass-bg);
+    backdrop-filter:blur(16px) saturate(160%);
+    -webkit-backdrop-filter:blur(16px) saturate(160%);
+    box-shadow:
+      0 1px 0 var(--glass-hl) inset,
+      inset -8px -6px 0 -9px color-mix(in oklab, var(--fg) 68%, transparent),
+      inset 0 -6px 0 -5px color-mix(in oklab, var(--fg) 58%, transparent);
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.7;
+  }
+
+  footer{
+    padding:0 0 34px;
+  }
+  .foot{
+    border-top:1px solid var(--line);
+    padding-top:18px;
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted-2);
+  }
+
+  @media (max-width: 960px){
+    .nav-links{ display:none; }
+    .nav-row{ min-height:60px; }
+    .logo-mark{ height:32px; }
+    .back-home{ display:none; }
+    .hero{ padding:42px 0 24px; }
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-shell{ border-radius:24px; padding:22px; }
+    .hero-mini-grid{ grid-template-columns:1fr; }
+    .catalog{ padding-bottom:70px; }
+    .product-grid,
+    .product-card.reverse .product-grid{
+      grid-template-columns:1fr;
+    }
+    .product-card.reverse .product-copy,
+    .product-card.reverse .product-visual{
+      order:initial;
+    }
+    .product-card{ border-radius:22px; padding:18px; }
+    .product-visual{ min-height:190px; }
+    .foot{
+      flex-direction:column;
+      text-transform:none;
+      letter-spacing:.04em;
+    }
+  }
+</style>
+</head>
+<body data-theme="dark">
+<nav class="nav">
+  <div class="wrap nav-row">
+    <a class="logo" href="../index.html" aria-label="ConectUp">
+      <span class="logo-mark">
+        <img class="logo-light" src="../logolargo.png" alt="ConectUp">
+        <img class="logo-dark" src="../logolargo-dark.png" alt="" aria-hidden="true">
+      </span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#servicios">Servicios</a>
+      <a href="../index.html#proceso">C&oacute;mo trabajamos</a>
+      <a href="../index.html#contacto">Contacto</a>
+    </div>
+    <div class="nav-actions">
+      <a class="back-home" href="../index.html">Volver al inicio</a>
+      <div class="toggle-switch" id="themeToggleWrap" title="Cambiar tema">
+        <label class="switch-label" aria-label="Cambiar entre modo oscuro y claro">
+          <input type="checkbox" class="checkbox" id="themeToggle" role="switch" aria-checked="false">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-shell">
+        <div class="hero-grid">
+          <div>
+            <span class="eyebrow">Productos b&aacute;sicos</span>
+            <h1>Herramientas <span class="em">&uacute;tiles</span>, sin esperar desarrollos largos.</h1>
+            <p class="hero-sub">Adem&aacute;s de construir soluciones a medida, tambi&eacute;n vamos a ofrecer herramientas listas para usar. La idea es resolver necesidades comunes con una inversi&oacute;n mucho menor y una puesta en marcha mucho m&aacute;s r&aacute;pida.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../index.html#contacto">Hablar con nosotros</a>
+              <a class="btn btn-ghost" href="../index.html#servicios">Ver servicios a medida</a>
+            </div>
+          </div>
+
+          <aside class="hero-note">
+            <div class="hero-panel">
+              <span class="kicker">Lo que encontrar&aacute;s aqu&iacute;</span>
+              <strong>Productos claros, ligeros y mucho m&aacute;s accesibles.</strong>
+              <p>Cuando tengamos herramientas listas, esta ser&aacute; la zona para descubrirlas sin tener que empezar siempre desde cero.</p>
+            </div>
+            <div class="hero-mini-grid">
+              <div class="hero-mini">
+                <b>Menor coste</b>
+                <span>Soluciones pensadas para cubrir necesidades repetidas sin proyecto a medida.</span>
+              </div>
+              <div class="hero-mini">
+                <b>Menos espera</b>
+                <span>Base ya preparada para activar valor antes y con una implantaci&oacute;n m&aacute;s simple.</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="catalog">
+    <div class="wrap">
+      <div class="catalog-head">
+        <span>Pr&oacute;ximamente</span>
+        <h2>Una peque&ntilde;a l&iacute;nea de productos lista para crecer.</h2>
+        <p>De momento todav&iacute;a no hay SAAS publicados, pero dejamos esta estructura preparada para presentar cada herramienta con el mismo lenguaje visual del inicio y una lectura mucho m&aacute;s agradable.</p>
+      </div>
+
+      <div class="product-list">
+        <article class="product-card">
+          <div class="product-grid">
+            <div class="product-visual">
+              <div class="ghost">
+                <strong>SAAS 1</strong>
+                <span>Placeholder visual para la primera herramienta lista para usar.</span>
+              </div>
+            </div>
+            <div class="product-copy">
+              <span class="tag">Placeholder</span>
+              <h3>SAAS 1</h3>
+              <p>Texto provisional para el primer producto. Aqu&iacute; ir&aacute; una explicaci&oacute;n clara del problema que resuelve, para qu&eacute; negocio est&aacute; pensado y por qu&eacute; merece la pena frente a seguir haci&eacute;ndolo manualmente.</p>
+              <ul class="product-points">
+                <li>Enfoque simple y r&aacute;pido de implantar</li>
+                <li>Precio mucho m&aacute;s bajo que un desarrollo a medida</li>
+                <li>Perfecto para necesidades repetidas</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <article class="product-card reverse">
+          <div class="product-grid">
+            <div class="product-copy">
+              <span class="tag">Placeholder</span>
+              <h3>SAAS 2</h3>
+              <p>Segundo ejemplo provisional, con la composici&oacute;n invertida para que la p&aacute;gina respire mejor. Aqu&iacute; podremos a&ntilde;adir capturas, funcionalidades principales y un resumen del plan recomendado.</p>
+              <ul class="product-points">
+                <li>Lectura r&aacute;pida para entender el producto en segundos</li>
+                <li>Dise&ntilde;o preparado para screenshots y casos de uso</li>
+                <li>Base visual consistente con la web principal</li>
+              </ul>
+            </div>
+            <div class="product-visual">
+              <div class="ghost">
+                <strong>SAAS 2</strong>
+                <span>Espacio reservado para otro producto con m&aacute;s contexto y pantallas.</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="closing">
+        Todav&iacute;a no tenemos SAAS publicados. Esta p&aacute;gina queda preparada como subdirectorio principal para ense&ntilde;arlos cuando est&eacute;n listos, manteniendo el mismo tono visual, el selector de tema y la conexi&oacute;n directa con la web principal.
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>ConectUp</span>
+    <span>Productos b&aacute;sicos</span>
+  </div>
+</footer>
+
+<script>
+  const THEME_KEY = 'conectup:theme';
+  const themeToggle = document.getElementById('themeToggle');
+
+  function applyTheme(theme){
+    document.body.dataset.theme = theme;
+    const isLight = theme === 'light';
+    themeToggle.checked = isLight;
+    themeToggle.setAttribute('aria-checked', String(isLight));
+  }
+
+  const stored = (()=>{ try{ return localStorage.getItem(THEME_KEY); }catch(_){ return null; } })();
+  applyTheme(stored || 'dark');
+
+  themeToggle.addEventListener('change', ()=>{
+    const next = themeToggle.checked ? 'light' : 'dark';
+    applyTheme(next);
+    try{ localStorage.setItem(THEME_KEY, next); }catch(_){}
+  });
+</script>
+</body>
+</html>
