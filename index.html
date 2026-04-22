@@ -1335,6 +1335,101 @@
   }
   @keyframes chk-spin{ to{ transform: rotate(360deg); } }
 
+  /* --- Dashboard card: hero KPI + grid + bars --- */
+  .card-hd-v2 .hd-tabs{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family: var(--font-mono); font-size:10px; letter-spacing:.04em;
+    color: var(--muted-2);
+  }
+  .card-hd-v2 .hd-tabs b{
+    color: var(--fg); font-weight:500;
+    padding: 4px 9px; border-radius:999px;
+    background: color-mix(in oklab, var(--fg) 8%, transparent);
+  }
+  .card-hd-v2 .hd-tabs i{ font-style:normal; color: var(--muted-2); opacity:.5; }
+
+  .dash-hero{
+    margin-top: 18px;
+    display:grid; grid-template-columns: 1fr auto; align-items:center; gap: 14px;
+    padding: 18px 18px 14px;
+    border-radius: 14px;
+    background: linear-gradient(135deg,
+      color-mix(in oklab, var(--accent) 14%, transparent),
+      color-mix(in oklab, var(--accent) 4%, transparent));
+    border: 1px solid color-mix(in oklab, var(--accent) 20%, transparent);
+  }
+  .dash-label{
+    font-family: var(--font-mono); font-size:10px;
+    color: var(--muted-2); letter-spacing:.06em; text-transform:uppercase;
+  }
+  .dash-value{ display:flex; align-items:baseline; gap:12px; margin-top:4px; flex-wrap:wrap;}
+  .dash-num{
+    font-size: 30px; letter-spacing:-.03em; font-weight:500; color: var(--fg);
+    line-height:1;
+  }
+  .dash-num em{
+    font-family: var(--font-serif); font-style: italic; color: var(--accent);
+    font-size:.65em; margin-left:2px;
+  }
+  .dash-delta{
+    display:inline-flex; align-items:center; gap:4px;
+    padding: 3px 8px; border-radius:999px;
+    font-family: var(--font-mono); font-size:11px; font-weight:500;
+    color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 15%, transparent);
+  }
+  .dash-delta svg{ width:12px; height:12px;}
+
+  .dash-spark{ width:120px; height:40px; flex:0 0 auto; filter: drop-shadow(0 0 6px color-mix(in oklab, var(--accent) 40%, transparent)); }
+
+  .dash-grid{
+    margin-top: 10px;
+    display:grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .dash-cell{
+    padding: 14px; border-radius: 12px;
+    background: color-mix(in oklab, var(--fg) 4%, transparent);
+    display:flex; flex-direction:column; gap:4px;
+  }
+  .dash-num-sm{
+    font-size: 22px; font-weight:500; color: var(--fg); letter-spacing:-.02em;
+    line-height:1.1;
+  }
+  .dash-num-sm em{
+    font-family: var(--font-mono); font-style:normal; font-size:.55em;
+    color: var(--muted-2); margin-left:2px; font-weight:400;
+  }
+  .dash-note{
+    font-family: var(--font-mono); font-size:10px; color: var(--muted-2); letter-spacing:.02em;
+  }
+
+  .dash-bars{ margin-top: 10px; display:flex; flex-direction:column; gap: 10px; }
+  .dash-bar{
+    padding: 12px 14px; border-radius: 12px;
+    background: color-mix(in oklab, var(--fg) 4%, transparent);
+  }
+  .dash-bar-hd{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-family: var(--font-mono); font-size:11px; color: var(--muted);
+    letter-spacing:.02em; margin-bottom: 8px;
+  }
+  .dash-bar-hd b{ color: var(--fg); font-weight:500; font-size:13px; }
+  .dash-bar-hd b em{ font-style:normal; color: var(--muted-2); font-weight:400; font-size:.8em; }
+  .bar-track{
+    display:block; height: 6px; border-radius: 999px;
+    background: color-mix(in oklab, var(--fg) 10%, transparent);
+    overflow:hidden; position:relative;
+  }
+  .bar-track i{
+    display:block; height:100%;
+    width: var(--w, 50%);
+    background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 70%, transparent), var(--accent));
+    border-radius:inherit;
+    box-shadow: 0 0 10px color-mix(in oklab, var(--accent) 60%, transparent);
+    animation: bar-fill 1.4s cubic-bezier(.22,.61,.36,1) both;
+  }
+  @keyframes bar-fill{ from{ width:0; } }
+
   /* Pulse badge (replaces dots) */
   .card-hd-v2 .hd-pulse{
     display:inline-flex; align-items:center; gap:6px;
@@ -2163,16 +2258,77 @@
           <span class="sticker lilac" style="width:80px; height:80px; top:-25px; right:30px;"></span>
           <span class="sticker mint" style="width:50px; height:50px; bottom:40px; left:-20px;"></span>
           <div class="feat-card lg">
-            <div class="feat-card-hd">
-              <span>Panel · inicio</span>
-              <span class="dots"><i></i><i></i><i></i></span>
+            <div class="feat-card-hd card-hd-v2">
+              <div class="hd-left">
+                <span class="hd-title">Panel de Julia</span>
+                <span class="hd-meta">Abril · semana 3 · actualizado hace 2 min</span>
+              </div>
+              <span class="hd-tabs">
+                <b>Hoy</b><i>·</i><span>Semana</span><i>·</i><span>Mes</span>
+              </span>
             </div>
-            <div class="vwin lg">
-              <div class="vwin-row"><span class="lbl">Pedidos pendientes</span><span class="val">24</span></div>
-              <div class="vwin-row"><span class="lbl">Entregas de hoy</span><span class="val">12</span></div>
-              <div class="vwin-row hl"><span class="lbl">Ingresos del mes</span><span class="val">+18%</span></div>
-              <div class="vwin-row"><span class="lbl">Objetivo mensual</span><span class="mini-bar"><i style="--w:74%"></i></span></div>
-              <div class="vwin-row"><span class="lbl">Satisfacción</span><span class="mini-bar"><i style="--w:88%"></i></span></div>
+
+            <!-- Hero KPI with sparkline -->
+            <div class="dash-hero">
+              <div class="dash-hero-left">
+                <span class="dash-label">Ingresos · abril</span>
+                <div class="dash-value">
+                  <span class="dash-num">38 420<em>€</em></span>
+                  <span class="dash-delta up">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17l5-6 4 4 5-8"/><path d="M14 7h7v7"/></svg>
+                    +18% vs marzo
+                  </span>
+                </div>
+              </div>
+              <svg class="dash-spark" viewBox="0 0 120 40" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"  stop-color="var(--accent)" stop-opacity=".45"/>
+                    <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0 28 L12 26 L24 30 L36 22 L48 24 L60 18 L72 20 L84 14 L96 16 L108 8 L120 6 L120 40 L0 40 Z" fill="url(#sparkFill)"/>
+                <path d="M0 28 L12 26 L24 30 L36 22 L48 24 L60 18 L72 20 L84 14 L96 16 L108 8 L120 6"
+                      fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="120" cy="6" r="3" fill="var(--accent)"/>
+              </svg>
+            </div>
+
+            <!-- 2x2 secondary KPIs -->
+            <div class="dash-grid">
+              <div class="dash-cell">
+                <span class="dash-label">Pedidos pendientes</span>
+                <span class="dash-num-sm">24</span>
+                <span class="dash-note">3 urgentes</span>
+              </div>
+              <div class="dash-cell">
+                <span class="dash-label">Entregas de hoy</span>
+                <span class="dash-num-sm">12<em>/14</em></span>
+                <span class="dash-note">2 en reparto</span>
+              </div>
+            </div>
+
+            <!-- Progress bars -->
+            <div class="dash-bars">
+              <div class="dash-bar">
+                <div class="dash-bar-hd">
+                  <span>Objetivo mensual</span>
+                  <b>74%</b>
+                </div>
+                <span class="bar-track"><i style="--w:74%"></i></span>
+              </div>
+              <div class="dash-bar">
+                <div class="dash-bar-hd">
+                  <span>Satisfacción cliente</span>
+                  <b>4.8<em>/5</em></b>
+                </div>
+                <span class="bar-track"><i style="--w:88%"></i></span>
+              </div>
+            </div>
+
+            <div class="card-foot">
+              <span class="foot-dot"></span>
+              <span class="foot-txt">Diseñado <b>para Julia</b> · 7 vistas conectadas a 4 apps</span>
             </div>
           </div>
         </div>
