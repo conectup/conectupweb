@@ -47,4 +47,19 @@ Cada developer trabaja libremente en su rama `develop-*`. Para promover a prepro
 
 ## Deploy
 
-Al ser estático, cualquier hosting de archivos estáticos sirve (GitHub Pages, Netlify, Vercel, Cloudflare Pages, S3, etc.). El contenido a desplegar es la raíz del repo.
+**Producción**: [conectupweb.pages.dev](https://conectupweb.pages.dev) (Cloudflare Pages)
+
+### Auto-deploy
+
+Cada push a `main` dispara el workflow `.github/workflows/deploy.yml` que
+sube la raíz del repo a Cloudflare Pages via Wrangler.
+
+Secrets requeridos en el repo (ya configurados):
+- `CLOUDFLARE_API_TOKEN` — token con permiso "Cloudflare Pages · Edit"
+- `CLOUDFLARE_ACCOUNT_ID` — ID de la cuenta destino
+
+### Deploy manual
+
+```bash
+CLOUDFLARE_API_TOKEN=xxx npx wrangler pages deploy . --project-name=conectupweb --branch=main
+```
