@@ -676,6 +676,194 @@
   .strip-row span::before{ content:""; width:6px; height:6px; background:var(--accent); border-radius:999px; display:inline-block;}
   @keyframes slide{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
+  /* ============================================================
+     GLASS PASS — Apple-style frosted glass treatment
+     Applied on top of existing components. Layered:
+       1. Translucent fill with backdrop-blur
+       2. Thin translucent border
+       3. Inner top highlight via ::before (1px inset top line)
+       4. Soft layered shadow for depth
+     ============================================================ */
+  :root{
+    --glass-bg:        color-mix(in oklab, var(--ink) 42%, transparent);
+    --glass-bg-strong: color-mix(in oklab, var(--ink) 62%, transparent);
+    --glass-border:    color-mix(in oklab, var(--fg)  14%, transparent);
+    --glass-hl:        color-mix(in oklab, var(--fg)  24%, transparent);
+    --glass-blur:      blur(22px) saturate(160%);
+    --glass-blur-lg:   blur(32px) saturate(170%);
+    --glass-shadow:    0 1px 0 color-mix(in oklab, var(--fg) 10%, transparent) inset,
+                       0 20px 60px -20px color-mix(in oklab, #000 55%, transparent),
+                       0 8px 20px -12px color-mix(in oklab, #000 40%, transparent);
+  }
+  [data-theme="light"]{
+    --glass-bg:        color-mix(in oklab, #fff 60%, transparent);
+    --glass-bg-strong: color-mix(in oklab, #fff 78%, transparent);
+    --glass-border:    color-mix(in oklab, #0a0a0f 12%, transparent);
+    --glass-hl:        color-mix(in oklab, #fff 90%, transparent);
+    --glass-shadow:    0 1px 0 color-mix(in oklab, #fff 85%, transparent) inset,
+                       0 20px 60px -24px color-mix(in oklab, #0a0a0f 22%, transparent),
+                       0 8px 20px -14px color-mix(in oklab, #0a0a0f 15%, transparent);
+  }
+
+  /* Nav — stronger frost */
+  .nav{
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 1px 0 var(--glass-hl) inset;
+  }
+
+  /* Hero visualization */
+  .viz{
+    background:
+      radial-gradient(120% 80% at 20% 0%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 60%),
+      radial-gradient(80% 60% at 100% 100%, color-mix(in oklab, var(--lilac) 12%, transparent), transparent 60%),
+      var(--glass-bg);
+    backdrop-filter: var(--glass-blur-lg);
+    -webkit-backdrop-filter: var(--glass-blur-lg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    position:relative;
+  }
+  .viz::after{
+    content:""; position:absolute; left:1px; right:1px; top:1px; height:1px;
+    background: linear-gradient(90deg, transparent, var(--glass-hl), transparent);
+    pointer-events:none; border-radius:inherit;
+  }
+
+  /* Nodes inside viz */
+  .node{
+    background: var(--glass-bg-strong) !important;
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      0 1px 0 var(--glass-hl) inset,
+      0 10px 30px -14px color-mix(in oklab, #000 50%, transparent);
+  }
+
+  /* Toasts — frosted pill */
+  .wf-toast{
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Buttons */
+  .btn{ backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .btn-primary{
+    background: color-mix(in oklab, var(--accent) 88%, transparent);
+    border-color: color-mix(in oklab, var(--accent) 70%, transparent);
+    box-shadow:
+      0 1px 0 color-mix(in oklab, #fff 30%, transparent) inset,
+      0 10px 30px -10px color-mix(in oklab, var(--accent) 80%, transparent);
+  }
+  .btn-primary:hover{
+    box-shadow:
+      0 1px 0 color-mix(in oklab, #fff 40%, transparent) inset,
+      0 14px 40px -12px color-mix(in oklab, var(--accent) 95%, transparent);
+  }
+  .btn-ghost{
+    background: var(--glass-bg);
+    border-color: var(--glass-border);
+    box-shadow: 0 1px 0 var(--glass-hl) inset;
+  }
+  .btn-ghost:hover{ background: var(--glass-bg-strong); border-color: var(--glass-hl); }
+
+  /* Nav CTA */
+  .nav-cta{
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-color: var(--glass-border);
+    box-shadow: 0 1px 0 var(--glass-hl) inset;
+  }
+
+  /* Feature cards — glass surface */
+  .feat-card{
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    position:relative;
+  }
+  .feat-card::before{
+    content:""; position:absolute; left:1px; right:1px; top:1px; height:1px;
+    background: linear-gradient(90deg, transparent, var(--glass-hl), transparent);
+    pointer-events:none; border-radius:inherit;
+  }
+
+  /* Sub-window inside feature cards */
+  .vwin{
+    background: var(--glass-bg-strong) !important;
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 1px 0 var(--glass-hl) inset, 0 10px 30px -14px color-mix(in oklab, #000 40%, transparent);
+  }
+
+  /* Tool pills */
+  .vtool{
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-color: var(--glass-border);
+  }
+
+  /* CTA block */
+  .cta{
+    background:
+      radial-gradient(60% 120% at 100% 0%, color-mix(in oklab, var(--accent) 20%, transparent), transparent 60%),
+      radial-gradient(60% 120% at 0% 100%, color-mix(in oklab, var(--lilac) 18%, transparent), transparent 60%),
+      var(--glass-bg);
+    backdrop-filter: var(--glass-blur-lg);
+    -webkit-backdrop-filter: var(--glass-blur-lg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    position:relative;
+  }
+  .cta::before{
+    content:""; position:absolute; left:1px; right:1px; top:1px; height:1px;
+    background: linear-gradient(90deg, transparent, var(--glass-hl), transparent);
+    pointer-events:none; border-radius:inherit;
+  }
+
+  /* Tweaks panel — already glassy, just refine */
+  .tweaks{
+    background: var(--glass-bg-strong);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+
+  /* Scene nav buttons */
+  .scene-nav{
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    border-color: var(--glass-border);
+    box-shadow: 0 1px 0 var(--glass-hl) inset, 0 10px 24px -10px color-mix(in oklab, #000 45%, transparent);
+  }
+
+  /* Theme toggle track */
+  .toggle-switch .switch-label{
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      0 1px 0 var(--glass-hl) inset,
+      0 6px 18px color-mix(in oklab, #000 32%, transparent);
+  }
+
+  /* Disable heavy blur on low-end / when not supported */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+    .viz, .feat-card, .cta, .nav, .node, .wf-toast, .vwin, .btn-ghost, .nav-cta, .vtool, .tweaks, .scene-nav{
+      background-color: color-mix(in oklab, var(--ink) 88%, transparent);
+    }
+  }
+
   /* ---------- SECTION HEADER ---------- */
   .sect{ padding: var(--sect) 0; position:relative;}
   .sect-hd{ display:grid; grid-template-columns: 120px 1fr; gap:32px; margin-bottom: 68px; align-items:start;}
