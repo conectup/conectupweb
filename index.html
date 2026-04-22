@@ -911,25 +911,36 @@
   [data-theme="light"] .lg{ background-color: rgba(255,255,255,.12); }
   .lg > *{ position:relative; z-index:3; }
 
-  /* BEND — distorts everything behind via SVG turbulence applied to
-     the BACKDROP (not the element). This is what makes the glass
-     actually warp what's behind it. */
+  /* BEND — blur + saturate the backdrop (universal, Chrome/Edge/Safari).
+     The SVG displacement filter is layered on top as a subtle noise
+     distortion via a second pseudo technique (see below). */
   .lg::before{
     content:""; position:absolute; inset:0; z-index:0;
     border-radius: inherit;
-    backdrop-filter: blur(4px) saturate(180%) url(#glass-blur);
-    -webkit-backdrop-filter: blur(4px) saturate(180%) url(#glass-blur);
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
     pointer-events:none;
   }
-  /* EDGE — thick inset white rim, aggressive */
+  /* EDGE — thick inset white rim like the reference (very visible) */
   .lg::after{
     content:""; position:absolute; inset:0; z-index:2;
     border-radius: inherit;
     box-shadow:
-      inset  3px  3px 4px 0 rgba(255,255,255,.55),
-      inset -3px -3px 4px 0 rgba(255,255,255,.40),
-      inset  0   0  0  1px rgba(255,255,255,.18);
+      inset  2px  2px 3px  0 rgba(255,255,255,.85),
+      inset -2px -2px 3px  0 rgba(255,255,255,.75),
+      inset  4px  4px 10px 0 rgba(255,255,255,.25),
+      inset -4px -4px 10px 0 rgba(255,255,255,.20),
+      inset  0    0   0   1px rgba(255,255,255,.35);
     pointer-events:none;
+    mix-blend-mode: plus-lighter;
+  }
+  [data-theme="light"] .lg::after{
+    box-shadow:
+      inset  2px  2px 3px  0 rgba(255,255,255,.95),
+      inset -2px -2px 3px  0 rgba(255,255,255,.85),
+      inset  4px  4px 10px 0 rgba(255,255,255,.40),
+      inset -4px -4px 10px 0 rgba(255,255,255,.30),
+      inset  0    0   0   1px rgba(255,255,255,.55);
   }
 
   /* Tinted variants keep brand color but let the bend show through */
@@ -947,8 +958,8 @@
     content:""; left:0; right:0; top:0; bottom:0; height:auto;
     background: none;
     border-radius: inherit;
-    backdrop-filter: blur(4px) saturate(180%) url(#glass-blur);
-    -webkit-backdrop-filter: blur(4px) saturate(180%) url(#glass-blur);
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
     filter: none;
     z-index:0;
   }
@@ -958,9 +969,12 @@
     background: none; opacity:1; filter:none;
     border-radius: inherit;
     box-shadow:
-      inset  3px  3px 4px 0 rgba(255,255,255,.55),
-      inset -3px -3px 4px 0 rgba(255,255,255,.40),
-      inset  0   0  0  1px rgba(255,255,255,.18);
+      inset  2px  2px 3px  0 rgba(255,255,255,.85),
+      inset -2px -2px 3px  0 rgba(255,255,255,.75),
+      inset  4px  4px 10px 0 rgba(255,255,255,.25),
+      inset -4px -4px 10px 0 rgba(255,255,255,.20),
+      inset  0    0   0   1px rgba(255,255,255,.35);
+    mix-blend-mode: plus-lighter;
     z-index:2;
   }
 
@@ -970,19 +984,42 @@
     position:relative; isolation:isolate;
   }
   .sect-testi::before, .sect-feat::before, .sect-cta::before{
-    content:""; position:absolute; inset:-10% -5%; z-index:-1; pointer-events:none;
+    content:""; position:absolute; inset:-10% -5%; z-index:-2; pointer-events:none;
     background:
-      radial-gradient(32% 40% at 15% 25%, color-mix(in oklab, var(--accent) 80%, transparent), transparent 60%),
-      radial-gradient(30% 38% at 85% 20%, color-mix(in oklab, var(--lilac)  80%, transparent), transparent 60%),
-      radial-gradient(28% 36% at 50% 80%, color-mix(in oklab, #F5B35A 70%, transparent), transparent 60%),
-      radial-gradient(25% 35% at 30% 75%, color-mix(in oklab, var(--accent) 65%, transparent), transparent 60%),
-      radial-gradient(22% 32% at 75% 60%, color-mix(in oklab, var(--lilac) 65%, transparent), transparent 60%);
-    filter: blur(40px);
-    opacity: .75;
+      radial-gradient(32% 40% at 15% 25%, color-mix(in oklab, var(--accent) 85%, transparent), transparent 60%),
+      radial-gradient(30% 38% at 85% 20%, color-mix(in oklab, var(--lilac)  85%, transparent), transparent 60%),
+      radial-gradient(28% 36% at 50% 80%, color-mix(in oklab, #F5B35A 75%, transparent), transparent 60%),
+      radial-gradient(25% 35% at 30% 75%, color-mix(in oklab, var(--accent) 70%, transparent), transparent 60%),
+      radial-gradient(22% 32% at 75% 60%, color-mix(in oklab, var(--lilac) 70%, transparent), transparent 60%);
+    filter: blur(30px);
+    opacity: .9;
   }
   [data-theme="light"] .sect-testi::before,
   [data-theme="light"] .sect-feat::before,
-  [data-theme="light"] .sect-cta::before{ opacity:.55; }
+  [data-theme="light"] .sect-cta::before{ opacity:.6; }
+
+  /* Giant watermark text behind sections — this is what the glass
+     actually distorts in a way the user can perceive */
+  .sect-testi::after, .sect-feat::after, .sect-cta::after{
+    content: attr(data-watermark);
+    position:absolute; left:0; right:0; z-index:-1; pointer-events:none;
+    top:50%; transform: translateY(-50%);
+    font-family: var(--font-display);
+    font-size: clamp(100px, 20vw, 280px);
+    font-weight: 700; letter-spacing:-.04em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px color-mix(in oklab, var(--fg) 18%, transparent);
+            text-stroke: 1.5px color-mix(in oklab, var(--fg) 18%, transparent);
+    text-align:center;
+    white-space: nowrap; overflow:hidden;
+    opacity:.7;
+  }
+  [data-theme="light"] .sect-testi::after,
+  [data-theme="light"] .sect-feat::after,
+  [data-theme="light"] .sect-cta::after{
+    -webkit-text-stroke-color: color-mix(in oklab, #0a0a0f 14%, transparent);
+    opacity:.55;
+  }
 
   /* Fallback when SVG filter isn't supported — keep the rim look */
   @supports not (filter: url(#glass-blur)){
@@ -1626,7 +1663,7 @@
 </div>
 
 <!-- FEATURE ROWS (alternating) -->
-<section class="sect sect-feat" id="servicios" data-screen-label="02 Servicios">
+<section class="sect sect-feat" id="servicios" data-screen-label="02 Servicios" data-watermark="servicios">
   <div class="wrap">
     <div class="sect-hd">
       <div class="idx reveal">02 / Qué hacemos</div>
@@ -1809,7 +1846,7 @@
 </section>
 
 <!-- TESTIMONIALS (sticky notes) -->
-<section class="sect sect-testi" id="confianza" style="padding-top:0" data-screen-label="04 Confianza">
+<section class="sect sect-testi" id="confianza" style="padding-top:0" data-screen-label="04 Confianza" data-watermark="confianza">
   <div class="wrap">
     <div class="sect-hd">
       <div class="idx reveal">04 / Lo que dicen</div>
@@ -1835,7 +1872,7 @@
 </section>
 
 <!-- CTA FINAL -->
-<section class="wrap sect-cta" id="contacto" data-screen-label="05 CTA">
+<section class="wrap sect-cta" id="contacto" data-screen-label="05 CTA" data-watermark="contacto">
   <div class="cta lg reveal">
     <div class="cta-grid">
       <div>
