@@ -1281,8 +1281,80 @@
   .vrow .chk{ width:20px; height:20px; border-radius:999px; background:var(--accent); color:var(--accent-ink);
     display:flex; align-items:center; justify-content:center; flex-shrink:0;}
   .vrow .chk svg{ width:12px; height:12px;}
-  .vrow.pending{ opacity:.55;}
-  .vrow.pending .chk{ background:transparent; border:1px dashed var(--muted-2);}
+  .vrow.pending{ opacity:.72;}
+  .vrow.pending .chk{ background:transparent; border:1px dashed var(--muted-2); display:grid; place-items:center;}
+
+  /* --- Task card v2: richer header + rows with meta + footer --- */
+  .card-hd-v2{ align-items:flex-start; }
+  .card-hd-v2 .hd-left{ display:flex; flex-direction:column; gap:3px; text-transform:none; letter-spacing:normal;}
+  .card-hd-v2 .hd-title{
+    font-family: var(--font-display); font-size:14px; font-weight:500;
+    color: var(--fg); letter-spacing:-.01em; text-transform:none;
+  }
+  .card-hd-v2 .hd-meta{
+    font-family: var(--font-mono); font-size:10px; color: var(--muted-2);
+    letter-spacing:.04em; text-transform:none;
+  }
+  .card-hd-v2 .hd-badge{
+    display:inline-flex; align-items:center; gap:3px;
+    padding:5px 10px; border-radius:999px;
+    font-family: var(--font-mono); font-size:11px;
+    color: var(--fg);
+    background: color-mix(in oklab, var(--accent) 18%, transparent);
+    border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+  }
+  .card-hd-v2 .hd-badge b{ color: var(--accent); font-weight:600; font-size:13px;}
+
+  .vlist-v2{ gap: 10px; }
+  .vlist-v2 .vrow{
+    display:grid; grid-template-columns: auto 1fr auto; align-items:center;
+    gap: 14px; padding: 12px 14px; border-radius: 12px;
+    background: color-mix(in oklab, var(--fg) 4%, transparent);
+    transition: background .25s ease, transform .25s ease;
+  }
+  .vlist-v2 .vrow:hover{ background: color-mix(in oklab, var(--fg) 7%, transparent); transform: translateX(2px); }
+  .vlist-v2 .vrow-body{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+  .vlist-v2 .vrow-title{
+    color: var(--fg); font-size:14px; font-weight:400; letter-spacing:-.005em;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .vlist-v2 .vrow-sub{
+    font-family: var(--font-mono); font-size:10px; color: var(--muted-2); letter-spacing:.02em;
+  }
+  .vlist-v2 .vrow-time{
+    font-family: var(--font-mono); font-size:10px; color: var(--muted-2);
+    letter-spacing:.04em; flex:0 0 auto;
+  }
+  .vlist-v2 .vrow.pending .vrow-time{ color: var(--accent); }
+
+  /* Spinning dot inside the pending checkbox */
+  .chk-spin{
+    display:block; width:8px; height:8px; border-radius:50%;
+    border: 1.5px solid var(--muted-2); border-top-color: var(--accent);
+    animation: chk-spin .9s linear infinite;
+  }
+  @keyframes chk-spin{ to{ transform: rotate(360deg); } }
+
+  /* Footer summary */
+  .card-foot{
+    margin-top: 16px; padding-top: 14px;
+    border-top: 1px solid color-mix(in oklab, var(--fg) 8%, transparent);
+    display:flex; align-items:center; gap: 10px;
+    font-family: var(--font-mono); font-size:11px; color: var(--muted);
+    letter-spacing:.02em;
+  }
+  .card-foot b{ color: var(--fg); font-weight:500; }
+  .card-foot .foot-dot{
+    width:7px; height:7px; border-radius:999px; background: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 18%, transparent),
+                0 0 10px var(--accent);
+    animation: foot-pulse 2.4s ease-in-out infinite;
+    flex:0 0 auto;
+  }
+  @keyframes foot-pulse{
+    0%,100%{ box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 18%, transparent), 0 0 10px var(--accent); }
+    50%    { box-shadow: 0 0 0 7px color-mix(in oklab, var(--accent) 8%, transparent),  0 0 14px var(--accent); }
+  }
   .feat-visual:hover .vrow:nth-child(1){ transform: translateX(4px);}
   .feat-visual:hover .vrow:nth-child(2){ transform: translateX(8px);}
   .feat-visual:hover .vrow:nth-child(3){ transform: translateX(4px);}
@@ -1864,27 +1936,50 @@
           <span class="sticker mint" style="width:80px; height:80px; top:-30px; right:-20px;"></span>
           <span class="sticker lilac" style="width:60px; height:60px; bottom:-20px; left:-25px;"></span>
           <div class="feat-card lg">
-            <div class="feat-card-hd">
-              <span>Tareas · hoy</span>
-              <span class="dots"><i></i><i></i><i></i></span>
+            <div class="feat-card-hd card-hd-v2">
+              <div class="hd-left">
+                <span class="hd-title">Jueves, 22 abr</span>
+                <span class="hd-meta">Automatizado · corre cada día a las 08:00</span>
+              </div>
+              <span class="hd-badge"><b>3</b>/4</span>
             </div>
-            <div class="vlist">
+            <div class="vlist vlist-v2">
               <div class="vrow">
                 <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9"/></svg></span>
-                <span>Generar facturas del mes</span>
+                <div class="vrow-body">
+                  <span class="vrow-title">Facturas del mes</span>
+                  <span class="vrow-sub">Lorena · 2 h → 11 s</span>
+                </div>
+                <span class="vrow-time">08:00</span>
               </div>
               <div class="vrow">
                 <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9"/></svg></span>
-                <span>Actualizar estado de pedidos</span>
+                <div class="vrow-body">
+                  <span class="vrow-title">Estado de pedidos</span>
+                  <span class="vrow-sub">Admin · 45 min → 4 s</span>
+                </div>
+                <span class="vrow-time">08:02</span>
               </div>
               <div class="vrow">
                 <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9"/></svg></span>
-                <span>Enviar recordatorios</span>
+                <div class="vrow-body">
+                  <span class="vrow-title">Recordatorios a clientes</span>
+                  <span class="vrow-sub">34 correos enviados</span>
+                </div>
+                <span class="vrow-time">08:05</span>
               </div>
               <div class="vrow pending">
-                <span class="chk"></span>
-                <span>Preparar informe semanal</span>
+                <span class="chk"><span class="chk-spin"></span></span>
+                <div class="vrow-body">
+                  <span class="vrow-title">Informe semanal</span>
+                  <span class="vrow-sub">En cola · espera cierre de día</span>
+                </div>
+                <span class="vrow-time">19:00</span>
               </div>
+            </div>
+            <div class="card-foot">
+              <span class="foot-dot"></span>
+              <span class="foot-txt">Esta semana · <b>14 h 30 min</b> recuperadas</span>
             </div>
           </div>
         </div>
