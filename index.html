@@ -2743,6 +2743,9 @@
   .foot ul{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; color:var(--muted); font-size:14px;}
   .foot ul a:hover{ color:var(--fg);}
   .foot-brand{ font-size:14px; color:var(--muted); max-width:36ch; line-height:1.55}
+  /* Plain list (no link hover, no cursor) — used for Servicios in footer */
+  .foot-plain li{ cursor: default; color: var(--muted); }
+  .foot-plain li:hover{ color: var(--muted); }
   .foot-bot{ display:flex; justify-content:space-between; margin-top:50px; padding-top:24px; border-top:1px solid var(--line); font-family:var(--font-mono); font-size:12px; color:var(--muted-2); letter-spacing:.08em; text-transform:uppercase;}
 
   /* ---------- reveals ---------- */
@@ -3960,11 +3963,12 @@
       </div>
       <div>
         <h5>Servicios</h5>
-        <ul>
-          <li><a href="#servicios">Automatizaciones</a></li>
-          <li><a href="#servicios">Workflows</a></li>
-          <li><a href="#servicios">Software a medida</a></li>
-          <li><a href="#servicios">Integraciones</a></li>
+        <ul class="foot-plain">
+          <li>Diseños web</li>
+          <li>Automatizaciones</li>
+          <li>Workflows</li>
+          <li>Software a medida</li>
+          <li>Integraciones</li>
         </ul>
       </div>
       <div>
