@@ -734,22 +734,14 @@
     box-shadow: var(--glass-shadow);
     position:relative;
   }
-  /* Top 1px inner highlight (uses ::before so ::after stays free for liquid shine) */
-  .viz::before{
-    content:""; position:absolute; left:1px; right:1px; top:1px; height:1px;
-    background: linear-gradient(90deg, transparent, var(--glass-hl), transparent);
-    pointer-events:none; border-radius:inherit; z-index:2;
+  /* Liquid rim baked into the viz border itself (no pseudo-elements, so
+     scenes/nodes/packets remain fully visible and untouched). */
+  .viz{
+    box-shadow:
+      var(--glass-shadow),
+      inset -10px -8px 0 -11px var(--glass-hl),
+      inset 0 -9px 0 -8px var(--glass-hl);
   }
-  /* Liquid shine — bottom-right rim + subtle drop shadow, behind content */
-  .viz::after{
-    content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
-    border-radius: inherit;
-    box-shadow: var(--liquid-shine);
-    opacity:.65;
-    filter: blur(1px) brightness(115%);
-  }
-  .viz > *{ position:relative; z-index:1; }
-  .viz-hdr, .scene-pills, .scene-nav{ z-index:4 !important; }
 
   /* Nodes inside viz — liquid pill */
   .node{
