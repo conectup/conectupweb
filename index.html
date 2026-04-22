@@ -1686,6 +1686,264 @@
   .note .who{ font-family:var(--font-display); font-style:normal; font-size:13px; letter-spacing:.02em; color:rgba(10,10,15,.7); margin-top:22px;}
   .note .who b{ color:#0a0a0f; font-weight:500;}
 
+  /* ============================================================
+     REVIEWS — editorial wall (hero quote + grid + trust row)
+     ============================================================ */
+  .rv-hero{
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 40px;
+    padding: clamp(30px, 4vw, 54px);
+    border-radius: 28px;
+    background: color-mix(in oklab, var(--ink) 20%, transparent);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+    box-shadow: 0 30px 70px -24px rgba(0,0,0,.45);
+    position: relative; overflow: hidden;
+    align-items: center;
+  }
+  .rv-hero::before{
+    content:""; position:absolute; left:1px; right:1px; top:0; height:1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+    pointer-events:none;
+  }
+  @media (max-width: 820px){
+    .rv-hero{ grid-template-columns: 1fr; gap: 28px; }
+  }
+
+  .rv-hero-main{ display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+  .rv-quote-mark{
+    width: 44px; height: 36px;
+    color: var(--accent); opacity: .85;
+  }
+  .rv-quote{ margin: 0; }
+  .rv-quote p{
+    margin: 0;
+    font-family: var(--font-serif); font-weight: 400;
+    font-size: clamp(26px, 3.2vw, 40px); line-height: 1.25;
+    letter-spacing: -.015em;
+    color: var(--fg);
+  }
+  .rv-quote p em{
+    font-style: italic; color: var(--accent); font-weight: 400;
+  }
+
+  .rv-meta{
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    padding-top: 10px;
+    border-top: 1px solid color-mix(in oklab, var(--fg) 8%, transparent);
+  }
+  .rv-sep{
+    width: 1px; height: 32px;
+    background: color-mix(in oklab, var(--fg) 12%, transparent);
+  }
+  .rv-avatar{
+    width: 52px; height: 52px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg,
+      color-mix(in oklab, var(--accent) 60%, transparent),
+      color-mix(in oklab, var(--accent) 30%, transparent));
+    color: var(--accent-ink, #041411); font-weight: 600; font-size: 18px;
+    letter-spacing: .02em;
+    border: 2px solid color-mix(in oklab, var(--accent) 50%, transparent);
+    box-shadow: 0 6px 20px -8px color-mix(in oklab, var(--accent) 60%, transparent);
+    flex: 0 0 auto;
+  }
+  .rv-avatar.sm{ width: 36px; height: 36px; font-size: 13px; border-width: 1.5px; }
+  .rv-avatar.lilac{
+    background: linear-gradient(135deg,
+      color-mix(in oklab, var(--lilac) 70%, transparent),
+      color-mix(in oklab, var(--lilac) 35%, transparent));
+    border-color: color-mix(in oklab, var(--lilac) 55%, transparent);
+    box-shadow: 0 6px 20px -8px color-mix(in oklab, var(--lilac) 60%, transparent);
+    color: #2a0f2a;
+  }
+  .rv-avatar.amber{
+    background: linear-gradient(135deg,
+      color-mix(in oklab, #F5B35A 70%, transparent),
+      color-mix(in oklab, #F5B35A 35%, transparent));
+    border-color: color-mix(in oklab, #F5B35A 55%, transparent);
+    box-shadow: 0 6px 20px -8px color-mix(in oklab, #F5B35A 60%, transparent);
+    color: #3a1f08;
+  }
+
+  .rv-who{ display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .rv-who b{
+    color: var(--fg); font-weight: 500; font-size: 14px;
+    letter-spacing: -.005em;
+  }
+  .rv-who span{
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--muted-2); letter-spacing: .02em;
+  }
+
+  .rv-context{ display: flex; flex-direction: column; gap: 2px; }
+  .rv-label{
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--muted-2); letter-spacing: .08em; text-transform: uppercase;
+  }
+  .rv-context b{
+    color: var(--fg); font-weight: 500; font-size: 13px;
+    letter-spacing: -.005em;
+  }
+
+  /* KPI sidebar in hero review */
+  .rv-hero-kpi{
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 24px;
+    border-radius: 18px;
+    background: linear-gradient(160deg,
+      color-mix(in oklab, var(--accent) 16%, transparent),
+      color-mix(in oklab, var(--accent) 4%, transparent));
+    border: 1px solid color-mix(in oklab, var(--accent) 25%, transparent);
+    position: relative; overflow: hidden;
+  }
+  .rv-kpi-label{
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--accent); letter-spacing: .08em; text-transform: uppercase;
+  }
+  .rv-kpi-value{
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    font-size: clamp(54px, 7vw, 80px); color: var(--accent);
+    line-height: 1; letter-spacing: -.03em;
+    display: flex; align-items: flex-start; gap: 2px;
+  }
+  .rv-kpi-value em{
+    font-family: var(--font-mono); font-style: normal; font-size: 22px;
+    letter-spacing: 0; margin-top: 8px; opacity: .8;
+  }
+  .rv-kpi-note{
+    font-family: var(--font-display); font-size: 14px;
+    color: var(--fg); letter-spacing: -.005em;
+  }
+  .rv-kpi-bar{
+    height: 4px; border-radius: 2px; overflow: hidden;
+    background: color-mix(in oklab, var(--fg) 10%, transparent);
+    margin-top: 8px;
+  }
+  .rv-kpi-bar i{
+    display: block; height: 100%; width: var(--w, 70%);
+    background: linear-gradient(90deg, var(--accent), color-mix(in oklab, var(--accent) 50%, transparent));
+    box-shadow: 0 0 10px color-mix(in oklab, var(--accent) 60%, transparent);
+    animation: bar-fill 1.4s cubic-bezier(.22,.61,.36,1) both;
+  }
+  .rv-kpi-foot{
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--muted); letter-spacing: .02em;
+    padding-top: 10px;
+    border-top: 1px solid color-mix(in oklab, var(--fg) 8%, transparent);
+  }
+  .rv-kpi-foot b{ color: var(--fg); font-weight: 500; }
+
+  /* Secondary reviews grid */
+  .rv-grid{
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 760px){ .rv-grid{ grid-template-columns: 1fr; } }
+
+  .rv-card-span{ grid-column: 1 / -1; }
+
+  .rv-card{
+    display: flex; flex-direction: column; gap: 16px;
+    padding: 26px;
+    border-radius: 20px;
+    background: color-mix(in oklab, var(--ink) 18%, transparent);
+    backdrop-filter: blur(14px) saturate(180%);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+    border: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+    box-shadow: 0 18px 40px -18px rgba(0,0,0,.35);
+    position: relative; overflow: hidden;
+    transition: transform .35s cubic-bezier(.2,.7,.2,1), border-color .35s ease, box-shadow .35s ease;
+  }
+  .rv-card::before{
+    content:""; position:absolute; left:1px; right:1px; top:0; height:1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+    pointer-events:none;
+  }
+  .rv-card:hover{
+    transform: translateY(-3px);
+    border-color: color-mix(in oklab, var(--accent) 35%, transparent);
+    box-shadow: 0 24px 50px -18px color-mix(in oklab, var(--accent) 25%, rgba(0,0,0,.4));
+  }
+
+  .rv-stars{ display: flex; gap: 2px; color: var(--accent); }
+  .rv-stars svg{ width: 14px; height: 14px; fill: currentColor; }
+  .rv-stars svg:hover{ transform: scale(1.1); }
+
+  .rv-text{
+    margin: 0;
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    font-size: 18px; line-height: 1.45;
+    color: var(--fg); letter-spacing: -.005em;
+    flex: 1;
+  }
+  .rv-text mark{
+    background: color-mix(in oklab, var(--accent) 22%, transparent);
+    color: var(--fg);
+    padding: 1px 4px; border-radius: 3px;
+    font-style: italic;
+  }
+
+  .rv-foot{
+    display: flex; align-items: center; gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid color-mix(in oklab, var(--fg) 8%, transparent);
+  }
+  .rv-foot .rv-who{ flex: 1; }
+  .rv-chip{
+    padding: 4px 10px; border-radius: 999px;
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--accent); letter-spacing: .04em;
+    background: color-mix(in oklab, var(--accent) 14%, transparent);
+    border: 1px solid color-mix(in oklab, var(--accent) 28%, transparent);
+  }
+
+  /* Trust row */
+  .rv-trust{
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+    align-items: center;
+    gap: clamp(14px, 3vw, 40px);
+    padding: 24px clamp(20px, 4vw, 44px);
+    border-radius: 20px;
+    background: color-mix(in oklab, var(--ink) 14%, transparent);
+    border: 1px solid color-mix(in oklab, var(--fg) 8%, transparent);
+    backdrop-filter: blur(10px) saturate(160%);
+    -webkit-backdrop-filter: blur(10px) saturate(160%);
+  }
+  @media (max-width: 760px){
+    .rv-trust{ grid-template-columns: 1fr 1fr; gap: 20px; }
+    .trust-sep{ display: none; }
+  }
+  .trust-cell{
+    display: flex; flex-direction: column; gap: 2px;
+    text-align: left;
+  }
+  .trust-cell b{
+    font-size: clamp(26px, 3vw, 34px); font-weight: 500;
+    color: var(--fg); letter-spacing: -.02em; line-height: 1;
+  }
+  .trust-cell b em{
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    color: var(--accent); font-size: .7em; margin-left: 2px;
+  }
+  .trust-cell span{
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--muted-2); letter-spacing: .06em; text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .trust-sep{
+    width: 1px; height: 40px;
+    background: color-mix(in oklab, var(--fg) 10%, transparent);
+  }
+
   /* ---------- PROCESS (numbered organic steps) ---------- */
   .proc-wrap{
     display:grid; grid-template-columns: repeat(4, 1fr); gap: clamp(20px, 3vw, 40px);
@@ -3347,18 +3605,117 @@
         <h2 class="reveal d1">Hecho con equipos reales, <span class="em">con historias reales.</span></h2>
       </div>
     </div>
-    <div class="testi-row">
-      <div class="note lg lg-tint-paper reveal">
-        <p>"En seis semanas reemplazaron una tarea manual que ocupaba a tres personas. Hoy funciona sola."</p>
-        <div class="who"><b>Martín R.</b> · Operaciones</div>
+    <!-- Featured quote (hero review) -->
+    <article class="rv-hero reveal">
+      <div class="rv-hero-main">
+        <svg class="rv-quote-mark" viewBox="0 0 60 48" fill="currentColor" aria-hidden="true">
+          <path d="M0 48V28C0 15.8 6.4 6.4 19.2 0l4 8C15.2 12 11.2 18.4 11.2 27.2H20V48H0zm34 0V28C34 15.8 40.4 6.4 53.2 0l4 8c-8 4-12 10.4-12 19.2H54V48H34z"/>
+        </svg>
+        <blockquote class="rv-quote">
+          <p>En seis semanas reemplazaron una tarea que ocupaba a <em>tres personas</em>. Hoy funciona sola, sin que nadie tenga que acordarse.</p>
+        </blockquote>
+        <div class="rv-meta">
+          <div class="rv-avatar" data-initials="MR" aria-hidden="true">MR</div>
+          <div class="rv-who">
+            <b>Martín Ruiz</b>
+            <span>Director de Operaciones · Frutas del Ebro S.L.</span>
+          </div>
+          <div class="rv-sep"></div>
+          <div class="rv-context">
+            <span class="rv-label">Proyecto</span>
+            <b>Automatización de pedidos · 6 semanas</b>
+          </div>
+        </div>
       </div>
-      <div class="note lg lg-tint-mint reveal d1">
-        <p>"Nos entendieron desde el primer día. Sin jerga, sin humo — sólo soluciones que funcionan."</p>
-        <div class="who"><b>Lucía G.</b> · Dirección</div>
+      <aside class="rv-hero-kpi">
+        <span class="rv-kpi-label">Impacto medido</span>
+        <div class="rv-kpi-value">−68<em>%</em></div>
+        <span class="rv-kpi-note">tiempo por pedido</span>
+        <div class="rv-kpi-bar"><i style="--w:68%"></i></div>
+        <span class="rv-kpi-foot">Antes <b>42 min</b> · Después <b>13 min</b></span>
+      </aside>
+    </article>
+
+    <!-- Secondary reviews -->
+    <div class="rv-grid">
+      <article class="rv-card reveal d1">
+        <div class="rv-stars" aria-label="5 de 5">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+        </div>
+        <p class="rv-text">Nos entendieron desde el primer día. <mark>Sin jerga, sin humo</mark> — sólo soluciones que funcionan. Lo que pedimos el lunes lo teníamos el viernes.</p>
+        <footer class="rv-foot">
+          <div class="rv-avatar sm" data-initials="LG">LG</div>
+          <div class="rv-who">
+            <b>Lucía Gómez</b>
+            <span>Dirección · Clínica Marbe</span>
+          </div>
+          <span class="rv-chip">3 proyectos</span>
+        </footer>
+      </article>
+
+      <article class="rv-card reveal d2">
+        <div class="rv-stars" aria-label="5 de 5">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+        </div>
+        <p class="rv-text">Cuando necesitamos algo nuevo, responden el mismo día. Se nota que <mark>no son una consultora más</mark> — están pendientes del día a día.</p>
+        <footer class="rv-foot">
+          <div class="rv-avatar sm lilac" data-initials="JS">JS</div>
+          <div class="rv-who">
+            <b>Jorge Salas</b>
+            <span>Logística · Distribuciones Andía</span>
+          </div>
+          <span class="rv-chip">2 años juntos</span>
+        </footer>
+      </article>
+
+      <article class="rv-card rv-card-span reveal d3">
+        <div class="rv-stars" aria-label="5 de 5">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg>
+        </div>
+        <p class="rv-text">Pensé que íbamos a tener que cambiar nuestra forma de trabajar para encajar en su sistema. Fue al revés: <mark>el sistema se adaptó a nosotros</mark>. Y sigue adaptándose.</p>
+        <footer class="rv-foot">
+          <div class="rv-avatar sm amber" data-initials="CM">CM</div>
+          <div class="rv-who">
+            <b>Carmen Molina</b>
+            <span>CEO · Atelier Molina</span>
+          </div>
+          <span class="rv-chip">Cliente desde 2023</span>
+        </footer>
+      </article>
+    </div>
+
+    <!-- Trust row -->
+    <div class="rv-trust reveal d4">
+      <div class="trust-cell">
+        <b>3<em> años</em></b>
+        <span>acompañando a clientes</span>
       </div>
-      <div class="note lg lg-tint-lilac reveal d2">
-        <p>"Lo mejor: cuando necesitamos algo nuevo, responden el mismo día. Se nota el acompañamiento."</p>
-        <div class="who"><b>Jorge S.</b> · Logística</div>
+      <div class="trust-sep"></div>
+      <div class="trust-cell">
+        <b>12</b>
+        <span>proyectos activos</span>
+      </div>
+      <div class="trust-sep"></div>
+      <div class="trust-cell">
+        <b>98<em>%</em></b>
+        <span>tasa de renovación</span>
+      </div>
+      <div class="trust-sep"></div>
+      <div class="trust-cell">
+        <b>4.9<em>/5</em></b>
+        <span>nota media</span>
       </div>
     </div>
   </div>
