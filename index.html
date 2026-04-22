@@ -911,13 +911,14 @@
   [data-theme="light"] .lg{ background-color: rgba(255,255,255,.12); }
   .lg > *{ position:relative; z-index:3; }
 
-  /* BEND — distorts everything behind via SVG turbulence */
+  /* BEND — distorts everything behind via SVG turbulence applied to
+     the BACKDROP (not the element). This is what makes the glass
+     actually warp what's behind it. */
   .lg::before{
     content:""; position:absolute; inset:0; z-index:0;
     border-radius: inherit;
-    backdrop-filter: blur(6px) saturate(160%);
-    -webkit-backdrop-filter: blur(6px) saturate(160%);
-    filter: url(#glass-blur);
+    backdrop-filter: blur(4px) saturate(180%) url(#glass-blur);
+    -webkit-backdrop-filter: blur(4px) saturate(180%) url(#glass-blur);
     pointer-events:none;
   }
   /* EDGE — thick inset white rim, aggressive */
@@ -946,9 +947,9 @@
     content:""; left:0; right:0; top:0; bottom:0; height:auto;
     background: none;
     border-radius: inherit;
-    backdrop-filter: blur(6px) saturate(160%);
-    -webkit-backdrop-filter: blur(6px) saturate(160%);
-    filter: url(#glass-blur);
+    backdrop-filter: blur(4px) saturate(180%) url(#glass-blur);
+    -webkit-backdrop-filter: blur(4px) saturate(180%) url(#glass-blur);
+    filter: none;
     z-index:0;
   }
   .feat-card.lg::after,
@@ -969,17 +970,19 @@
     position:relative; isolation:isolate;
   }
   .sect-testi::before, .sect-feat::before, .sect-cta::before{
-    content:""; position:absolute; inset:-20% -10%; z-index:-1; pointer-events:none;
+    content:""; position:absolute; inset:-10% -5%; z-index:-1; pointer-events:none;
     background:
-      radial-gradient(40% 50% at 18% 30%, color-mix(in oklab, var(--accent) 55%, transparent), transparent 65%),
-      radial-gradient(35% 45% at 80% 25%, color-mix(in oklab, var(--lilac)  55%, transparent), transparent 65%),
-      radial-gradient(38% 48% at 55% 85%, color-mix(in oklab, #F5B35A 45%, transparent), transparent 65%);
-    filter: blur(60px);
-    opacity: .55;
+      radial-gradient(32% 40% at 15% 25%, color-mix(in oklab, var(--accent) 80%, transparent), transparent 60%),
+      radial-gradient(30% 38% at 85% 20%, color-mix(in oklab, var(--lilac)  80%, transparent), transparent 60%),
+      radial-gradient(28% 36% at 50% 80%, color-mix(in oklab, #F5B35A 70%, transparent), transparent 60%),
+      radial-gradient(25% 35% at 30% 75%, color-mix(in oklab, var(--accent) 65%, transparent), transparent 60%),
+      radial-gradient(22% 32% at 75% 60%, color-mix(in oklab, var(--lilac) 65%, transparent), transparent 60%);
+    filter: blur(40px);
+    opacity: .75;
   }
   [data-theme="light"] .sect-testi::before,
   [data-theme="light"] .sect-feat::before,
-  [data-theme="light"] .sect-cta::before{ opacity:.38; }
+  [data-theme="light"] .sect-cta::before{ opacity:.55; }
 
   /* Fallback when SVG filter isn't supported — keep the rim look */
   @supports not (filter: url(#glass-blur)){
@@ -1355,8 +1358,8 @@
 <!-- Global SVG filter for liquid-glass displacement -->
 <svg style="position:absolute; width:0; height:0; overflow:hidden" aria-hidden="true">
   <filter id="glass-blur" x="0" y="0" width="100%" height="100%" filterUnits="objectBoundingBox">
-    <feTurbulence type="fractalNoise" baseFrequency="0.004 0.008" numOctaves="1" result="turbulence" />
-    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="80" xChannelSelector="R" yChannelSelector="G" />
+    <feTurbulence type="fractalNoise" baseFrequency="0.006 0.012" numOctaves="2" seed="4" result="turbulence" />
+    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="180" xChannelSelector="R" yChannelSelector="G" />
   </filter>
 </svg>
 
