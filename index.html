@@ -1777,21 +1777,16 @@
   .stage-btn:active{ transform: translateY(0) scale(.94); }
   .stage-btn svg{ width: 18px; height: 18px; }
 
-  /* Grab cursor on deck to hint draggability. user-select:none kills
-     native text selection so mouse drag works smoothly — the text is
-     purely decorative inside the cards anyway. */
-  .proc-deck{
-    cursor: grab;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-  .proc-deck:active{ cursor: grabbing; }
   .stage-play .ico-play{ display: none; }
   .stage-stage-stopped .stage-play .ico-pause,
   .proc-stage.is-paused .stage-play .ico-pause{ display: none; }
   .proc-stage.is-paused .stage-play .ico-play{ display: block; }
 
-  /* Card deck — native scroll-snap, zero lag */
+  /* Card deck — native scroll-snap, zero lag.
+     - user-select:none and cursor:grab to signal draggability and kill
+       native text selection before it starts.
+     - touch-action:pan-y so mouse horizontal drag works (we handle x).
+     - mask-image fades the edges so neighbour cards don't cut sharply. */
   .proc-deck{
     display: flex;
     gap: clamp(16px, 2vw, 28px);
@@ -1799,10 +1794,24 @@
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    padding: 40px clamp(14%, 18%, 22%);
+    padding: 40px clamp(10%, 14%, 18%);
     scrollbar-width: none;
     -ms-overflow-style: none;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: pan-y;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
   }
+  .proc-deck:active{ cursor: grabbing; }
+  .proc-deck.is-dragging{
+    cursor: grabbing;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+  }
+  /* During drag, kids ignore the pointer so clicks/hovers don't fire */
+  .proc-deck.is-dragging *{ pointer-events: none; }
   .proc-deck::-webkit-scrollbar{ display: none; }
 
   /* Each slide */
@@ -3860,23 +3869,24 @@
     });
 
     // --- Drag to scroll with snap on release ---
-    // Pattern: mousedown on deck, then mousemove/mouseup on window so the
-    // drag keeps tracking even if the pointer leaves the deck. We call
-    // preventDefault() on mousedown itself, which is the only way to
-    // suppress native text selection in Chrome/Firefox/Safari reliably.
+    // Robust pattern for draggable overflow containers:
+    // - mousedown on deck: preventDefault kills native text selection
+    //   AND the default scrollbar drag behavior.
+    // - mousemove/mouseup on window so the drag keeps tracking even if
+    //   the cursor leaves the deck.
+    // - class 'is-dragging' on deck disables scroll-snap via CSS (not
+    //   inline) so Chrome honors the change immediately.
     let isDragging = false, dragStartX = 0, dragStartScroll = 0, dragMoved = false;
 
     function onDown(e){
-      if(e.button !== undefined && e.button !== 0) return;
+      if(e.button !== 0) return;
       if(e.target.closest('button, a, input, textarea, select')) return;
+      e.preventDefault();                  // kill native selection/drag
       isDragging = true;
-      dragMoved = false;
+      dragMoved  = false;
       dragStartX = e.clientX;
       dragStartScroll = deck.scrollLeft;
-      deck.style.scrollSnapType = 'none';
-      deck.style.cursor = 'grabbing';
-      // IMPORTANT: kill native text selection immediately
-      e.preventDefault();
+      deck.classList.add('is-dragging');
       if(window.getSelection) window.getSelection().removeAllRanges();
     }
 
@@ -3885,31 +3895,32 @@
       const dx = e.clientX - dragStartX;
       if(Math.abs(dx) > 3) dragMoved = true;
       deck.scrollLeft = dragStartScroll - dx;
+      e.preventDefault();
     }
 
     function onUp(){
       if(!isDragging) return;
       isDragging = false;
-      deck.style.cursor = '';
+      deck.classList.remove('is-dragging');
+      // Recompute active slide from where the user dropped, then snap.
       markActive();
-      deck.style.scrollSnapType = 'x mandatory';
       goTo(current);
-      // Keep dragMoved true briefly so the click that fires right after
-      // pointerup gets swallowed; reset on next tick.
-      setTimeout(() => { dragMoved = false; }, 0);
+      // Swallow the synthetic click that may fire after this mouseup.
+      setTimeout(() => { dragMoved = false; }, 50);
     }
 
-    deck.addEventListener('mousedown',  onDown);
-    window.addEventListener('mousemove', onMove);
+    deck.addEventListener('mousedown',   onDown);
+    window.addEventListener('mousemove', onMove, { passive: false });
     window.addEventListener('mouseup',   onUp);
 
-    // Swallow the click after a drag so cards don't trigger links
+    // Swallow the click that fires at the end of a drag so links/cards
+    // don't trigger. Use capture so we intercept before target listeners.
     deck.addEventListener('click', (e) => {
       if(dragMoved){ e.preventDefault(); e.stopPropagation(); }
     }, true);
 
-    // Belt-and-braces: stop the browser's native drag ghost image and any
-    // stray selectstart that sneaks through.
+    // Belt-and-braces: kill browser's native drag ghost image and any
+    // selectstart that slips through.
     deck.addEventListener('dragstart',   (e) => e.preventDefault());
     deck.addEventListener('selectstart', (e) => { if(isDragging) e.preventDefault(); });
 
