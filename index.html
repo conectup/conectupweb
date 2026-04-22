@@ -2026,6 +2026,7 @@
     position: relative;
     margin-top: 40px;
   }
+  .proc-mobile{ display:none; }
 
   /* Header with numbered dot-nav + prev/play/next */
   .stage-hd{
@@ -3129,6 +3130,371 @@
     .dash-grid{ grid-template-columns: 1fr; }
   }
 
+  /* ============================================================
+     MOBILE REBUILD · calm, simple, no heavy blur/animation
+     ============================================================ */
+  @media (max-width: 760px){
+    :root{
+      --gut: 16px;
+      --sect: 52px;
+    }
+    html{ -webkit-text-size-adjust: 100%; }
+    body{
+      overflow-x: hidden;
+      background:
+        radial-gradient(70% 60% at 8% 0%, color-mix(in oklab, var(--accent) 8%, transparent), transparent 80%),
+        var(--ink);
+    }
+    body::before,
+    body::after{
+      display: none !important;
+    }
+
+    .flow-path.dashed,
+    .block-wires path,
+    .wf-pk,
+    .wf-toast,
+    .feat-visual .sticker,
+    .theme-wave,
+    .theme-wave.echo{
+      animation: none !important;
+      transition: none !important;
+    }
+    .nav,
+    .lg,
+    .btn,
+    .kpi,
+    .feat-card,
+    .rv-card,
+    .proc-slide,
+    .cta,
+    .cta-form,
+    .wb,
+    .tl-node{
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      filter: none !important;
+      box-shadow: none !important;
+    }
+
+    .nav{
+      background: color-mix(in oklab, var(--ink) 92%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-row{ height: 60px; }
+    .logo-mark{ height: 30px; }
+    .nav .wrap{ padding: 0 14px; }
+    .nav-actions{ gap: 8px; }
+    #themeToggleWrap{
+      display: block;
+      transform: scale(.9);
+      transform-origin: center;
+    }
+    .nav-cta{
+      padding: 8px 11px !important;
+      font-size: 12px !important;
+      border-radius: 10px;
+      border-color: color-mix(in oklab, var(--accent) 30%, transparent);
+      background: color-mix(in oklab, var(--accent) 14%, transparent);
+    }
+
+    .sect{ padding: 42px 0; }
+
+    .hero{
+      padding-top: 84px !important;
+      padding-bottom: 16px !important;
+    }
+    .hero-grid,
+    .scene-nav,
+    .scene-pills,
+    .viz-hdr .dots,
+    .sticker,
+    .wf-toasts,
+    .timeline-rail,
+    .tweaks{
+      display: none !important;
+    }
+    .hero-inner{
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+    h1.hero-title{
+      font-size: clamp(34px, 10.2vw, 46px) !important;
+      line-height: 1.08;
+      margin-top: 8px;
+      max-width: 14ch;
+    }
+    h1.hero-title .glow-layer{ display: none; }
+    .hero-sub{
+      font-size: 15px !important;
+      line-height: 1.55;
+      margin-top: 14px !important;
+      max-width: 34ch;
+      color: var(--muted);
+    }
+    .hero-ctas{
+      margin-top: 18px !important;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .hero-ctas .btn{
+      width: 100%;
+      justify-content: center;
+      padding: 13px 16px !important;
+    }
+    .hero-meta{
+      display: flex !important;
+      margin-top: 10px;
+      gap: 14px;
+    }
+    .viz{ display: none !important; }
+    .kpis{
+      grid-template-columns: 1fr !important;
+      gap: 10px !important;
+      border-top: 0 !important;
+      padding-top: 0 !important;
+    }
+    .kpi.lg{
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px 14px !important;
+      background: color-mix(in oklab, var(--ink) 88%, transparent);
+      min-height: auto;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .kpi .n{ font-size: 24px !important; }
+    .kpi .l{
+      margin-top: 0 !important;
+      max-width: 48%;
+      text-align: right;
+      letter-spacing: .06em;
+      font-size: 10px;
+    }
+
+    .strip{
+      padding: 14px 0;
+      overflow: hidden;
+    }
+    .strip-row{
+      width: max-content;
+      gap: 36px;
+      font-size: 11px;
+      animation: slide 26s linear infinite;
+      will-change: transform;
+    }
+    .strip-row span{ gap: 10px; }
+
+    .sect-hd{
+      grid-template-columns: 1fr !important;
+      gap: 12px;
+      margin-bottom: 24px !important;
+    }
+    .sect-hd h2{
+      font-size: clamp(28px, 8.8vw, 38px) !important;
+      max-width: 16ch;
+      line-height: 1.08;
+    }
+    .sect-hd p{
+      font-size: 15px !important;
+      line-height: 1.55;
+      max-width: 38ch;
+    }
+
+    .feat-row{
+      grid-template-columns: 1fr !important;
+      gap: 18px !important;
+      margin-bottom: 46px !important;
+    }
+    .feat-visual{
+      display: none !important;
+    }
+    .feat-copy h3{
+      font-size: clamp(27px, 8vw, 36px) !important;
+      line-height: 1.08;
+      margin-bottom: 10px;
+    }
+    .feat-copy p{
+      font-size: 15px !important;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .proc-stage{ display: none !important; }
+    .proc-mobile{
+      display: grid !important;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .proc-mobile-card{
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: color-mix(in oklab, var(--ink) 88%, transparent);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .proc-mobile-top{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .proc-mobile-step{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      border: 1px solid color-mix(in oklab, var(--accent) 40%, transparent);
+      color: var(--accent);
+      background: color-mix(in oklab, var(--accent) 10%, transparent);
+    }
+    .proc-mobile-time{
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted-2);
+    }
+    .proc-mobile-card h3{
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+    }
+    .proc-mobile-card p{
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+    .proc-mobile-list{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 7px;
+    }
+    .proc-mobile-list li{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--fg);
+    }
+    .proc-mobile-list li::before{
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--accent);
+      flex: 0 0 auto;
+    }
+
+    .rv-hero{
+      border-radius: 16px;
+      padding: 20px 18px !important;
+      gap: 18px !important;
+      background: color-mix(in oklab, var(--ink) 90%, transparent);
+      border: 1px solid var(--line);
+    }
+    .rv-quote p{
+      font-size: 21px !important;
+      line-height: 1.35;
+    }
+    .rv-hero-kpi{ display: none; }
+    .rv-grid{
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+    .rv-card{
+      padding: 18px !important;
+      border-radius: 14px;
+      background: color-mix(in oklab, var(--ink) 88%, transparent);
+      border: 1px solid var(--line);
+    }
+    .rv-text{
+      font-size: 15px !important;
+      line-height: 1.55;
+    }
+
+    .cta{
+      margin-bottom: 46px;
+      padding: 26px 16px !important;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--ink) 90%, transparent);
+    }
+    .cta-inner{ gap: 18px !important; }
+    .cta h2{
+      font-size: clamp(29px, 8vw, 40px) !important;
+      line-height: 1.08;
+      margin-bottom: 12px;
+    }
+    .cta-sub{
+      font-size: 15px !important;
+      line-height: 1.55;
+      margin-bottom: 16px !important;
+    }
+    .cta-form{
+      border-radius: 14px;
+      padding: 16px !important;
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--ink) 86%, transparent);
+    }
+    .cta-field input,
+    .cta-field textarea{
+      border-radius: 10px;
+      font-size: 16px !important;
+      background: color-mix(in oklab, var(--fg) 4%, transparent);
+      border-color: color-mix(in oklab, var(--fg) 14%, transparent);
+      box-shadow: none !important;
+    }
+
+    footer{
+      padding: 34px 0 24px;
+      margin-top: 10px;
+    }
+    .foot{
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+    .foot > div{
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: color-mix(in oklab, var(--ink) 90%, transparent);
+    }
+    .foot-brand{
+      max-width: 100%;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .foot h5{
+      margin-bottom: 10px;
+      letter-spacing: .1em;
+    }
+    .foot ul{
+      gap: 8px;
+      font-size: 14px;
+    }
+    .foot-bot{
+      margin-top: 16px;
+      padding-top: 14px;
+      font-size: 11px;
+      letter-spacing: .03em;
+      text-transform: none;
+      line-height: 1.5;
+    }
+  }
+
 </style>
 </head>
 <body data-theme="dark" data-accent="mint" data-density="comfortable">
@@ -3929,6 +4295,60 @@
       <div class="stage-rail"><i id="procRail"></i></div>
     </div>
 
+    <div class="proc-mobile" aria-label="Proceso en móvil">
+      <article class="proc-mobile-card">
+        <div class="proc-mobile-top">
+          <span class="proc-mobile-step">01</span>
+          <span class="proc-mobile-time">1 semana</span>
+        </div>
+        <h3>Escuchamos</h3>
+        <p>Entendemos cómo trabaja tu equipo hoy y dónde se pierde tiempo.</p>
+        <ul class="proc-mobile-list">
+          <li>Entrevistas rápidas con personas clave</li>
+          <li>Mapa del flujo actual</li>
+        </ul>
+      </article>
+
+      <article class="proc-mobile-card">
+        <div class="proc-mobile-top">
+          <span class="proc-mobile-step">02</span>
+          <span class="proc-mobile-time">3-5 días</span>
+        </div>
+        <h3>Proponemos</h3>
+        <p>Definimos una solución simple, cerrada y con precio claro.</p>
+        <ul class="proc-mobile-list">
+          <li>Alcance concreto</li>
+          <li>Plan por semanas</li>
+        </ul>
+      </article>
+
+      <article class="proc-mobile-card">
+        <div class="proc-mobile-top">
+          <span class="proc-mobile-step">03</span>
+          <span class="proc-mobile-time">3-8 semanas</span>
+        </div>
+        <h3>Construimos</h3>
+        <p>Entrega continua para que veas avances y ajustes sin esperar meses.</p>
+        <ul class="proc-mobile-list">
+          <li>Revisiones semanales</li>
+          <li>Cambios rápidos según feedback</li>
+        </ul>
+      </article>
+
+      <article class="proc-mobile-card">
+        <div class="proc-mobile-top">
+          <span class="proc-mobile-step">04</span>
+          <span class="proc-mobile-time">Continuo</span>
+        </div>
+        <h3>Acompañamos</h3>
+        <p>Seguimos contigo para medir, mejorar y mantener todo estable.</p>
+        <ul class="proc-mobile-list">
+          <li>Mejoras mensuales</li>
+          <li>Soporte directo</li>
+        </ul>
+      </article>
+    </div>
+
     <!-- Hidden legacy timeline keeps semantic list for search/screen-reader -->
     <div class="timeline" hidden aria-hidden="true">
       <!-- Horizontal rail that connects the four nodes -->
@@ -4298,8 +4718,17 @@
     const prevBtn = viz.querySelector('#sceneNavPrev');
     const nextBtn = viz.querySelector('#sceneNavNext');
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isCalmMobile = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
     const SCENE_DUR = 7000;
     const PAUSE_AFTER_INTERACTION = 15000;
+
+    if(isCalmMobile){
+      scenes.forEach((s,i)=> s.classList.toggle('is-active', i===0));
+      pills.forEach((p,i)=> p.classList.toggle('on', i===0));
+      hdrDots.forEach((d,i)=> d.classList.toggle('on', i===0));
+      if(labels[0] && labelEl) labelEl.textContent = labels[0];
+      return;
+    }
 
     let current = 0;
     let rafs = [];
@@ -4523,6 +4952,13 @@
     const dots   = Array.from(stage.querySelectorAll('.sd-item'));
     const n = slides.length;
     if(n < 2) return;
+    const isCalmMobile = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
+
+    if(isCalmMobile){
+      slides.forEach((s,i)=> s.classList.toggle('is-active', i===0));
+      dots.forEach((d,i)=> d.classList.toggle('on', i===0));
+      return;
+    }
 
     let current = 0;
     let paused = false;
@@ -4820,6 +5256,10 @@
   let lastY = 0;
   const nav = document.querySelector('.nav');
   window.addEventListener('scroll', ()=>{
+    if(window.matchMedia && window.matchMedia('(max-width: 760px)').matches){
+      nav.style.transform = 'translateY(0)';
+      return;
+    }
     const y = window.scrollY;
     if(y > 120 && y > lastY) nav.style.transform = 'translateY(-100%)';
     else nav.style.transform = 'translateY(0)';
@@ -4862,6 +5302,7 @@
 
   function setTheme(next, evt){
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isCalmMobile = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
     const apply = ()=>{
       TWEAKS.theme = next;
       applyTweaks(TWEAKS);
@@ -4879,7 +5320,7 @@
     document.documentElement.style.setProperty('--tx', cx + 'px');
     document.documentElement.style.setProperty('--ty', cy + 'px');
 
-    if(prefersReduced){ apply(); return; }
+    if(prefersReduced || isCalmMobile){ apply(); return; }
 
     // Vía 1: View Transitions API (Chromium) — hace todo nativo
     if(document.startViewTransition){
@@ -4912,6 +5353,15 @@
   }
 
   applyTweaks(TWEAKS);
+
+  (function mobileCopyTune(){
+    const isMobile = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
+    if(!isMobile) return;
+    const labels = document.querySelectorAll('.kpi .l');
+    if(labels[0]) labels[0].textContent = 'Menos repetición';
+    if(labels[1]) labels[1].textContent = 'Más velocidad';
+    if(labels[2]) labels[2].textContent = 'Tiempo recuperado';
+  })();
 
   document.querySelectorAll('.tk-opts').forEach(grp=>{
     grp.addEventListener('click', (e)=>{
