@@ -117,6 +117,95 @@
   .nav-cta .dot{ width:6px; height:6px; border-radius:999px; background:var(--accent); box-shadow:0 0 10px var(--accent);}
   @media (max-width:760px){ .nav-links{display:none} }
 
+  /* ---------- THEME TOGGLE (Uiverse/Madflows, integrado) ---------- */
+  .nav-actions{ display:flex; align-items:center; gap:14px; }
+  .toggle-switch{
+    position:relative; width:62px; height:30px;
+    --light:#d8dbe0; --dark:#28292c;
+    flex:0 0 auto;
+  }
+  .toggle-switch .switch-label{
+    position:absolute; inset:0;
+    background-color:var(--dark);
+    border-radius:999px; cursor:pointer;
+    border:2px solid color-mix(in oklab, var(--fg) 14%, transparent);
+    box-shadow: 0 1px 0 color-mix(in oklab, var(--fg) 6%, transparent) inset,
+                0 6px 18px color-mix(in oklab, #000 32%, transparent);
+    transition: border-color .35s ease, background-color .55s cubic-bezier(.8,0,.2,1);
+    overflow:hidden;
+  }
+  .toggle-switch .switch-label::after{
+    content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    background: radial-gradient(120% 180% at 0% 50%, color-mix(in oklab, var(--accent) 30%, transparent), transparent 55%);
+    opacity:.0; transition:opacity .5s ease;
+  }
+  .toggle-switch:hover .switch-label::after{ opacity:.55 }
+  .toggle-switch .checkbox{ position:absolute; opacity:0; pointer-events:none; }
+  .toggle-switch .slider{
+    position:absolute; inset:0; border-radius:inherit;
+    transition: background-color .55s cubic-bezier(.8,0,.2,1);
+  }
+  .toggle-switch .checkbox:checked ~ .slider{ background-color: var(--light); }
+  .toggle-switch .slider::before{
+    content:""; position:absolute; top:4px; left:4px;
+    width:18px; height:18px; border-radius:50%;
+    background-color: var(--dark);
+    box-shadow: inset 9px -3px 0 0 var(--light),
+                0 2px 6px color-mix(in oklab, #000 40%, transparent);
+    transition: transform .55s cubic-bezier(.68,-0.2,.27,1.3),
+                background-color .35s ease,
+                box-shadow .45s ease;
+  }
+  .toggle-switch .checkbox:checked ~ .slider::before{
+    transform: translateX(32px);
+    background-color: var(--dark);
+    box-shadow: inset 0 0 0 0 var(--light),
+                0 2px 8px color-mix(in oklab, #000 35%, transparent);
+  }
+  .toggle-switch:focus-within .switch-label{
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 30%, transparent);
+  }
+  .toggle-switch .switch-label:active .slider::before{ width:22px; }
+
+  /* Circular "onda" reveal — View Transitions API (Chrome/Edge) */
+  ::view-transition-old(root){ animation: none; }
+  ::view-transition-new(root){
+    animation: theme-wave-in .9s cubic-bezier(.22,.61,.36,1) forwards;
+    mix-blend-mode: normal;
+  }
+  @keyframes theme-wave-in{
+    from{ clip-path: circle(0 at var(--tx,50%) var(--ty,50%)); }
+    to  { clip-path: circle(160vmax at var(--tx,50%) var(--ty,50%)); }
+  }
+
+  /* Fallback universal: overlay con onda circular desde el botón */
+  .theme-wave{
+    position:fixed; inset:0; z-index:9999; pointer-events:none;
+    background: var(--wave-bg, #000);
+    clip-path: circle(0 at var(--tx,50%) var(--ty,50%));
+    will-change: clip-path, opacity;
+    animation: theme-wave-expand .9s cubic-bezier(.22,.61,.36,1) forwards;
+  }
+  .theme-wave.echo{
+    animation: theme-wave-expand 1.15s cubic-bezier(.22,.61,.36,1) forwards;
+    animation-delay: .08s;
+    opacity:.45;
+    background: var(--wave-accent, currentColor);
+    mix-blend-mode: screen;
+  }
+  @keyframes theme-wave-expand{
+    0%   { clip-path: circle(0 at var(--tx,50%) var(--ty,50%)); opacity:1; }
+    70%  { opacity:1; }
+    100% { clip-path: circle(160vmax at var(--tx,50%) var(--ty,50%)); opacity:0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .toggle-switch .slider::before{ transition: transform .15s linear; }
+    ::view-transition-new(root){ animation: none; }
+    .theme-wave, .theme-wave.echo{ animation: none; display:none; }
+  }
+
   /* ---------- HERO ---------- */
   .hero{
     position:relative; padding-top:140px; padding-bottom:var(--sect);
@@ -633,10 +722,18 @@
       <a href="#proceso">Cómo trabajamos</a>
       <a href="#confianza">Clientes</a>
     </div>
-    <a class="nav-cta" href="#contacto">
-      <span class="dot"></span>
-      Agendar consulta
-    </a>
+    <div class="nav-actions">
+      <div class="toggle-switch" id="themeToggleWrap" title="Cambiar tema">
+        <label class="switch-label" aria-label="Cambiar entre modo oscuro y claro">
+          <input type="checkbox" class="checkbox" id="themeToggle" role="switch" aria-checked="false">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <a class="nav-cta" href="#contacto">
+        <span class="dot"></span>
+        Agendar consulta
+      </a>
+    </div>
   </div>
 </nav>
 
@@ -1126,7 +1223,79 @@
         b.classList.toggle('on', b.dataset.val === t[key]);
       });
     });
+    syncThemeToggle(t.theme);
   }
+
+  // ---------- THEME TOGGLE ----------
+  const THEME_KEY = 'conectup:theme';
+  const themeToggle = document.getElementById('themeToggle');
+  const themeToggleWrap = document.getElementById('themeToggleWrap');
+
+  const stored = (()=>{ try{ return localStorage.getItem(THEME_KEY); }catch(_){ return null; } })();
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  TWEAKS.theme = stored || (prefersLight ? 'light' : TWEAKS.theme || 'dark');
+
+  function syncThemeToggle(theme){
+    if(!themeToggle) return;
+    const isLight = theme === 'light';
+    themeToggle.checked = isLight;
+    themeToggle.setAttribute('aria-checked', String(isLight));
+  }
+
+  // Color de fondo del tema entrante (para teñir la onda del fallback)
+  const THEME_BG = { dark: '#050309', light: '#F6FBF8' };
+
+  function setTheme(next, evt){
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const apply = ()=>{
+      TWEAKS.theme = next;
+      applyTweaks(TWEAKS);
+      try{ localStorage.setItem(THEME_KEY, next); }catch(_){}
+      try{ window.parent.postMessage({ type:'__edit_mode_set_keys', edits:{ theme: next } }, '*'); }catch(_){}
+    };
+
+    // Origen de la onda: centro del toggle
+    let cx = window.innerWidth - 80, cy = 34;
+    if(themeToggleWrap){
+      const r = themeToggleWrap.getBoundingClientRect();
+      cx = r.left + r.width/2;
+      cy = r.top + r.height/2;
+    }
+    document.documentElement.style.setProperty('--tx', cx + 'px');
+    document.documentElement.style.setProperty('--ty', cy + 'px');
+
+    if(prefersReduced){ apply(); return; }
+
+    // Vía 1: View Transitions API (Chromium) — hace todo nativo
+    if(document.startViewTransition){
+      document.startViewTransition(apply);
+      return;
+    }
+
+    // Vía 2: fallback — overlay circular que expande desde el botón
+    const accentColor = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#0FEFBC';
+    const wave = document.createElement('div');
+    wave.className = 'theme-wave';
+    wave.style.setProperty('--wave-bg', THEME_BG[next] || '#000');
+    const echo = document.createElement('div');
+    echo.className = 'theme-wave echo';
+    echo.style.setProperty('--wave-accent', accentColor);
+    document.body.appendChild(wave);
+    document.body.appendChild(echo);
+
+    // Cambia el tema cuando la onda ya cubre buena parte de la pantalla
+    setTimeout(apply, 280);
+    // Limpia el overlay al terminar la animación
+    wave.addEventListener('animationend', ()=> wave.remove(), { once:true });
+    echo.addEventListener('animationend', ()=> echo.remove(), { once:true });
+  }
+
+  if(themeToggle){
+    themeToggle.addEventListener('change', (e)=>{
+      setTheme(themeToggle.checked ? 'light' : 'dark', e);
+    });
+  }
+
   applyTweaks(TWEAKS);
 
   document.querySelectorAll('.tk-opts').forEach(grp=>{
