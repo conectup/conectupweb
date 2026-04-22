@@ -144,8 +144,14 @@
   .logo-mark .logo-dark{ display: none; }
   [data-theme="dark"] .logo-mark .logo-light{ display: none; }
   [data-theme="dark"] .logo-mark .logo-dark { display: block; }
-  /* Align mark with the wordmark baseline */
-  .logo{ align-items: center; gap: 12px; font-size: 20px; letter-spacing: -.015em; }
+  /* Mark acts as the C of "onectUp" — glue them together */
+  .logo{ align-items: center; gap: 0; font-size: 22px; letter-spacing: -.02em; font-weight: 500; }
+  .logo-word{ margin-left: -2px; }
+  /* For screen readers, announce the full name */
+  .logo-word::before{
+    content: "C"; position: absolute; width: 1px; height: 1px;
+    overflow: hidden; clip: rect(0 0 0 0);
+  }
   .nav-links{ display:flex; gap:32px; font-size:14px; color:var(--muted)}
   .nav-links a{ position:relative; transition:color .2s}
   .nav-links a:hover{ color:var(--fg) }
@@ -2921,7 +2927,7 @@
         <img class="logo-light" src="logomini.png"      alt="ConectUp" width="52" height="52">
         <img class="logo-dark"  src="logomini-dark.png" alt=""          width="52" height="52" aria-hidden="true">
       </span>
-      <span>ConectUp</span>
+      <span class="logo-word">onectUp</span>
     </a>
     <div class="nav-links">
       <a href="#servicios">Servicios</a>
@@ -3960,7 +3966,7 @@
             <img class="logo-light" src="logomini.png"      alt="ConectUp" width="52" height="52">
         <img class="logo-dark"  src="logomini-dark.png" alt=""          width="52" height="52" aria-hidden="true">
           </span>
-          <span>ConectUp</span>
+          <span class="logo-word">onectUp</span>
         </a>
         <p class="foot-brand" style="margin-top:14px">Construimos tecnología útil para equipos que necesitan moverse más rápido sin perder el control.</p>
       </div>
