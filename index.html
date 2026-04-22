@@ -369,6 +369,12 @@
   }
   .scene.is-active .flow-path{ stroke-dashoffset: 0; }
   .flow-path.glow{ stroke:url(#flowGrad); stroke-width:1.8; filter: drop-shadow(0 0 4px color-mix(in oklab, var(--accent) 70%, transparent)); }
+  .flow-path.glow-mint { stroke:url(#wfGradMint);  stroke-width:1.8; filter: drop-shadow(0 0 4px color-mix(in oklab, var(--accent) 70%, transparent)); }
+  .flow-path.glow-lilac{ stroke:url(#wfGradLilac); stroke-width:1.8; filter: drop-shadow(0 0 4px color-mix(in oklab, var(--lilac)  70%, transparent)); }
+  .flow-path.glow-amber{ stroke:url(#wfGradAmber); stroke-width:1.8; filter: drop-shadow(0 0 4px color-mix(in oklab, #F5B35A 70%, transparent)); }
+  .flow-path.dashed{ stroke-dasharray: 4 5; stroke-dashoffset: 0; stroke-width:1; opacity:.5; animation: dash-move 3s linear infinite; }
+  @keyframes dash-move{ to{ stroke-dashoffset: -18; } }
+  .wf-svg{ position:absolute; inset:0; width:100%; height:100%; }
 
   .node{
     position:absolute; transform:translate(-50%,-50%);
@@ -393,11 +399,50 @@
   }
   .node .nd{ width:6px; height:6px; border-radius:999px; background:var(--accent); box-shadow:0 0 8px var(--accent);}
   .node.lilac .nd{ background:var(--lilac); box-shadow:0 0 8px var(--lilac);}
+  .node.amber .nd{ background:#F5B35A; box-shadow:0 0 8px #F5B35A;}
   .node.idle .nd{ background:var(--muted-2); box-shadow:none;}
-  .node.center{ padding:10px 14px; font-size:12px; }
-  .node .icn{ width:12px; height:12px; opacity:.8; }
+  .node.center{ padding:10px 14px; font-size:12px; background: color-mix(in oklab, var(--ink) 80%, transparent); }
+  .node .icn{
+    width:14px; height:14px; display:inline-grid; place-items:center;
+    border-radius:5px; background: color-mix(in oklab, var(--fg) 12%, transparent);
+    color: var(--fg);
+  }
+  .node .icn svg{ width:10px; height:10px; stroke-width:1.8; }
+  .node.lilac .icn{ background: color-mix(in oklab, var(--lilac) 25%, transparent); color:var(--lilac); }
+  .node.amber .icn{ background: color-mix(in oklab, #F5B35A 25%, transparent); color:#F5B35A; }
+  .node.core-node{
+    padding:12px 16px; font-size:12px; font-weight:500;
+    background: color-mix(in oklab, var(--accent) 14%, color-mix(in oklab, var(--ink) 70%, transparent));
+    border-color: color-mix(in oklab, var(--accent) 50%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 10%, transparent),
+                0 8px 32px color-mix(in oklab, var(--accent) 25%, transparent);
+  }
   .packet{ fill: var(--accent); filter: drop-shadow(0 0 6px var(--accent)); }
   .packet.l{ fill:var(--lilac); filter: drop-shadow(0 0 6px var(--lilac)); }
+  .packet.a{ fill:#F5B35A; filter: drop-shadow(0 0 6px #F5B35A); }
+
+  /* Notification toast that pops at end nodes */
+  .wf-toast{
+    position:absolute; z-index:4;
+    padding:6px 10px; border-radius:8px;
+    background: color-mix(in oklab, var(--ink) 82%, transparent);
+    border:1px solid color-mix(in oklab, var(--accent) 40%, transparent);
+    box-shadow: 0 8px 24px color-mix(in oklab, #000 40%, transparent),
+                0 0 0 3px color-mix(in oklab, var(--accent) 10%, transparent);
+    color: var(--fg); font-family: var(--font-mono); font-size:10px; letter-spacing:.02em;
+    backdrop-filter: blur(8px);
+    display:flex; align-items:center; gap:6px;
+    opacity:0; transform: translate(-50%, -4px) scale(.9);
+    pointer-events:none;
+    transition: opacity .35s ease, transform .45s cubic-bezier(.2,.7,.2,1);
+    white-space:nowrap;
+  }
+  .wf-toast.lilac{ border-color: color-mix(in oklab, var(--lilac) 45%, transparent); box-shadow: 0 8px 24px color-mix(in oklab, #000 40%, transparent), 0 0 0 3px color-mix(in oklab, var(--lilac) 10%, transparent);}
+  .wf-toast.amber{ border-color: color-mix(in oklab, #F5B35A 50%, transparent); box-shadow: 0 8px 24px color-mix(in oklab, #000 40%, transparent), 0 0 0 3px color-mix(in oklab, #F5B35A 12%, transparent);}
+  .wf-toast.on{ opacity:1; transform: translate(-50%, 0) scale(1); }
+  .wf-toast .check{ width:10px; height:10px; border-radius:50%; background: var(--accent); box-shadow:0 0 6px var(--accent); flex:0 0 auto;}
+  .wf-toast.lilac .check{ background:var(--lilac); box-shadow:0 0 6px var(--lilac);}
+  .wf-toast.amber .check{ background:#F5B35A; box-shadow:0 0 6px #F5B35A;}
 
   /* Scene 2 — Sistemas a medida (bloques modulares) */
   .blocks{ position:absolute; inset:44px 16px 58px 16px; display:grid; grid-template-columns:repeat(6,1fr); grid-template-rows:repeat(5,1fr); gap:8px;}
@@ -1065,59 +1110,12 @@
     <div class="hero-meta reveal d3">
       <div class="viz" id="viz">
         <div class="viz-hdr">
-          <span class="label" id="vizLabel" data-labels='["Workflows conectados","Sistemas a medida","Webs enteras"]'>Workflows conectados</span>
+          <span class="label" id="vizLabel" data-labels='["Webs enteras","Sistemas a medida","Workflows conectados"]'>Webs enteras</span>
           <span class="dots"><i class="on"></i><i></i><i></i></span>
         </div>
 
-        <!-- SCENE 1 — Workflow conectado -->
+        <!-- SCENE 1 — Webs enteras -->
         <div class="scene is-active" data-scene="1">
-          <svg viewBox="0 0 600 420" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="flowGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%"  stop-color="var(--accent)" stop-opacity=".15"/>
-                <stop offset="50%" stop-color="var(--accent)" stop-opacity="1"/>
-                <stop offset="100%" stop-color="var(--accent)" stop-opacity=".15"/>
-              </linearGradient>
-            </defs>
-            <g fill="none" stroke-linecap="round">
-              <path class="flow-path" d="M135 100 C 240 100, 250 210, 330 210" />
-              <path class="flow-path" d="M155 336 C 245 336, 255 210, 330 210" />
-              <path class="flow-path" d="M395 210 C 450 210, 455 118, 500 118" />
-              <path class="flow-path" d="M395 210 C 450 210, 460 319, 505 319" />
-            </g>
-            <g>
-              <circle class="packet p1" cx="135" cy="100" r="4"/>
-              <circle class="packet p2 l" cx="155" cy="336" r="4"/>
-              <circle class="packet p3" cx="395" cy="210" r="4"/>
-            </g>
-          </svg>
-          <div class="node" data-node="sales" style="left:14%; top:24%;"><span class="nd"></span>Ventas</div>
-          <div class="node lilac" data-node="admin" style="left:18%; top:80%;"><span class="nd"></span>Administración</div>
-          <div class="node center" data-node="core" style="left:60%; top:50%;"><span class="nd"></span>Tu proceso</div>
-          <div class="node idle" data-node="reports" style="left:86%; top:28%;"><span class="nd"></span>Informes</div>
-          <div class="node idle" data-node="clients" style="left:86%; top:76%;"><span class="nd"></span>Clientes</div>
-        </div>
-
-        <!-- SCENE 2 — Sistemas a medida -->
-        <div class="scene" data-scene="2">
-          <svg class="block-wires" viewBox="0 0 600 420" preserveAspectRatio="none">
-            <path d="M150 140 C 230 140, 250 230, 300 260"/>
-            <path d="M450 140 C 380 160, 350 240, 320 260"/>
-            <path d="M300 260 C 260 300, 240 340, 220 360"/>
-            <path d="M320 260 C 380 300, 420 330, 460 360"/>
-          </svg>
-          <div class="blocks">
-            <div class="block b-db" style="--w:78%"><div class="ttl"><span class="d"></span>Base de datos</div><div class="meter"></div></div>
-            <div class="block b-api" style="--w:62%"><div class="ttl"><span class="d"></span>API REST</div><div class="meter"></div></div>
-            <div class="block b-auth lilac" style="--w:100%"><div class="ttl"><span class="d"></span>Auth · SSO</div><div class="meter"></div></div>
-            <div class="block b-dash"><div class="ttl"><span class="d"></span>Dashboard a medida</div><div class="rows"><span></span><span></span><span></span></div></div>
-            <div class="block b-flow lilac" style="--w:84%"><div class="ttl"><span class="d"></span>Automatizaciones</div><div class="meter"></div></div>
-            <div class="block b-bot" style="--w:40%"><div class="ttl"><span class="d"></span>Integraciones</div><div class="meter"></div></div>
-          </div>
-        </div>
-
-        <!-- SCENE 3 — Webs enteras -->
-        <div class="scene" data-scene="3">
           <div class="browser brand-mint" id="webBrowser">
             <div class="browser-bar">
               <span class="tl"></span><span class="tl"></span><span class="tl"></span>
@@ -1153,6 +1151,110 @@
           </div>
         </div>
 
+        <!-- SCENE 2 — Sistemas a medida -->
+        <div class="scene" data-scene="2">
+          <svg class="block-wires" viewBox="0 0 600 420" preserveAspectRatio="none">
+            <path d="M150 140 C 230 140, 250 230, 300 260"/>
+            <path d="M450 140 C 380 160, 350 240, 320 260"/>
+            <path d="M300 260 C 260 300, 240 340, 220 360"/>
+            <path d="M320 260 C 380 300, 420 330, 460 360"/>
+          </svg>
+          <div class="blocks">
+            <div class="block b-db" style="--w:78%"><div class="ttl"><span class="d"></span>Base de datos</div><div class="meter"></div></div>
+            <div class="block b-api" style="--w:62%"><div class="ttl"><span class="d"></span>API REST</div><div class="meter"></div></div>
+            <div class="block b-auth lilac" style="--w:100%"><div class="ttl"><span class="d"></span>Auth · SSO</div><div class="meter"></div></div>
+            <div class="block b-dash"><div class="ttl"><span class="d"></span>Dashboard a medida</div><div class="rows"><span></span><span></span><span></span></div></div>
+            <div class="block b-flow lilac" style="--w:84%"><div class="ttl"><span class="d"></span>Automatizaciones</div><div class="meter"></div></div>
+            <div class="block b-bot" style="--w:40%"><div class="ttl"><span class="d"></span>Integraciones</div><div class="meter"></div></div>
+          </div>
+        </div>
+
+        <!-- SCENE 3 — Workflows conectados (orquestación) -->
+        <div class="scene" data-scene="3">
+          <svg class="wf-svg" viewBox="0 0 600 420" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="wfGradMint" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%"  stop-color="var(--accent)" stop-opacity=".1"/>
+                <stop offset="50%" stop-color="var(--accent)" stop-opacity="1"/>
+                <stop offset="100%" stop-color="var(--accent)" stop-opacity=".1"/>
+              </linearGradient>
+              <linearGradient id="wfGradLilac" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%"  stop-color="var(--lilac)" stop-opacity=".1"/>
+                <stop offset="50%" stop-color="var(--lilac)" stop-opacity="1"/>
+                <stop offset="100%" stop-color="var(--lilac)" stop-opacity=".1"/>
+              </linearGradient>
+              <linearGradient id="wfGradAmber" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%"  stop-color="#F5B35A" stop-opacity=".1"/>
+                <stop offset="50%" stop-color="#F5B35A" stop-opacity="1"/>
+                <stop offset="100%" stop-color="#F5B35A" stop-opacity=".1"/>
+              </linearGradient>
+            </defs>
+            <g fill="none" stroke-linecap="round">
+              <!-- Email -> Core -->
+              <path class="flow-path" data-route="0" d="M90 80 C 180 80, 200 200, 300 210" />
+              <!-- Calendar -> Core -->
+              <path class="flow-path" data-route="1" d="M90 210 C 180 210, 220 210, 300 210" />
+              <!-- Sheets -> Core -->
+              <path class="flow-path" data-route="2" d="M90 340 C 180 340, 210 230, 300 210" />
+              <!-- Core -> CRM -->
+              <path class="flow-path" data-route="3" d="M350 210 C 430 210, 450 90, 520 90" />
+              <!-- Core -> Slack -->
+              <path class="flow-path" data-route="4" d="M350 210 C 430 210, 450 210, 520 210" />
+              <!-- Core -> Drive -->
+              <path class="flow-path" data-route="5" d="M350 210 C 430 210, 450 330, 520 330" />
+              <!-- Side loop: CRM -> Slack (feedback) -->
+              <path class="flow-path dashed" data-route="6" d="M548 110 C 570 150, 570 180, 548 205" />
+            </g>
+            <g>
+              <circle class="packet wf-pk" data-pk="0" cx="90"  cy="80"  r="4"/>
+              <circle class="packet wf-pk l" data-pk="1" cx="90" cy="210" r="4"/>
+              <circle class="packet wf-pk a" data-pk="2" cx="90" cy="340" r="4"/>
+              <circle class="packet wf-pk" data-pk="3" cx="350" cy="210" r="4"/>
+              <circle class="packet wf-pk l" data-pk="4" cx="350" cy="210" r="4"/>
+              <circle class="packet wf-pk a" data-pk="5" cx="350" cy="210" r="4"/>
+            </g>
+          </svg>
+
+          <!-- Source nodes (left) -->
+          <div class="node" data-wf="email" style="left:12%; top:19%;">
+            <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7l9 6 9-6"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg></span>
+            Correo
+          </div>
+          <div class="node lilac" data-wf="calendar" style="left:12%; top:50%;">
+            <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/></svg></span>
+            Calendario
+          </div>
+          <div class="node amber" data-wf="sheets" style="left:12%; top:81%;">
+            <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/></svg></span>
+            Hojas
+          </div>
+
+          <!-- Core -->
+          <div class="node core-node" data-wf="core" style="left:54%; top:50%;">
+            <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></span>
+            Tu proceso
+          </div>
+
+          <!-- Destination nodes (right) -->
+          <div class="node" data-wf="crm" style="left:88%; top:22%;">
+            <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 5-7 8-7s7 2 8 7"/></svg></span>
+            CRM
+          </div>
+          <div class="node lilac" data-wf="slack" style="left:88%; top:50%;">
+            <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 4v12a4 4 0 11-4-4h12a4 4 0 114 4V4a4 4 0 11-4 4H8"/></svg></span>
+            Slack
+          </div>
+          <div class="node amber" data-wf="drive" style="left:88%; top:79%;">
+            <span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 3l8 0 5 9-4 7-10 0-5-9z"/><path d="M8 3l5 9h8M8 3l-4 9"/></svg></span>
+            Drive
+          </div>
+
+          <!-- Toasts -->
+          <div class="wf-toast"       data-toast="crm"   style="left:83%; top:33%;"><span class="check"></span>Nueva tarea · CRM</div>
+          <div class="wf-toast lilac" data-toast="slack" style="left:83%; top:61%;"><span class="check"></span>Mensaje enviado · #ventas</div>
+          <div class="wf-toast amber" data-toast="drive" style="left:83%; top:90%;"><span class="check"></span>Informe guardado</div>
+        </div>
+
         <button class="scene-nav prev" id="sceneNavPrev" aria-label="Animación anterior" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>
         </button>
@@ -1161,9 +1263,9 @@
         </button>
 
         <div class="scene-pills" id="scenePills">
-          <button class="on" type="button" aria-label="Workflows conectados"></button>
+          <button class="on" type="button" aria-label="Webs enteras"></button>
           <button type="button" aria-label="Sistemas a medida"></button>
-          <button type="button" aria-label="Webs enteras"></button>
+          <button type="button" aria-label="Workflows conectados"></button>
         </div>
       </div>
 
@@ -1576,66 +1678,45 @@
     let pauseUntil = 0;
     const clearTimers = ()=>{ timers.forEach(clearTimeout); timers = []; rafs.forEach(cancelAnimationFrame); rafs = []; };
 
-    // Scene 1 — animate packets along paths + pulse end node
+    // Scene 1 — build website section by section + scroll + brand swap
     function runScene1(){
-      const paths = scenes[0].querySelectorAll('svg .flow-path');
-      const p1 = scenes[0].querySelector('.p1');
-      const p2 = scenes[0].querySelector('.p2');
-      const p3 = scenes[0].querySelector('.p3');
-      const sales   = scenes[0].querySelector('[data-node="sales"]');
-      const admin   = scenes[0].querySelector('[data-node="admin"]');
-      const core    = scenes[0].querySelector('[data-node="core"]');
-      const reports = scenes[0].querySelector('[data-node="reports"]');
-      const clients = scenes[0].querySelector('[data-node="clients"]');
-
-      paths.forEach(p=>{
-        const len = p.getTotalLength();
-        p.style.setProperty('--len', len);
-      });
-
-      const routes = [
-        { pk:p1, path:paths[0], dur:2200, delay: 600, from:sales,   to:core,    glow:paths[0] },
-        { pk:p2, path:paths[1], dur:2400, delay:1500, from:admin,   to:core,    glow:paths[1], lilac:true },
-        { pk:p3, path:paths[2], dur:1900, delay:3200, from:core,    to:reports, glow:paths[2] },
-        { pk:p3, path:paths[3], dur:2100, delay:4300, from:core,    to:clients, glow:paths[3] }
+      const browser = scenes[0].querySelector('#webBrowser');
+      const page    = scenes[0].querySelector('#browserPage');
+      const wbs = page.querySelectorAll('.wb');
+      const url = scenes[0].querySelector('#browserUrl');
+      const brands = [
+        { cls:'brand-mint',  url:'tu-marca.com'  },
+        { cls:'brand-lilac', url:'tu-tienda.com' },
+        { cls:'brand-amber', url:'tu-app.com'    }
       ];
+      const pick = brands[Math.floor(Math.random()*brands.length)];
 
-      function runRoute(r){
-        const len = r.path.getTotalLength();
-        const start = performance.now();
-        r.glow.classList.add('glow');
-        if(r.from) r.from.classList.add('pulse');
-        function tick(now){
-          if(!scenes[0].classList.contains('is-active')) return;
-          const t = Math.min(1, (now - start) / r.dur);
-          const eased = t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
-          const pt = r.path.getPointAtLength(len * eased);
-          r.pk.setAttribute('cx', pt.x);
-          r.pk.setAttribute('cy', pt.y);
-          r.pk.style.opacity = t < .05 ? t*20 : t > .95 ? (1-t)*20 : 1;
-          if(t<1){ rafs.push(requestAnimationFrame(tick)); }
-          else {
-            r.glow.classList.remove('glow');
-            if(r.from) r.from.classList.remove('pulse');
-            if(r.to){
-              r.to.classList.add('pulse');
-              if(r.lilac) r.to.classList.add('lilac-pulse');
-              timers.push(setTimeout(()=> r.to.classList.remove('pulse'), 900));
-            }
-          }
+      browser.classList.remove('brand-mint','brand-lilac','brand-amber');
+      browser.classList.add(pick.cls);
+
+      wbs.forEach(w=> w.classList.remove('show'));
+      page.classList.remove('scroll');
+      wbs.forEach((w,i)=> timers.push(setTimeout(()=> w.classList.add('show'), 250 + i*380)));
+      timers.push(setTimeout(()=> page.classList.add('scroll'), 250 + wbs.length*380 + 600));
+
+      const cursor = '<span class="cursor"></span>';
+      let ch = 0;
+      url.innerHTML = 'https://' + cursor;
+      const type = ()=>{
+        if(!scenes[0].classList.contains('is-active')) return;
+        if(ch <= pick.url.length){
+          url.innerHTML = 'https://' + pick.url.slice(0, ch) + cursor;
+          ch++;
+          timers.push(setTimeout(type, 85));
         }
-        rafs.push(requestAnimationFrame(tick));
-      }
-      routes.forEach(r=> timers.push(setTimeout(()=> runRoute(r), r.delay)));
+      };
+      timers.push(setTimeout(type, 500));
     }
 
     // Scene 2 — stagger-in blocks + highlight sweep
     function runScene2(){
       const blocks = scenes[1].querySelectorAll('.block');
-      blocks.forEach((b,i)=>{
-        b.style.transitionDelay = (i * 90) + 'ms';
-      });
-      // highlight sweep
+      blocks.forEach((b,i)=>{ b.style.transitionDelay = (i * 90) + 'ms'; });
       let i = 0;
       const sweep = ()=>{
         if(!scenes[1].classList.contains('is-active')) return;
@@ -1647,45 +1728,99 @@
       timers.push(setTimeout(sweep, 900));
     }
 
-    // Scene 3 — build website section by section + scroll + brand swap
+    // Scene 3 — Workflows conectados: multiple parallel packets + toasts
     function runScene3(){
-      const browser = scenes[2].querySelector('#webBrowser');
-      const page    = scenes[2].querySelector('#browserPage');
-      const wbs = page.querySelectorAll('.wb');
-      const url = scenes[2].querySelector('#browserUrl');
-      const brands = [
-        { cls:'brand-mint',  url:'tu-marca.com'  },
-        { cls:'brand-lilac', url:'tu-tienda.com' },
-        { cls:'brand-amber', url:'tu-app.com'    }
+      const s = scenes[2];
+      const paths   = s.querySelectorAll('.flow-path');
+      const packets = s.querySelectorAll('.wf-pk');
+      const byWf   = (k)=> s.querySelector('[data-wf="'+k+'"]');
+      const toast  = (k)=> s.querySelector('[data-toast="'+k+'"]');
+
+      // Precompute lengths for draw-in animation
+      paths.forEach(p=>{
+        if(p.classList.contains('dashed')) return;
+        const len = p.getTotalLength();
+        p.style.setProperty('--len', len);
+      });
+
+      const core = byWf('core');
+      // Routes. Each object = one packet trip (source -> core -> dest).
+      // Runs in pairs (in then out) so the packet "passes through Tu proceso".
+      const flows = [
+        { from:'email',    to:'crm',   color:'',  amber:false, lilac:false, inPath:paths[0], outPath:paths[3], pk:packets[0], outPk:packets[3], toast:'crm' },
+        { from:'calendar', to:'slack', color:'l', lilac:true,  inPath:paths[1], outPath:paths[4], pk:packets[1], outPk:packets[4], toast:'slack' },
+        { from:'sheets',   to:'drive', color:'a', amber:true,  inPath:paths[2], outPath:paths[5], pk:packets[2], outPk:packets[5], toast:'drive' }
       ];
-      const pick = brands[Math.floor(Math.random()*brands.length)];
 
-      browser.classList.remove('brand-mint','brand-lilac','brand-amber');
-      browser.classList.add(pick.cls);
+      function glowClassFor(f){
+        return f.amber ? 'glow-amber' : f.lilac ? 'glow-lilac' : 'glow-mint';
+      }
 
-      // Reset: hide sections + scroll top
-      wbs.forEach(w=> w.classList.remove('show'));
-      page.classList.remove('scroll');
-
-      // Build sections staggered
-      wbs.forEach((w,i)=> timers.push(setTimeout(()=> w.classList.add('show'), 250 + i*380)));
-
-      // Scroll down once everything is built
-      timers.push(setTimeout(()=> page.classList.add('scroll'), 250 + wbs.length*380 + 600));
-
-      // Type URL
-      const cursor = '<span class="cursor"></span>';
-      let ch = 0;
-      url.innerHTML = 'https://' + cursor;
-      const type = ()=>{
-        if(!scenes[2].classList.contains('is-active')) return;
-        if(ch <= pick.url.length){
-          url.innerHTML = 'https://' + pick.url.slice(0, ch) + cursor;
-          ch++;
-          timers.push(setTimeout(type, 85));
+      function animate(pk, path, dur, onEnd){
+        const len = path.getTotalLength();
+        const start = performance.now();
+        function tick(now){
+          if(!s.classList.contains('is-active')) return;
+          const t = Math.min(1, (now - start) / dur);
+          const eased = t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+          const pt = path.getPointAtLength(len * eased);
+          pk.setAttribute('cx', pt.x);
+          pk.setAttribute('cy', pt.y);
+          pk.style.opacity = t < .05 ? t*20 : t > .95 ? (1-t)*20 : 1;
+          if(t<1) rafs.push(requestAnimationFrame(tick));
+          else onEnd && onEnd();
         }
+        rafs.push(requestAnimationFrame(tick));
+      }
+
+      function runFlow(f, delay){
+        timers.push(setTimeout(()=>{
+          const gcls = glowClassFor(f);
+          const srcNode = byWf(f.from);
+          const dstNode = byWf(f.to);
+          const tst = toast(f.toast);
+
+          // Source pulses → packet flies in to core
+          if(srcNode) srcNode.classList.add('pulse');
+          f.inPath.classList.add(gcls);
+          animate(f.pk, f.inPath, 1900, ()=>{
+            f.inPath.classList.remove(gcls);
+            if(srcNode) srcNode.classList.remove('pulse');
+            if(core) core.classList.add('pulse');
+
+            // core → destination
+            timers.push(setTimeout(()=>{
+              if(core) core.classList.remove('pulse');
+              f.outPath.classList.add(gcls);
+              animate(f.outPk, f.outPath, 1700, ()=>{
+                f.outPath.classList.remove(gcls);
+                if(dstNode){
+                  dstNode.classList.add('pulse');
+                  timers.push(setTimeout(()=> dstNode.classList.remove('pulse'), 1100));
+                }
+                if(tst){
+                  tst.classList.add('on');
+                  timers.push(setTimeout(()=> tst.classList.remove('on'), 2400));
+                }
+              });
+            }, 280));
+          });
+        }, delay));
+      }
+
+      // Stagger the 3 flows so they overlap (parallel feel) but are readable
+      runFlow(flows[0],  500);
+      runFlow(flows[1], 1900);
+      runFlow(flows[2], 3300);
+      // Loop so it keeps going while the scene is visible
+      const loop = ()=>{
+        if(!s.classList.contains('is-active')) return;
+        runFlow(flows[0], 0);
+        runFlow(flows[1], 1400);
+        runFlow(flows[2], 2800);
+        timers.push(setTimeout(loop, 5500));
       };
-      timers.push(setTimeout(type, 500));
+      timers.push(setTimeout(loop, 5500));
     }
 
     function setScene(n){
