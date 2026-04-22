@@ -130,9 +130,19 @@
   }
   .logo{ display:flex; align-items:center; gap:10px; font-weight:500; letter-spacing:-.01em; font-size:18px}
   .logo-mark{
-    width:22px; height:22px; position:relative;
+    width:28px; height:28px; position:relative;
+    display:inline-flex; align-items:center; justify-content:center;
   }
-  .logo-mark svg{ width:100%; height:100%; display:block }
+  .logo-mark svg,
+  .logo-mark img{
+    width:100%; height:100%; display:block;
+    object-fit: contain;
+  }
+  /* In light theme the logo is a dark mark on a light bg — keep as-is. In
+     dark theme we invert brightness so a dark PNG mark reads white. */
+  [data-theme="dark"] .logo-mark img{
+    filter: brightness(0) invert(1);
+  }
   .nav-links{ display:flex; gap:32px; font-size:14px; color:var(--muted)}
   .nav-links a{ position:relative; transition:color .2s}
   .nav-links a:hover{ color:var(--fg) }
@@ -2905,13 +2915,7 @@
   <div class="wrap nav-row">
     <a class="logo" href="#">
       <span class="logo-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-          <circle cx="5" cy="12" r="2.2"/>
-          <circle cx="19" cy="5" r="2.2"/>
-          <circle cx="19" cy="19" r="2.2"/>
-          <path d="M6.8 11l10.4 -5.2"/>
-          <path d="M6.8 13l10.4 5.2"/>
-        </svg>
+        <img src="logomini.png" alt="ConectUp" width="28" height="28">
       </span>
       <span>ConectUp</span>
     </a>
@@ -3949,13 +3953,7 @@
       <div>
         <a class="logo" href="#">
           <span class="logo-mark">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-              <circle cx="5" cy="12" r="2.2"/>
-              <circle cx="19" cy="5" r="2.2"/>
-              <circle cx="19" cy="19" r="2.2"/>
-              <path d="M6.8 11l10.4 -5.2"/>
-              <path d="M6.8 13l10.4 5.2"/>
-            </svg>
+            <img src="logomini.png" alt="ConectUp" width="28" height="28">
           </span>
           <span>ConectUp</span>
         </a>
