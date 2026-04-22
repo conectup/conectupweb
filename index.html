@@ -168,10 +168,19 @@
   .nav-cta:hover{ background:var(--accent) !important; color:#fff; border-color:var(--accent) }
   .nav-cta:hover .dot{ background:#fff; box-shadow:0 0 10px rgba(255,255,255,.8); }
   .nav-cta .dot{ width:6px; height:6px; border-radius:999px; background:var(--accent); box-shadow:0 0 10px var(--accent);}
+  .nav-products{
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--muted);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+  .nav-products:hover{ color:var(--fg); }
   @media (max-width:760px){ .nav-links{display:none} }
 
   /* ---------- THEME TOGGLE (Uiverse/Madflows, integrado) ---------- */
   .nav-actions{ display:flex; align-items:center; gap:14px; }
+  .mobile-products-entry{ display:none; }
   .toggle-switch{
     position:relative; width:62px; height:30px;
     --light:#d8dbe0; --dark:#28292c;
@@ -3185,6 +3194,7 @@
     .logo-mark{ height: 30px; }
     .nav .wrap{ padding: 0 14px; }
     .nav-actions{ gap: 8px; }
+    .nav-products{ display:none; }
     #themeToggleWrap{
       display: block;
       transform: scale(.9);
@@ -3197,11 +3207,35 @@
       border-color: color-mix(in oklab, var(--accent) 30%, transparent);
       background: color-mix(in oklab, var(--accent) 14%, transparent);
     }
+    .mobile-products-entry{
+      display:block;
+      position:sticky;
+      top:60px;
+      z-index:38;
+      border-bottom:1px solid var(--line);
+      background: color-mix(in oklab, var(--ink) 95%, transparent);
+    }
+    .mobile-products-entry .wrap{ padding-top:10px; padding-bottom:10px; }
+    .mobile-products-entry a{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      width:100%; padding:11px 12px;
+      border:1px solid color-mix(in oklab, var(--accent) 30%, transparent);
+      border-radius:11px;
+      background: color-mix(in oklab, var(--accent) 14%, transparent);
+      font-size:13px; font-weight:500; letter-spacing:-.01em;
+    }
+    .mobile-products-entry a .mini{
+      font-family:var(--font-mono);
+      font-size:10px;
+      color:var(--muted-2);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
 
     .sect{ padding: 42px 0; }
 
     .hero{
-      padding-top: 84px !important;
+      padding-top: 94px !important;
       padding-bottom: 16px !important;
     }
     .hero-grid,
@@ -3520,9 +3554,11 @@
     <div class="nav-links">
       <a href="#servicios">Servicios</a>
       <a href="#proceso">Cómo trabajamos</a>
+      <a href="productos-basicos/">Productos basicos</a>
       <a href="#contacto">Contacto</a>
     </div>
     <div class="nav-actions">
+      <a class="nav-products" href="productos-basicos/">@ Productos basicos</a>
       <div class="toggle-switch" id="themeToggleWrap" title="Cambiar tema">
         <label class="switch-label" aria-label="Cambiar entre modo oscuro y claro">
           <input type="checkbox" class="checkbox" id="themeToggle" role="switch" aria-checked="false">
@@ -3536,6 +3572,15 @@
     </div>
   </div>
 </nav>
+
+<div class="mobile-products-entry">
+  <div class="wrap">
+    <a href="productos-basicos/">
+      <span>Ver nuestros productos basicos</span>
+      <span class="mini">Nuevo</span>
+    </a>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero sect-hero" data-screen-label="01 Hero">
@@ -4127,7 +4172,7 @@
           <!-- 01 Escuchamos — libreta -->
           <article class="proc-slide">
             <div class="ps-copy">
-              <span class="ps-step">Fase 01 · 1 semana</span>
+              <span class="ps-step">Fase 01</span>
               <h3>Escuchamos<span class="em">.</span></h3>
               <p>Nos sentamos con quien vive el proceso cada día. Tomamos notas, grabamos cuellos de botella, dibujamos el mapa real de cómo funciona todo hoy — incluidas las partes que nadie se atreve a contar.</p>
               <ul class="ps-list">
@@ -4164,7 +4209,7 @@
           <!-- 02 Proponemos — propuesta -->
           <article class="proc-slide">
             <div class="ps-copy">
-              <span class="ps-step">Fase 02 · 3–5 días</span>
+              <span class="ps-step">Fase 02</span>
               <h3>Proponemos<span class="em">.</span></h3>
               <p>La solución más sencilla que resuelve. Un documento con el alcance, los plazos y el precio — sin letra pequeña, sin 'dependerá de'. Lo firmas o no; así de claro.</p>
               <ul class="ps-list">
@@ -4204,7 +4249,7 @@
           <!-- 03 Construimos — IDE + preview -->
           <article class="proc-slide">
             <div class="ps-copy">
-              <span class="ps-step">Fase 03 · 3–8 semanas</span>
+              <span class="ps-step">Fase 03</span>
               <h3>Construimos<span class="em">.</span></h3>
               <p>En ciclos cortos con entregas cada semana. Ves lo que hacemos mientras lo hacemos y ajustas sobre la marcha.</p>
               <ul class="ps-list">
@@ -4246,7 +4291,7 @@
           <!-- 04 Acompañamos — dashboard -->
           <article class="proc-slide">
             <div class="ps-copy">
-              <span class="ps-step">Fase 04 · Continuo</span>
+              <span class="ps-step">Fase 04</span>
               <h3>Acompañamos<span class="em">.</span></h3>
               <p>Seguimos después del arranque. La solución mejora con el uso, el equipo nunca se queda solo y los números suben porque seguimos afinando.</p>
               <ul class="ps-list">
@@ -4262,7 +4307,7 @@
                     <span class="md-label">Tiempo por pedido · últimos 90 días</span>
                     <div class="md-val">13 min <em class="up">↓ de 42 min</em></div>
                   </div>
-                  <span class="md-badge">En marcha · 11 semanas</span>
+                  <span class="md-badge">En marcha</span>
                 </div>
                 <svg class="md-chart" viewBox="0 0 320 120" preserveAspectRatio="none">
                   <defs>
@@ -4299,7 +4344,7 @@
       <article class="proc-mobile-card">
         <div class="proc-mobile-top">
           <span class="proc-mobile-step">01</span>
-          <span class="proc-mobile-time">1 semana</span>
+          <span class="proc-mobile-time">Paso inicial</span>
         </div>
         <h3>Escuchamos</h3>
         <p>Entendemos cómo trabaja tu equipo hoy y dónde se pierde tiempo.</p>
@@ -4312,7 +4357,7 @@
       <article class="proc-mobile-card">
         <div class="proc-mobile-top">
           <span class="proc-mobile-step">02</span>
-          <span class="proc-mobile-time">3-5 días</span>
+          <span class="proc-mobile-time">Plan cerrado</span>
         </div>
         <h3>Proponemos</h3>
         <p>Definimos una solución simple, cerrada y con precio claro.</p>
@@ -4325,7 +4370,7 @@
       <article class="proc-mobile-card">
         <div class="proc-mobile-top">
           <span class="proc-mobile-step">03</span>
-          <span class="proc-mobile-time">3-8 semanas</span>
+          <span class="proc-mobile-time">Ejecución</span>
         </div>
         <h3>Construimos</h3>
         <p>Entrega continua para que veas avances y ajustes sin esperar meses.</p>
@@ -4338,7 +4383,7 @@
       <article class="proc-mobile-card">
         <div class="proc-mobile-top">
           <span class="proc-mobile-step">04</span>
-          <span class="proc-mobile-time">Continuo</span>
+          <span class="proc-mobile-time">Seguimiento</span>
         </div>
         <h3>Acompañamos</h3>
         <p>Seguimos contigo para medir, mejorar y mantener todo estable.</p>
@@ -4372,7 +4417,7 @@
             <span class="tl-num">01</span>
           </div>
           <div class="tl-body">
-            <span class="tl-duration">1 semana</span>
+            <span class="tl-duration">Paso 01</span>
             <h4>Escuchamos</h4>
             <p>Entendemos el problema real, no solo el que se ve desde fuera. Hablamos con quien lo vive cada día.</p>
             <span class="tl-deliverable">
@@ -4387,7 +4432,7 @@
             <span class="tl-num">02</span>
           </div>
           <div class="tl-body">
-            <span class="tl-duration">3–5 días</span>
+            <span class="tl-duration">Paso 02</span>
             <h4>Proponemos</h4>
             <p>La solución más sencilla que resuelve. Con todo claro desde el día cero — alcance, plazos y precio.</p>
             <span class="tl-deliverable">
@@ -4402,7 +4447,7 @@
             <span class="tl-num">03</span>
           </div>
           <div class="tl-body">
-            <span class="tl-duration">3–8 semanas</span>
+            <span class="tl-duration">Paso 03</span>
             <h4>Construimos</h4>
             <p>En ciclos cortos con entregas cada semana. Ves lo que hacemos mientras lo hacemos y ajustas sobre la marcha.</p>
             <span class="tl-deliverable">
@@ -4417,7 +4462,7 @@
             <span class="tl-num">04</span>
           </div>
           <div class="tl-body">
-            <span class="tl-duration">Continuo</span>
+            <span class="tl-duration">Paso 04</span>
             <h4>Acompañamos</h4>
             <p>Seguimos después del arranque. La solución mejora con el uso, y el equipo nunca se queda solo.</p>
             <span class="tl-deliverable">
