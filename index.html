@@ -399,10 +399,25 @@
     transition: stroke-dashoffset 1.2s cubic-bezier(.4,.8,.2,1);
   }
   .scene.is-active .flow-path{ stroke-dashoffset: 0; }
-  .flow-path.glow{ stroke:url(#flowGrad); stroke-width:1.8; filter: drop-shadow(0 0 4px color-mix(in oklab, var(--accent) 70%, transparent)); }
-  .flow-path.glow-mint { stroke:url(#wfGradMint);  stroke-width:1.8; filter: drop-shadow(0 0 4px color-mix(in oklab, var(--accent) 70%, transparent)); }
-  .flow-path.glow-lilac{ stroke:url(#wfGradLilac); stroke-width:1.8; filter: drop-shadow(0 0 4px color-mix(in oklab, var(--lilac)  70%, transparent)); }
-  .flow-path.glow-amber{ stroke:url(#wfGradAmber); stroke-width:1.8; filter: drop-shadow(0 0 4px color-mix(in oklab, #F5B35A 70%, transparent)); }
+  /* Active flow highlight: transition stroke + filter so there's no flash
+     when the glow class is added/removed. The base stroke is kept solid
+     and always visible; the active state boosts width and adds an accent
+     drop-shadow. No gradient stroke (gradients with fade-to-transparent
+     endpoints caused the line to appear to 'disappear' at the nodes). */
+  .flow-path{
+    transition: stroke-dashoffset 1.2s cubic-bezier(.4,.8,.2,1),
+                stroke .35s ease,
+                stroke-width .35s ease,
+                filter .35s ease;
+  }
+  .flow-path.glow       { stroke: var(--accent); stroke-width: 1.8;
+    filter: drop-shadow(0 0 4px color-mix(in oklab, var(--accent) 70%, transparent)); }
+  .flow-path.glow-mint  { stroke: var(--accent); stroke-width: 1.8;
+    filter: drop-shadow(0 0 4px color-mix(in oklab, var(--accent) 70%, transparent)); }
+  .flow-path.glow-lilac { stroke: var(--lilac);  stroke-width: 1.8;
+    filter: drop-shadow(0 0 4px color-mix(in oklab, var(--lilac)  70%, transparent)); }
+  .flow-path.glow-amber { stroke: #F5B35A;       stroke-width: 1.8;
+    filter: drop-shadow(0 0 4px color-mix(in oklab, #F5B35A 70%, transparent)); }
   .flow-path.dashed{ stroke-dasharray: 4 5; stroke-dashoffset: 0; stroke-width:1; opacity:.5; animation: dash-move 3s linear infinite; }
   @keyframes dash-move{ to{ stroke-dashoffset: -18; } }
   .wf-svg{ position:absolute; inset:0; width:100%; height:100%; }
