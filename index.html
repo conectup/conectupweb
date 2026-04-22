@@ -961,10 +961,22 @@
       inset  0    0   0   1px rgba(255,255,255,.55);
   }
 
-  /* Tinted variants keep brand color but let the bend show through */
-  .lg.lg-tint-mint { background-color: rgba(15, 239, 188, .32); }
-  .lg.lg-tint-paper{ background-color: rgba(220, 251, 239, .35); }
-  .lg.lg-tint-lilac{ background-color: rgba(216, 145, 216, .38); }
+  /* Tinted variants keep brand color but let the bend show through.
+     For testimonial notes (dark text on pastel bg) we boost alpha so
+     the card stays opaque enough that the dark text remains legible
+     even in dark mode. */
+  .lg.lg-tint-mint { background-color: rgba(15, 239, 188, .85); }
+  .lg.lg-tint-paper{ background-color: rgba(220, 251, 239, .92); }
+  .lg.lg-tint-lilac{ background-color: rgba(216, 145, 216, .88); }
+  /* Disable the heavy backdrop filter on tinted cards — they're almost
+     opaque, the liquid-glass 'bend' has nothing useful to distort and
+     was fighting with the solid-ish fill. */
+  .lg.lg-tint-mint::before,
+  .lg.lg-tint-paper::before,
+  .lg.lg-tint-lilac::before{
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 
   /* Testimonials: ditch solid fills */
   .note{ background: transparent !important; box-shadow: none; }
@@ -3105,9 +3117,8 @@
             <div class="ps-copy">
               <span class="ps-step">Fase 03 · 3–8 semanas</span>
               <h3>Construimos<span class="em">.</span></h3>
-              <p>En ciclos cortos con entregas cada semana. Ves lo que hacemos mientras lo hacemos y ajustas sobre la marcha. Sin sorpresas en el minuto 90.</p>
+              <p>En ciclos cortos con entregas cada semana. Ves lo que hacemos mientras lo hacemos y ajustas sobre la marcha.</p>
               <ul class="ps-list">
-                <li><span></span>Entregables visibles cada viernes</li>
                 <li><span></span>Feedback → cambios en días, no meses</li>
                 <li><span></span>Código propio, sin atarte a nadie</li>
               </ul>
@@ -3731,14 +3742,19 @@
       }, AUTOPLAY_MS);
     }
 
-    // Scroll listener — update active + reset autoplay when user scrolls
+    // Scroll listener — update active, only reset autoplay when slide
+    // actually changes (so the progress rail doesn't jitter mid-animation).
     let scrollTicking = false;
+    let lastActive = -1;
     deck.addEventListener('scroll', () => {
       if(scrollTicking) return;
       scrollTicking = true;
       requestAnimationFrame(() => {
         markActive();
-        scheduleAutoplay();
+        if(current !== lastActive){
+          lastActive = current;
+          scheduleAutoplay();
+        }
         scrollTicking = false;
       });
     }, { passive: true });
@@ -3785,6 +3801,7 @@
     requestAnimationFrame(() => {
       goTo(0, false);
       markActive();
+      lastActive = current;
       scheduleAutoplay();
     });
   })();
