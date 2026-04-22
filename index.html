@@ -84,7 +84,29 @@
     -webkit-font-smoothing:antialiased;
     text-rendering:optimizeLegibility;
     overflow-x:hidden;
+    position:relative;
   }
+  /* Global ambient backdrop — single continuous layer behind everything.
+     Fixed so it doesn't scroll-jank, and spans the whole viewport. */
+  body::before{
+    content:""; position:fixed; inset:0; z-index:-10; pointer-events:none;
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 40%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 40%, transparent 90%);
+    opacity:.55;
+  }
+  body::after{
+    content:""; position:fixed; inset:0; z-index:-11; pointer-events:none;
+    background:
+      radial-gradient(60% 50% at 20% 20%, color-mix(in oklab, var(--accent) 18%, transparent), transparent 70%),
+      radial-gradient(55% 45% at 85% 80%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 70%);
+    filter: blur(40px);
+    opacity:.7;
+  }
+  [data-theme="light"] body::after{ opacity:.5; }
   a{color:inherit;text-decoration:none}
   button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   ::selection{background:var(--accent);color:var(--accent-ink)}
@@ -225,16 +247,7 @@
     position:relative; padding-top:140px; padding-bottom:var(--sect);
     overflow:hidden;
   }
-  .hero-grid{
-    position:absolute; inset:0;
-    background-image:
-      linear-gradient(to right, var(--line) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
-    background-size: 80px 80px;
-    mask-image: radial-gradient(ellipse 70% 60% at 60% 40%, black 40%, transparent 85%);
-    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 60% 40%, black 40%, transparent 85%);
-    pointer-events:none;
-  }
+  .hero-grid{ display:none; }
   .hero-inner{
     position:relative; z-index:2;
     display:grid; grid-template-columns: 1.05fr .95fr; gap: clamp(40px, 6vw, 90px);
@@ -988,20 +1001,10 @@
   .sect-testi, .sect-feat, .sect-cta, .sect-hero, .sect-proc{
     position:relative; isolation:isolate;
   }
-  .sect-testi::before, .sect-feat::before, .sect-cta::before,
-  .sect-hero::before, .sect-proc::before{
-    content:""; position:absolute; inset:-5% -5%; z-index:-2; pointer-events:none;
-    background:
-      radial-gradient(45% 55% at 20% 30%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%),
-      radial-gradient(45% 55% at 80% 70%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 70%);
-    filter: blur(50px);
-    opacity: .7;
-  }
-  [data-theme="light"] .sect-testi::before,
-  [data-theme="light"] .sect-feat::before,
-  [data-theme="light"] .sect-cta::before,
-  [data-theme="light"] .sect-hero::before,
-  [data-theme="light"] .sect-proc::before{ opacity:.45; }
+  /* Section-level blobs removed — the global ambient backdrop
+     (body::before + body::after) now provides a single continuous
+     fabric behind everything, so there are no vertical/horizontal
+     cuts between sections. */
 
   /* Overrides for .lg applied to elements that already had pseudos
      (feat-card, cta, pstep, kpi, vwin, tweaks). Force the lg glass
