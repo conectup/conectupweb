@@ -129,29 +129,24 @@
     height:68px;
   }
   .logo{ display:flex; align-items:center; gap:10px; font-weight:500; letter-spacing:-.01em; font-size:18px}
+  /* Full wordmark logo (image). Aspect ratio ~4:1 from the PNG, height
+     matches the nav row comfortably. */
+  .logo{ display: inline-flex; align-items: center; gap: 0; }
   .logo-mark{
-    width:52px; height:52px; position:relative;
+    position:relative;
     display:inline-flex; align-items:center; justify-content:center;
     flex: 0 0 auto;
+    height: 44px;
   }
   .logo-mark svg,
   .logo-mark img{
-    width:100%; height:100%; display:block;
+    height: 100%; width: auto; display:block;
     object-fit: contain;
   }
-  /* Two image variants: light-mode mark (default) and dark-mode mark with
-     the arrow kept green. Only one is visible at a time via data-theme. */
+  /* Two image variants toggled by [data-theme] */
   .logo-mark .logo-dark{ display: none; }
   [data-theme="dark"] .logo-mark .logo-light{ display: none; }
   [data-theme="dark"] .logo-mark .logo-dark { display: block; }
-  /* Mark acts as the C of "onectUp" — glue them together */
-  .logo{ align-items: center; gap: 0; font-size: 22px; letter-spacing: -.02em; font-weight: 500; }
-  .logo-word{ margin-left: -14px; }
-  /* For screen readers, announce the full name */
-  .logo-word::before{
-    content: "C"; position: absolute; width: 1px; height: 1px;
-    overflow: hidden; clip: rect(0 0 0 0);
-  }
   .nav-links{ display:flex; gap:32px; font-size:14px; color:var(--muted)}
   .nav-links a{ position:relative; transition:color .2s}
   .nav-links a:hover{ color:var(--fg) }
@@ -2934,12 +2929,11 @@
 <!-- NAV -->
 <nav class="nav" data-screen-label="Nav">
   <div class="wrap nav-row">
-    <a class="logo" href="#">
+    <a class="logo" href="#" aria-label="ConectUp">
       <span class="logo-mark">
-        <img class="logo-light" src="logomini.png"      alt="ConectUp" width="52" height="52">
-        <img class="logo-dark"  src="logomini-dark.png" alt=""          width="52" height="52" aria-hidden="true">
+        <img class="logo-light" src="logolargo.png"      alt="ConectUp">
+        <img class="logo-dark"  src="logolargo-dark.png" alt=""         aria-hidden="true">
       </span>
-      <span class="logo-word">onectUp</span>
     </a>
     <div class="nav-links">
       <a href="#servicios">Servicios</a>
@@ -3973,12 +3967,11 @@
   <div class="wrap">
     <div class="foot">
       <div>
-        <a class="logo" href="#">
+        <a class="logo" href="#" aria-label="ConectUp">
           <span class="logo-mark">
-            <img class="logo-light" src="logomini.png"      alt="ConectUp" width="52" height="52">
-        <img class="logo-dark"  src="logomini-dark.png" alt=""          width="52" height="52" aria-hidden="true">
+            <img class="logo-light" src="logolargo.png"      alt="ConectUp">
+            <img class="logo-dark"  src="logolargo-dark.png" alt=""         aria-hidden="true">
           </span>
-          <span class="logo-word">onectUp</span>
         </a>
         <p class="foot-brand" style="margin-top:14px">Construimos tecnología útil para equipos que necesitan moverse más rápido sin perder el control.</p>
       </div>
