@@ -713,13 +713,18 @@
     --liquid-shadow:   drop-shadow(0 10px 14px color-mix(in oklab, #0a0a0f 18%, transparent));
   }
 
-  /* Nav — stronger frost */
+  /* Nav — frosted, borderless, fades softly */
   .nav{
-    background: var(--glass-bg) !important;
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border-bottom: 1px solid var(--glass-border);
-    box-shadow: 0 1px 0 var(--glass-hl) inset;
+    background: color-mix(in oklab, var(--ink) 30%, transparent) !important;
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+    -webkit-mask-image: linear-gradient(to bottom, #000 85%, transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 85%, transparent 100%);
+  }
+  [data-theme="light"] .nav{
+    background: rgba(255,255,255,.55) !important;
   }
 
   /* Hero visualization — liquid glass */
@@ -985,21 +990,18 @@
   }
   .sect-testi::before, .sect-feat::before, .sect-cta::before,
   .sect-hero::before, .sect-proc::before{
-    content:""; position:absolute; inset:-10% -5%; z-index:-2; pointer-events:none;
+    content:""; position:absolute; inset:-5% -5%; z-index:-2; pointer-events:none;
     background:
-      radial-gradient(32% 40% at 15% 25%, color-mix(in oklab, var(--accent) 85%, transparent), transparent 60%),
-      radial-gradient(30% 38% at 85% 20%, color-mix(in oklab, var(--lilac)  85%, transparent), transparent 60%),
-      radial-gradient(28% 36% at 50% 80%, color-mix(in oklab, #F5B35A 75%, transparent), transparent 60%),
-      radial-gradient(25% 35% at 30% 75%, color-mix(in oklab, var(--accent) 70%, transparent), transparent 60%),
-      radial-gradient(22% 32% at 75% 60%, color-mix(in oklab, var(--lilac) 70%, transparent), transparent 60%);
-    filter: blur(30px);
-    opacity: .9;
+      radial-gradient(45% 55% at 20% 30%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%),
+      radial-gradient(45% 55% at 80% 70%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 70%);
+    filter: blur(50px);
+    opacity: .7;
   }
   [data-theme="light"] .sect-testi::before,
   [data-theme="light"] .sect-feat::before,
   [data-theme="light"] .sect-cta::before,
   [data-theme="light"] .sect-hero::before,
-  [data-theme="light"] .sect-proc::before{ opacity:.6; }
+  [data-theme="light"] .sect-proc::before{ opacity:.45; }
 
   /* Overrides for .lg applied to elements that already had pseudos
      (feat-card, cta, pstep, kpi, vwin, tweaks). Force the lg glass
