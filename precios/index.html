@@ -1,0 +1,1039 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1200, initial-scale=1" />
+  <title>ConectUp | Precios</title>
+  <link rel="icon" type="image/png" href="../logomini.png">
+  <link rel="icon" type="image/png" href="../logomini-dark.png" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="../logomini.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --ink: #050309;
+      --ink-2: #0b0810;
+      --paper: #EAFDF5;
+      --mint: #0FEFBC;
+      --lilac: #D891D8;
+      --line: rgba(220, 251, 239, .10);
+      --line-strong: rgba(220, 251, 239, .22);
+      --muted: rgba(220, 251, 239, .62);
+      --muted-2: rgba(220, 251, 239, .42);
+      --fg: #EAFDF5;
+      --accent: var(--mint);
+      --accent-ink: #041411;
+      --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
+      --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+      --maxw: 1360px;
+      --gut: clamp(22px, 4vw, 56px);
+    }
+
+    [data-theme="light"] {
+      --ink: #F6FBF8;
+      --ink-2: #EEF7F1;
+      --paper: #0a0a0f;
+      --line: rgba(10, 10, 15, .10);
+      --line-strong: rgba(10, 10, 15, .22);
+      --muted: rgba(10, 10, 15, .72);
+      --muted-2: rgba(10, 10, 15, .52);
+      --fg: #0a0a0f;
+      --accent: #0BA888;
+      --accent-ink: #FFFFFF;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-width: 1200px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--ink);
+      color: var(--fg);
+      font-family: var(--font-display);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, var(--line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 90% 70% at 50% 35%, #000 40%, transparent 90%);
+      -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 35%, #000 40%, transparent 90%);
+      opacity: .55;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      pointer-events: none;
+      background:
+        radial-gradient(50% 42% at 16% 18%, color-mix(in oklab, var(--accent) 20%, transparent), transparent 70%),
+        radial-gradient(42% 35% at 82% 12%, color-mix(in oklab, var(--lilac) 16%, transparent), transparent 72%),
+        radial-gradient(55% 45% at 50% 85%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 70%);
+      filter: blur(48px);
+      opacity: .85;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .wrap {
+      width: min(var(--maxw), calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 0 var(--gut);
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      background: color-mix(in oklab, var(--ink) 74%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      min-height: 76px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .logo-mark {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+    }
+
+    .logo-mark img {
+      height: 44px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .logo-mark .logo-dark {
+      display: none;
+    }
+
+    [data-theme="dark"] .logo-mark .logo-light {
+      display: none;
+    }
+
+    [data-theme="dark"] .logo-mark .logo-dark {
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav-links a {
+      position: relative;
+      transition: color .2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--fg);
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -7px;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .28s ease;
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      transform: scaleX(1);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      font-size: 13px;
+      transition: background .2s ease, border-color .2s ease, color .2s ease;
+    }
+
+    .nav-cta .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+    }
+
+    .nav-cta:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-ink);
+    }
+
+    .nav-cta:hover .dot {
+      background: currentColor;
+      box-shadow: none;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 62px;
+      height: 30px;
+      --light: #d8dbe0;
+      --dark: #28292c;
+      flex: 0 0 auto;
+    }
+
+    .toggle-switch .switch-label {
+      position: absolute;
+      inset: 0;
+      background-color: var(--dark);
+      border-radius: 999px;
+      cursor: pointer;
+      border: 2px solid color-mix(in oklab, var(--fg) 14%, transparent);
+      box-shadow: 0 1px 0 color-mix(in oklab, var(--fg) 6%, transparent) inset,
+        0 6px 18px color-mix(in oklab, #000 32%, transparent);
+      transition: border-color .35s ease, background-color .55s cubic-bezier(.8, 0, .2, 1);
+      overflow: hidden;
+    }
+
+    .toggle-switch .switch-label::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background: radial-gradient(120% 180% at 0% 50%, color-mix(in oklab, var(--accent) 30%, transparent), transparent 55%);
+      opacity: .0;
+      transition: opacity .5s ease;
+    }
+
+    .toggle-switch:hover .switch-label::after {
+      opacity: .55
+    }
+
+    .toggle-switch .checkbox {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .toggle-switch .switch-label {
+      outline: none;
+    }
+
+    .toggle-switch .checkbox:focus {
+      outline: none;
+    }
+
+    .toggle-switch .slider {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      transition: background-color .55s cubic-bezier(.8, 0, .2, 1);
+    }
+
+    .toggle-switch .checkbox:checked~.slider {
+      background-color: var(--light);
+    }
+
+    .toggle-switch .slider::before {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: var(--dark);
+      box-shadow: inset 9px -3px 0 0 var(--light),
+        0 2px 6px color-mix(in oklab, #000 40%, transparent);
+      transition: transform .55s cubic-bezier(.68, -0.2, .27, 1.3),
+        background-color .35s ease,
+        box-shadow .45s ease;
+    }
+
+    .toggle-switch .checkbox:checked~.slider::before {
+      transform: translateX(32px);
+      background-color: var(--dark);
+      box-shadow: inset 0 0 0 0 var(--light),
+        0 2px 8px color-mix(in oklab, #000 35%, transparent);
+    }
+
+    .toggle-switch:focus-within .switch-label {
+      border-color: color-mix(in oklab, var(--fg) 20%, transparent);
+    }
+
+    .toggle-switch .switch-label:active .slider::before {
+      width: 22px;
+    }
+
+    ::view-transition-old(root) {
+      animation: none;
+    }
+
+    ::view-transition-new(root) {
+      animation: theme-wave-in .9s cubic-bezier(.22, .61, .36, 1) forwards;
+      mix-blend-mode: normal;
+    }
+
+    @keyframes theme-wave-in {
+      from {
+        clip-path: circle(0 at var(--tx, 50%) var(--ty, 50%));
+      }
+
+      to {
+        clip-path: circle(160vmax at var(--tx, 50%) var(--ty, 50%));
+      }
+    }
+
+    .theme-wave {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      background: var(--wave-bg, #000);
+      clip-path: circle(0 at var(--tx, 50%) var(--ty, 50%));
+      will-change: clip-path, opacity;
+      animation: theme-wave-expand .9s cubic-bezier(.22, .61, .36, 1) forwards;
+    }
+
+    .theme-wave.echo {
+      animation: theme-wave-expand 1.15s cubic-bezier(.22, .61, .36, 1) forwards;
+    }
+
+    .theme-wave.echo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at var(--tx, 50%) var(--ty, 50%),
+          color-mix(in oklab, var(--wave-accent, #0FEFBC) 22%, transparent) 0,
+          color-mix(in oklab, var(--wave-accent, #0FEFBC) 10%, transparent) 18%,
+          transparent 42%);
+      opacity: .65;
+      filter: blur(10px);
+    }
+
+    @keyframes theme-wave-expand {
+      0% {
+        clip-path: circle(0 at var(--tx, 50%) var(--ty, 50%));
+        opacity: 1;
+      }
+
+      75% {
+        clip-path: circle(160vmax at var(--tx, 50%) var(--ty, 50%));
+        opacity: 1;
+      }
+
+      100% {
+        clip-path: circle(160vmax at var(--tx, 50%) var(--ty, 50%));
+        opacity: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      ::view-transition-new(root),
+      .theme-wave,
+      .theme-wave.echo {
+        animation: none !important;
+      }
+    }
+
+    .hero {
+      padding: 92px 0 36px;
+    }
+
+    .hero-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .hero-card,
+    .price-card,
+    .cta-card {
+      background: color-mix(in oklab, var(--ink-2) 82%, transparent);
+      border: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+      box-shadow: 0 24px 60px -24px rgba(0, 0, 0, .45);
+      backdrop-filter: blur(18px) saturate(150%);
+      -webkit-backdrop-filter: blur(18px) saturate(150%);
+    }
+
+    .hero-card {
+      border-radius: 34px;
+      padding: 42px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(90% 90% at 15% 0%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 58%),
+        radial-gradient(60% 60% at 85% 20%, color-mix(in oklab, var(--lilac) 10%, transparent), transparent 68%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    .hero-title {
+      margin-top: 18px;
+      max-width: 14ch;
+      font-size: clamp(56px, 7vw, 90px);
+      line-height: .96;
+      letter-spacing: -.05em;
+    }
+
+    .hero-title .em,
+    .section-copy .em {
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      margin-top: 18px;
+      max-width: 62ch;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .hero-meta {
+      margin-top: 26px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+      background: color-mix(in oklab, var(--fg) 5%, transparent);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .hero-pill strong {
+      color: var(--fg);
+      font-weight: 500;
+    }
+
+    .section {
+      padding: 12px 0 42px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .price-card {
+      position: relative;
+      border-radius: 26px;
+      padding: 30px 26px 26px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      overflow: hidden;
+      transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+    }
+
+    .price-card::before {
+      content: "";
+      position: absolute;
+      left: 1px;
+      right: 1px;
+      top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .24), transparent);
+    }
+
+    .price-card:hover {
+      transform: translateY(-6px);
+      border-color: color-mix(in oklab, var(--accent) 40%, transparent);
+      box-shadow: 0 32px 68px -28px rgba(0, 0, 0, .55);
+    }
+
+    .price-card.featured {
+      border-color: color-mix(in oklab, var(--accent) 40%, transparent);
+      background:
+        radial-gradient(120% 100% at 30% 0%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 60%),
+        color-mix(in oklab, var(--ink-2) 82%, transparent);
+    }
+
+    .price-card.price-cta-card {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-style: dashed;
+      background:
+        radial-gradient(100% 100% at 50% 100%, color-mix(in oklab, var(--lilac) 8%, transparent), transparent 70%),
+        color-mix(in oklab, var(--ink-2) 82%, transparent);
+    }
+
+    .price-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: color-mix(in oklab, var(--accent) 16%, transparent);
+      border: 1px solid color-mix(in oklab, var(--accent) 30%, transparent);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .price-icon,
+    .price-cta-icon {
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+    }
+
+    .price-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      background: color-mix(in oklab, var(--accent) 12%, transparent);
+      border: 1px solid color-mix(in oklab, var(--accent) 22%, transparent);
+    }
+
+    .price-icon svg,
+    .price-cta-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .price-name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .price-amount {
+      font-size: 48px;
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+
+    .price-from {
+      font-size: 15px;
+      color: var(--muted);
+      margin-right: 2px;
+    }
+
+    .price-currency {
+      color: var(--accent);
+      font-size: .62em;
+      font-family: var(--font-serif);
+      font-style: italic;
+    }
+
+    .price-desc {
+      margin: 14px 0 22px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .price-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .price-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13.5px;
+      line-height: 1.45;
+    }
+
+    .pf-check {
+      width: 18px;
+      height: 18px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      flex: 0 0 auto;
+      background: color-mix(in oklab, var(--accent) 15%, transparent);
+      border: 1px solid color-mix(in oklab, var(--accent) 28%, transparent);
+      color: var(--accent);
+    }
+
+    .pf-check svg {
+      width: 10px;
+      height: 10px;
+    }
+
+    .price-btn,
+    .ghost-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 50px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      border: 1px solid color-mix(in oklab, var(--fg) 14%, transparent);
+      background: color-mix(in oklab, var(--fg) 4%, transparent);
+      font-weight: 500;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .price-btn:hover,
+    .ghost-btn:hover {
+      transform: translateY(-1px);
+      background: color-mix(in oklab, var(--accent) 16%, transparent);
+      border-color: color-mix(in oklab, var(--accent) 40%, transparent);
+    }
+
+    .price-btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-ink);
+    }
+
+    .price-btn-primary:hover {
+      box-shadow: 0 14px 28px -16px var(--accent);
+    }
+
+    .arr {
+      width: 16px;
+      height: 16px;
+      transition: transform .2s ease;
+    }
+
+    .price-btn:hover .arr,
+    .ghost-btn:hover .arr {
+      transform: translateX(3px);
+    }
+
+    .price-cta-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 999px;
+      margin-bottom: 22px;
+      color: var(--lilac);
+      background: color-mix(in oklab, var(--lilac) 12%, transparent);
+      border: 1px dashed color-mix(in oklab, var(--lilac) 28%, transparent);
+    }
+
+    .price-cta-title {
+      font-size: 24px;
+      letter-spacing: -.03em;
+    }
+
+    .price-cta-sub {
+      margin: 10px 0 22px;
+      max-width: 28ch;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .cta-band {
+      padding: 28px 0 96px;
+    }
+
+    .cta-card {
+      border-radius: 30px;
+      padding: 34px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .cta-card h2 {
+      font-size: clamp(28px, 3vw, 42px);
+      letter-spacing: -.04em;
+      max-width: 13ch;
+    }
+
+    .cta-card p {
+      margin-top: 12px;
+      max-width: 58ch;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 14px;
+      flex: 0 0 auto;
+    }
+
+    .footer {
+      padding: 0 0 34px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer-row {
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+    }
+  </style>
+</head>
+
+<body data-theme="dark">
+  <nav class="nav">
+    <div class="wrap nav-row">
+      <a class="logo" href="../index.html" aria-label="ConectUp">
+        <span class="logo-mark">
+          <img class="logo-light" src="../logolargo.png" alt="ConectUp">
+          <img class="logo-dark" src="../logolargo-dark.png" alt="" aria-hidden="true">
+        </span>
+      </a>
+      <div class="nav-links">
+        <a href="../index.html#servicios">Servicios</a>
+        <a href="./" class="active">Precios</a>
+        <a href="../index.html#proceso">Cómo trabajamos</a>
+        <a href="../index.html#contacto">Contacto</a>
+      </div>
+      <div class="nav-actions">
+        <div class="toggle-switch" id="themeToggleWrap" title="Cambiar tema">
+          <label class="switch-label" aria-label="Cambiar entre modo oscuro y claro">
+            <input type="checkbox" class="checkbox" id="themeToggle" role="switch" aria-checked="false">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <a class="nav-cta" href="../index.html#contacto">
+          <span class="dot"></span>
+          Agendar consulta
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-shell">
+        <div class="hero-card">
+          <span class="eyebrow">Precios ConectUp</span>
+          <h1 class="hero-title">Planes claros para <span class="em">empezar bien</span>.</h1>
+          <div class="hero-meta">
+            <span class="hero-pill"><strong>Sin permanencias</strong> y con alcance definido</span>
+            <span class="hero-pill"><strong>Respuesta en 24 h</strong> laborables</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="planes">
+      <div class="wrap">
+        <div class="pricing-grid">
+          <article class="price-card">
+            <div class="price-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="14" rx="2" />
+                <path d="M3 17h18M8 21h8" />
+              </svg>
+            </div>
+            <div class="price-name">Diseño Web</div>
+            <div class="price-amount"><span class="price-from">desde</span>500<span class="price-currency">€</span></div>
+            <p class="price-desc">Diseñamos y desarrollamos tu web a medida. Recibes todos los archivos y la propiedad es tuya, sin dependencia posterior.</p>
+            <ul class="price-features">
+              <li><span class="pf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9" /></svg></span>Diseño 100% a medida</li>
+              <li><span class="pf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9" /></svg></span>Entrega de todos los archivos</li>
+              <li><span class="pf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9" /></svg></span>1 mes de soporte incluido</li>
+              <li><span class="pf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9" /></svg></span>Versión cuidada también para móvil</li>
+            </ul>
+            <a class="price-btn" href="../index.html?plan=diseno-web#contacto">
+              Agendar reunión
+              <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <path d="M5 12h14" />
+                <path d="M13 6l6 6-6 6" />
+              </svg>
+            </a>
+          </article>
+
+          <article class="price-card featured">
+            <span class="price-badge">Popular</span>
+            <div class="price-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="7" />
+                <path d="M21 21l-4.35-4.35" />
+                <path d="M8 11h6M11 8v6" />
+              </svg>
+            </div>
+            <div class="price-name">Auditoría de procesos</div>
+            <div class="price-amount"><span class="price-from">desde</span>850<span class="price-currency">€</span></div>
+            <p class="price-desc">Revisamos cómo trabaja tu equipo, localizamos cuellos de botella y te devolvemos un plan accionable para ordenar y acelerar.</p>
+            <ul class="price-features">
+              <li><span class="pf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9" /></svg></span>Análisis completo del proceso actual</li>
+              <li><span class="pf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9" /></svg></span>Plan de acción paso a paso</li>
+              <li><span class="pf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9" /></svg></span>Priorización de mejoras con impacto real</li>
+              <li><span class="pf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9" /></svg></span>Sesión de devolución contigo</li>
+            </ul>
+            <a class="price-btn price-btn-primary" href="../index.html?plan=auditoria-procesos#contacto">
+              Agendar reunión
+              <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <path d="M5 12h14" />
+                <path d="M13 6l6 6-6 6" />
+              </svg>
+            </a>
+          </article>
+
+          <article class="price-card">
+            <div class="price-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" />
+                <circle cx="12" cy="12" r="4" />
+              </svg>
+            </div>
+            <div class="price-name">Implementación</div>
+            <div class="price-amount"><span class="price-from">desde</span>2.400<span class="price-currency">€</span></div>
+            <p class="price-desc">Nos encargamos de construir la solución: automatizaciones, integraciones o software a medida listo para entrar en uso real.</p>
+            <ul class="price-features">
+              <li><span class="pf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9" /></svg></span>Automatizaciones adaptadas a tu operativa</li>
+              <li><span class="pf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9" /></svg></span>Integración con tus herramientas actuales</li>
+              <li><span class="pf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9" /></svg></span>Software personalizado si hace falta</li>
+              <li><span class="pf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5 9-9" /></svg></span>Acompañamiento en puesta en marcha</li>
+            </ul>
+            <a class="price-btn" href="../index.html?plan=implementacion#contacto">
+              Agendar reunión
+              <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <path d="M5 12h14" />
+                <path d="M13 6l6 6-6 6" />
+              </svg>
+            </a>
+          </article>
+
+          <article class="price-card price-cta-card">
+            <div class="price-cta-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <div class="price-cta-title">¿Otra necesidad?</div>
+            <p class="price-cta-sub">Si tu proyecto no encaja en estos tres puntos de partida, lo hablamos y armamos una propuesta a medida.</p>
+            <a class="price-btn" href="../index.html?plan=otro-proyecto#contacto">
+              Contáctanos
+              <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <path d="M5 12h14" />
+                <path d="M13 6l6 6-6 6" />
+              </svg>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <div class="wrap">
+        <div class="cta-card">
+          <div>
+            <h2>Si te encaja, lo hablamos contigo.</h2>
+            <p>Los planes sirven para orientarte, pero el siguiente paso sigue siendo el mismo: hablar contigo, entender el caso y aterrizar alcance, tiempos y presupuesto sin adornos.</p>
+          </div>
+          <div class="cta-actions">
+            <a class="price-btn price-btn-primary" href="../index.html#contacto">
+              Ir al contacto
+              <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <path d="M5 12h14" />
+                <path d="M13 6l6 6-6 6" />
+              </svg>
+            </a>
+            <a class="ghost-btn" href="../index.html">
+              Volver a la principal
+              <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <path d="M5 12h14" />
+                <path d="M13 6l6 6-6 6" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-row">
+      <span>© 2026 ConectUp</span>
+      <span>Precios en subpágina independiente con barra fija.</span>
+    </div>
+  </footer>
+  <script>
+    (function themeToggle() {
+      const root = document.body;
+      const toggle = document.getElementById('themeToggle');
+      const themeToggleWrap = document.getElementById('themeToggleWrap');
+      const THEME_KEY = 'conectup:theme';
+      const stored = (() => { try { return localStorage.getItem(THEME_KEY); } catch (_) { return null; } })();
+      const initialTheme = stored || root.dataset.theme || 'dark';
+
+      function syncThemeToggle(theme) {
+        if (!toggle) return;
+        const isLight = theme === 'light';
+        toggle.checked = isLight;
+        toggle.setAttribute('aria-checked', String(isLight));
+      }
+
+      const THEME_BG = { dark: '#050309', light: '#F6FBF8' };
+
+      function applyTheme(next) {
+        root.dataset.theme = next;
+        syncThemeToggle(next);
+        try { localStorage.setItem(THEME_KEY, next); } catch (_) { }
+      }
+
+      function setTheme(next) {
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const isCalmMobile = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
+
+        let cx = window.innerWidth - 80, cy = 34;
+        if (themeToggleWrap) {
+          const r = themeToggleWrap.getBoundingClientRect();
+          cx = r.left + r.width / 2;
+          cy = r.top + r.height / 2;
+        }
+        document.documentElement.style.setProperty('--tx', cx + 'px');
+        document.documentElement.style.setProperty('--ty', cy + 'px');
+
+        if (prefersReduced || isCalmMobile) {
+          applyTheme(next);
+          return;
+        }
+
+        if (document.startViewTransition) {
+          document.startViewTransition(() => applyTheme(next));
+          return;
+        }
+
+        const accentColor = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#0FEFBC';
+        const wave = document.createElement('div');
+        wave.className = 'theme-wave';
+        wave.style.setProperty('--wave-bg', THEME_BG[next] || '#000');
+        const echo = document.createElement('div');
+        echo.className = 'theme-wave echo';
+        echo.style.setProperty('--wave-accent', accentColor);
+        document.body.appendChild(wave);
+        document.body.appendChild(echo);
+
+        setTimeout(() => applyTheme(next), 280);
+        wave.addEventListener('animationend', () => wave.remove(), { once: true });
+        echo.addEventListener('animationend', () => echo.remove(), { once: true });
+      }
+
+      applyTheme(initialTheme);
+
+      if (toggle) {
+        toggle.addEventListener('change', () => {
+          setTheme(toggle.checked ? 'light' : 'dark');
+        });
+      }
+    })();
+  </script>
+</body>
+
+</html>
