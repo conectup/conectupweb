@@ -8401,7 +8401,6 @@
           <input type="hidden" name="access_key" value="5ac9ca76-fdb9-4dcd-a328-c0db5605c95c">
           <input type="hidden" name="subject" value="Nueva consulta desde conectup.io">
           <input type="hidden" name="from_name" value="Web ConectUp">
-          <input type="hidden" name="plan_interes" id="ctaPlanInterest" value="">
           <input type="hidden" name="redirect" value="false">
           <!-- Honeypot -->
           <input type="checkbox" name="botcheck" class="cta-honey" tabindex="-1" autocomplete="off">
@@ -9072,36 +9071,7 @@
       if (!form) return;
       const key = form.querySelector('[name="access_key"]');
       const hasKey = key && key.value && !/YOUR_ACCESS_KEY_HERE|^$/.test(key.value);
-      const planField = document.getElementById('ctaPlanInterest');
       const messageField = form.elements.message;
-      const planMessages = {
-        'diseno-web': {
-          label: 'Diseño Web',
-          text: 'Me interesa el plan Diseño Web. Necesito una web a medida y me gustaría que revisáramos alcance, tiempos y presupuesto.'
-        },
-        'auditoria-procesos': {
-          label: 'Auditoría de procesos',
-          text: 'Me interesa la Auditoría de procesos. Quiero revisar dónde estamos perdiendo tiempo y qué mejoras tendría más sentido priorizar.'
-        },
-        'implementacion': {
-          label: 'Implementación',
-          text: 'Me interesa el plan de Implementación. Busco automatizar procesos o construir una solución a medida y quiero valorar opciones.'
-        },
-        'otro-proyecto': {
-          label: 'Otro proyecto',
-          text: 'Tengo una necesidad diferente a los planes cerrados y me gustaría contaros el proyecto para ver cómo lo podemos enfocar.'
-        }
-      };
-      const params = new URLSearchParams(window.location.search);
-      const selectedPlan = params.get('plan');
-      const selectedPlanData = selectedPlan ? planMessages[selectedPlan] : null;
-
-      if (selectedPlanData) {
-        if (planField) planField.value = selectedPlanData.label;
-        if (messageField && !messageField.value.trim()) {
-          messageField.value = selectedPlanData.text;
-        }
-      }
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
