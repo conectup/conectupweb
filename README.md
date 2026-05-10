@@ -47,19 +47,17 @@ Cada developer trabaja libremente en su rama `develop-*`. Para promover a prepro
 
 ## Deploy
 
-**Producción**: [conectupweb.pages.dev](https://conectupweb.pages.dev) (Cloudflare Pages)
+**Producción**: despliegue gestionado desde Vercel.
 
 ### Auto-deploy
 
-Cada push a `main` dispara el workflow `.github/workflows/deploy.yml` que
-sube la raíz del repo a Cloudflare Pages via Wrangler.
+Cada push a `main` puede desplegarse automáticamente desde la integración de
+Vercel con GitHub.
 
-Secrets requeridos en el repo (ya configurados):
-- `CLOUDFLARE_API_TOKEN` — token con permiso "Cloudflare Pages · Edit"
-- `CLOUDFLARE_ACCOUNT_ID` — ID de la cuenta destino
+No se necesita workflow de GitHub Actions para el deploy si se usa la conexión
+directa de Vercel con el repositorio.
 
 ### Deploy manual
 
-```bash
-CLOUDFLARE_API_TOKEN=xxx npx wrangler pages deploy . --project-name=conectupweb --branch=main
-```
+Se puede lanzar desde el panel de Vercel o conectando el repositorio para que
+publique automáticamente cada cambio en `main`.
