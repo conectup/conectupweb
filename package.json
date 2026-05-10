@@ -7,5 +7,8 @@
     "dev": "npx --yes http-server . -p 3000 -c-1 -o",
     "start": "npx --yes http-server . -p 3000 -c-1",
     "build": "echo 'Build not required'"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
   }
 }
